@@ -8,7 +8,7 @@
 body {
   background: #101820;
   color: white;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   text-align: center;
   padding: 30px;
 }
@@ -16,8 +16,9 @@ h1 { color: orange; }
 button {
   background: orange;
   padding: 14px 30px;
-  border: none;
+  border: 0;
   border-radius: 10px;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -25,6 +26,18 @@ button {
 <h1>🐅 TIGER LIVE</h1>
 <h2>স্বাগতম</h2>
 <p>আপনার নিজের লাইভ প্ল্যাটফর্ম</p>
-<button>শুরু করুন</button>
+<p id="status">Supabase সংযোগ প্রস্তুত হচ্ছে...</p>
+<button onclick="alert('TIGER LIVE-এ স্বাগতম!')">
+শুরু করুন
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+document.getElementById("status").textContent =
+  window.supabaseClient
+  ? "Supabase Client প্রস্তুত"
+  : "Supabase লোড হয়নি";
+</script>
 </body>
 </html>
