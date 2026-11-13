@@ -5,39 +5,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TIGER LIVE</title>
 <style>
-body {
-  background: #101820;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 30px;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#10101b;color:white;
+ font-family:Arial,sans-serif;
 }
-h1 { color: orange; }
-button {
-  background: orange;
-  padding: 14px 30px;
-  border: 0;
-  border-radius: 10px;
-  font-size: 18px;
+header{
+ background:#191927;padding:18px;
+ display:flex;justify-content:space-between;
+ align-items:center;border-bottom:1px solid #333;
+}
+.logo{font-size:24px;font-weight:bold;color:#ff9d00}
+.lang{background:#29293a;color:white;padding:8px;border-radius:8px}
+.hero{
+ text-align:center;padding:55px 18px 40px;
+ background:linear-gradient(145deg,#29133e,#111827,#301500);
+}
+.tiger{font-size:65px}
+h1{font-size:34px;color:#ff9d00;margin:12px}
+.hero p{color:#ddd;line-height:1.7}
+.btn{
+ display:inline-block;padding:13px 23px;
+ margin:8px;border:0;border-radius:10px;
+ background:#ff9d00;color:#171717;
+ font-weight:bold;font-size:16px;text-decoration:none;
+}
+.btn2{background:#29293a;color:white}
+section{padding:25px 18px}
+h2{text-align:center;color:#ffad24}
+.cards{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:13px;max-width:650px;margin:auto;
+}
+.card{
+ background:#202033;padding:22px 10px;
+ border-radius:14px;text-align:center;
+ border:1px solid #34344a;
+}
+.card .emoji{font-size:32px}
+.card h3{font-size:16px;margin-bottom:5px}
+.card p{font-size:13px;color:#bbb}
+.admin{
+ margin:20px;padding:22px;background:#252036;
+ border-radius:14px;text-align:center;
+}
+footer{
+ text-align:center;padding:22px;color:#aaa;
+ background:#191927;font-size:13px;
 }
 </style>
 </head>
 <body>
-<h1>🐅 TIGER LIVE</h1>
-<h2>স্বাগতম</h2>
-<p>আপনার নিজের লাইভ প্ল্যাটফর্ম</p>
-<p id="status">Supabase সংযোগ প্রস্তুত হচ্ছে...</p>
-<button onclick="alert('TIGER LIVE-এ স্বাগতম!')">
-শুরু করুন
-</button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script>
-document.getElementById("status").textContent =
-  window.supabaseClient
-  ? "Supabase Client প্রস্তুত"
-  : "Supabase লোড হয়নি";
-</script>
+<header>
+ <div class="logo">🐅 TIGER LIVE</div>
+ <div class="lang">বাংলা | EN</div>
+</header>
+
+<div class="hero">
+ <div class="tiger">🐅</div>
+ <h1>WELCOME TO TIGER LIVE</h1>
+ <p>আপনার নিজের লাইভ কমিউনিটিতে স্বাগতম।<br>
+ বন্ধুদের সাথে যুক্ত হন, লাইভ উপভোগ করুন।</p>
+ <a class="btn" href="#login">শুরু করুন</a>
+ <a class="btn btn2" href="#features">আরও জানুন</a>
+</div>
+
+<section id="features">
+ <h2>✨ TIGER LIVE FEATURES</h2>
+ <div class="cards">
+  <div class="card">
+   <div class="emoji">📺</div>
+   <h3>লাইভ রুম</h3>
+   <p>লাইভ সম্প্রচারের সুবিধা</p>
+  </div>
+  <div class="card">
+   <div class="emoji">🎁</div>
+   <h3>ভার্চুয়াল গিফট</h3>
+   <p>বন্ধুদের গিফট পাঠান</p>
+  </div>
+  <div class="card">
+   <div class="emoji">👤</div>
+   <h3>প্রোফাইল</h3>
+   <p>নিজের অ্যাকাউন্ট পরিচালনা</p>
+  </div>
+  <div class="card">
+   <div class="emoji">💬</div>
+   <h3>চ্যাট</h3>
+   <p>সবার সাথে যোগাযোগ</p>
+  </div>
+ </div>
+</section>
+
+<section id="login">
+ <div class="admin">
+  <h2>🐅 TIGER LIVE-এ যোগ দিন</h2>
+  <p>আপনার অ্যাকাউন্ট তৈরি করে শুরু করুন।</p>
+  <button class="btn" onclick="alert('লগইন ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে')">লগইন</button>
+  <button class="btn btn2" onclick="alert('রেজিস্ট্রেশন ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে')">রেজিস্ট্রেশন</button>
+ </div>
+</section>
+
+<footer>
+ © 2026 TIGER LIVE | All Rights Reserved
+</footer>
+
 </body>
-</html>
+</html>upabae
