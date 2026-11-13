@@ -1,10 +1,10 @@
 const SUPABASE_URL = "https://yehheffwgloegvmexqzy.supabase.co";
 
-const SUPABASE_KEY = "আপনার sb_publishable Key এখানে বসান";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
 
-const { createClient } = supabase;
-
-window.supabaseClient = createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+if (window.supabase && window.supabase.createClient) {
+  window.supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+}
