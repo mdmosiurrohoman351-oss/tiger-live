@@ -3,107 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10121c">
 <title>TIGER LIVE</title>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#10121c;color:white;
- font-family:Arial,sans-serif;text-align:center;
+body {
+  background: #101820;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 30px;
 }
-header{
- background:#e87516;padding:18px;
- font-size:27px;font-weight:bold;
- box-shadow:0 4px 15px #0008;
+h1 { color: orange; }
+button {
+  background: orange;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 10px;
 }
-.logo{
- font-size:90px;margin:25px 0 5px;
-}
-h1{color:#ff9b35;font-size:32px}
-p{line-height:1.7}
-main{padding:20px 15px;max-width:650px;margin:auto}
-.card{
- background:#202438;padding:25px 18px;
- margin:22px auto;border-radius:18px;
- border:1px solid #ffffff20;
- box-shadow:0 8px 25px #0005;
-}
-button{
- background:#f28a20;color:white;border:0;
- border-radius:10px;padding:13px 20px;
- margin:7px;font-size:16px;font-weight:bold;
- cursor:pointer;
-}
-button:hover{background:#ffad45}
-.secondary{background:#30394d}
-.actions{display:flex;flex-wrap:wrap;justify-content:center}
-footer{padding:22px;color:#aaa}
 </style>
 </head>
 <body>
-
-<header>🐯 TIGER LIVE</header>
-
-<main>
-<div class="logo">🐯</div>
-
-<h1 id="welcome">স্বাগতম TIGER LIVE-এ</h1>
-<p id="subtitle">আপনার নিজের লাইভ কমিউনিটি প্ল্যাটফর্ম</p>
-
-<div class="card">
-<h2 id="heading">Welcome to TIGER LIVE</h2>
-<p id="description">বাংলা ও ইংরেজি ভাষায় ব্যবহার করুন।</p>
-
-<button onclick="showMessage('live')">🔴 Live</button>
-<button class="secondary" onclick="showMessage('login')">Login / লগইন</button>
-<button class="secondary" onclick="showMessage('signup')">Sign Up / নিবন্ধন</button>
-
-<p id="message"></p>
-</div>
-
-<button class="secondary" onclick="changeLanguage()" id="language">
-English
-</button>
-
-</main>
-
-<footer>© TIGER LIVE • Powered by TIGER LIVE</footer>
-
-<script>
-let english = false;
-
-function changeLanguage(){
- english = !english;
-
- document.getElementById("welcome").innerText =
- english ? "Welcome to TIGER LIVE" : "স্বাগতম TIGER LIVE-এ";
-
- document.getElementById("subtitle").innerText =
- english ? "Your own live community platform" :
- "আপনার নিজের লাইভ কমিউনিটি প্ল্যাটফর্ম";
-
- document.getElementById("heading").innerText =
- english ? "Welcome to TIGER LIVE" : "TIGER LIVE-এ স্বাগতম";
-
- document.getElementById("description").innerText =
- english ? "Use in Bengali and English." :
- "বাংলা ও ইংরেজি ভাষায় ব্যবহার করুন।";
-
- document.getElementById("language").innerText =
- english ? "বাংলা" : "English";
-
- document.getElementById("message").innerText = "";
-}
-
-function showMessage(type){
- let messages = {
-  live: english ? "Live feature is coming soon." : "লাইভ ফিচার শীঘ্রই আসছে।",
-  login: english ? "Login feature is coming soon." : "লগইন ফিচার শীঘ্রই আসছে।",
-  signup: english ? "Registration is coming soon." : "রেজিস্ট্রেশন শীঘ্রই আসছে।"
- };
- document.getElementById("message").innerText = messages[type];
-}
-</script>
-
+<h1>🐅 TIGER LIVE</h1>
+<h2>স্বাগতম</h2>
+<p>আপনার নিজের লাইভ প্ল্যাটফর্ম</p>
+<button>শুরু করুন</button>
 </body>
 </html>
