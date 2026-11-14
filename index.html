@@ -16,6 +16,7 @@ header{padding:17px;display:flex;justify-content:space-between;background:#19142
 h1{color:#ffad26;font-size:35px}
 .hero p{line-height:1.9;color:#eee}
 .btn{padding:13px 22px;margin:7px;border:0;border-radius:10px;background:#ffad26;color:#21152b;font-weight:bold;font-size:15px;cursor:pointer}
+.btn:disabled{opacity:.6}
 .secondary{background:#392d4d;color:white}
 section{padding:30px 15px}
 h2{text-align:center;color:#ffad26}
@@ -75,7 +76,6 @@ footer{text-align:center;padding:25px;color:#aaa;background:#191427}
 </section>
 
 <div id="userBar"></div>
-
 <footer>© 2026 TIGER LIVE | All Rights Reserved</footer>
 
 <div class="modal" id="authModal">
@@ -103,86 +103,147 @@ footer{text-align:center;padding:25px;color:#aaa;background:#191427}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
-<script>
-let mode='login';
 
-function openAuth(type){
- mode=type;
+<script>
+let mode = 'login';
+
+function openAuth(type) {
+ mode = type;
+
  document.getElementById('authModal').classList.add('show');
- document.getElementById('authTitle').textContent=type==='login'?'TIGER LIVE লগইন':'নতুন অ্যাকাউন্ট তৈরি';
- document.getElementById('nameField').style.display=type==='register'?'block':'none';
- document.getElementById('submitBtn').textContent=type==='login'?'লগইন করুন':'রেজিস্ট্রেশন করুন';
- document.getElementById('switchText').innerHTML=type==='login'
- ?'নতুন ব্যবহারকারী? <a onclick="openAuth(\\'register\\')">রেজিস্ট্রেশন করুন</a>'
- :'আগে অ্যাকাউন্ট আছে? <a onclick="openAuth(\\'login\\')">লগইন করুন</a>';
- document.getElementById('notice').textContent='';
+ document.getElementById('authTitle').textContent =
+  type === 'login' ? 'TIGER LIVE লগইন' : 'নতুন অ্যাকাউন্ট তৈরি';
+
+ document.getElementById('nameField').style.display =
+  type === 'register' ? 'block' : 'none';
+
+ document.getElementById('submitBtn').textContent =
+  type === 'login' ? 'লগইন করুন' : 'রেজিস্ট্রেশন করুন';
+
+ const switchText = document.getElementById('switchText');
+
+ switchText.innerHTML = type === 'login'
+  ? 'নতুন ব্যবহারকারী? <a href="#" id="switchAuth">রেজিস্ট্রেশন করুন</a>'
+  : 'আগে অ্যাকাউন্ট আছে? <a href="#" id="switchAuth">লগইন করুন</a>';
+
+ switchText.querySelector('#switchAuth').addEventListener('click', function(e) {
+  e.preventDefault();
+  openAuth(mode === 'login' ? 'register' : 'login');
+ });
+
+ document.getElementById('notice').textContent = '';
 }
-function closeAuth(){
+
+function closeAuth() {
  document.getElementById('authModal').classList.remove('show');
 }
-function showUser(user){
- const bar=document.getElementById('userBar');
- if(!user){bar.style.display='none';bar.textContent='';return;}
- bar.style.display='block';
- bar.textContent='স্বাগতম, '+(user.user_metadata?.full_name||user.email||'ব্যবহারকারী')+' ';
- const btn=document.createElement('button');
- btn.className='btn secondary';
- btn.textContent='লগআউট';
- btn.onclick=signOut;
+
+function showUser(user) {
+ const bar = document.getElementById('userBar');
+
+ if (!user) {
+  bar.style.display = 'none';
+  bar.textContent = '';
+  return;
+ }
+
+ bar.style.display = 'block';
+ bar.textContent = 'স্বাগতম, ' +
+  (user.user_metadata?.full_name || user.email || 'ব্যবহারকারী') + ' ';
+
+ const btn = document.createElement('button');
+ btn.className = 'btn secondary';
+ btn.textContent = 'লগআউট';
+ btn.onclick = signOut;
  bar.appendChild(btn);
 }
-async function signOut(){
- const {error}=await window.supabaseClient.auth.signOut();
- if(error) alert(error.message);
+
+async function signOut() {
+ const client = window.supabaseClient;
+ if (!client) return;
+
+ const {error} = await client.auth.signOut();
+ if (error) alert(error.message);
 }
-document.getElementById('authForm').addEventListener('submit',async function(e){
+
+document.getElementById('authForm').addEventListener('submit', async function(e) {
  e.preventDefault();
- const client=window.supabaseClient;
- const notice=document.getElementById('notice');
- const button=document.getElementById('submitBtn');
- if(!client){notice.textContent='Supabase সংযোগ পাওয়া যায়নি।';return;}
- const email=document.getElementById('email').value.trim();
- const password=document.getElementById('password').value;
- button.disabled=true;
- notice.textContent='অপেক্ষা করুন...';
- try{
-  if(mode==='register'){
-   const name=document.getElementById('fullName').value.trim();
-   if(!name){notice.textContent='আপনার নাম লিখুন।';return;}
-   const {data,error}=await client.auth.signUp({
-    email:email,
-    password:password,
-    options:{data:{full_name:name}}
+
+ const client = window.supabaseClient;
+ const notice = document.getElementById('notice');
+ const button = document.getElementById('submitBtn');
+
+ if (!client) {
+  notice.textContent = 'Supabase সংযোগ পাওয়া যায়নি।';
+  return;
+ }
+
+ const email = document.getElementById('email').value.trim();
+ const password = document.getElementById('password').value;
+
+ button.disabled = true;
+ notice.textContent = 'অপেক্ষা করুন...';
+
+ try {
+  if (mode === 'register') {
+   const name = document.getElementById('fullName').value.trim();
+
+   if (!name) {
+    notice.textContent = 'আপনার নাম লিখুন।';
+    return;
+   }
+
+   const {data, error} = await client.auth.signUp({
+    email: email,
+    password: password,
+    options: {data: {full_name: name}}
    });
-   if(error)throw error;
-   if(data.session){
+
+   if (error) throw error;
+
+   if (data.session) {
     showUser(data.user);
     closeAuth();
     alert('রেজিস্ট্রেশন সফল হয়েছে!');
-   }else{
-    notice.textContent='রেজিস্ট্রেশন সফল। ইমেইলে নিশ্চিতকরণ লিংক এলে সেটি খুলুন।';
+   } else {
+    notice.textContent =
+     'রেজিস্ট্রেশন সফল। ইমেইলে নিশ্চিতকরণ লিংক এলে সেটি খুলুন।';
    }
-  }else{
-   const {data,error}=await client.auth.signInWithPassword({email,password});
-   if(error)throw error;
+  } else {
+   const {data, error} = await client.auth.signInWithPassword({
+    email: email,
+    password: password
+   });
+
+   if (error) throw error;
+
    showUser(data.user);
    closeAuth();
    alert('লগইন সফল হয়েছে!');
   }
- }catch(error){
-  notice.textContent=error.message||'সমস্যা হয়েছে। আবার চেষ্টা করুন।';
- }finally{
-  button.disabled=false;
-  button.textContent=mode==='login'?'লগইন করুন':'রেজিস্ট্রেশন করুন';
+ } catch (error) {
+  notice.textContent = error.message || 'সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+ } finally {
+  button.disabled = false;
+  button.textContent = mode === 'login' ? 'লগইন করুন' : 'রেজিস্ট্রেশন করুন';
  }
 });
-(async function(){
- const client=window.supabaseClient;
- if(!client)return;
- const {data}=await client.auth.getSession();
- showUser(data.session?.user||null);
- client.auth.onAuthStateChange((_event,session)=>showUser(session?.user||null));
+
+(async function() {
+ const client = window.supabaseClient;
+ if (!client) return;
+
+ const {data, error} = await client.auth.getSession();
+
+ if (!error) {
+  showUser(data.session?.user || null);
+ }
+
+ client.auth.onAuthStateChange(function(event, session) {
+  showUser(session?.user || null);
+ });
 })();
 </script>
+
 </body>
 </html>
