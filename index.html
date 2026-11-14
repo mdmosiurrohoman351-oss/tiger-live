@@ -3,56 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100d1d">
 <title>TIGER LIVE</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#10101b;color:white;
- font-family:Arial,sans-serif;
-}
-header{
- background:#191927;padding:18px;
- display:flex;justify-content:space-between;
- align-items:center;border-bottom:1px solid #333;
-}
-.logo{font-size:24px;font-weight:bold;color:#ff9d00}
-.lang{background:#29293a;color:white;padding:8px;border-radius:8px}
-.hero{
- text-align:center;padding:55px 18px 40px;
- background:linear-gradient(145deg,#29133e,#111827,#301500);
-}
-.tiger{font-size:65px}
-h1{font-size:34px;color:#ff9d00;margin:12px}
-.hero p{color:#ddd;line-height:1.7}
-.btn{
- display:inline-block;padding:13px 23px;
- margin:8px;border:0;border-radius:10px;
- background:#ff9d00;color:#171717;
- font-weight:bold;font-size:16px;text-decoration:none;
-}
-.btn2{background:#29293a;color:white}
-section{padding:25px 18px}
-h2{text-align:center;color:#ffad24}
-.cards{
- display:grid;grid-template-columns:repeat(2,1fr);
- gap:13px;max-width:650px;margin:auto;
-}
-.card{
- background:#202033;padding:22px 10px;
- border-radius:14px;text-align:center;
- border:1px solid #34344a;
-}
-.card .emoji{font-size:32px}
-.card h3{font-size:16px;margin-bottom:5px}
-.card p{font-size:13px;color:#bbb}
-.admin{
- margin:20px;padding:22px;background:#252036;
- border-radius:14px;text-align:center;
-}
-footer{
- text-align:center;padding:22px;color:#aaa;
- background:#191927;font-size:13px;
-}
+body{margin:0;background:#100d1d;color:white;font-family:Arial,sans-serif}
+header{padding:17px;display:flex;justify-content:space-between;background:#191427;border-bottom:1px solid #44344f}
+.logo{font-size:23px;font-weight:bold;color:#ffad26}
+.lang{color:#ddd}
+.hero{text-align:center;padding:55px 15px;background:linear-gradient(145deg,#54205f,#21152f,#100d1d)}
+.tiger{font-size:70px}
+h1{color:#ffad26;font-size:35px}
+.hero p{line-height:1.9;color:#eee}
+.btn{padding:13px 22px;margin:7px;border:0;border-radius:10px;background:#ffad26;color:#21152b;font-weight:bold;font-size:15px;cursor:pointer}
+.secondary{background:#392d4d;color:white}
+section{padding:30px 15px}
+h2{text-align:center;color:#ffad26}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;max-width:700px;margin:auto}
+.card{background:#211a32;padding:22px 10px;border:1px solid #44344f;border-radius:14px;text-align:center}
+.emoji{font-size:34px}
+.card p{color:#bbb;font-size:13px}
+.join{max-width:500px;margin:auto;background:#211a32;padding:22px;border-radius:15px;text-align:center}
+.modal{display:none;position:fixed;inset:0;background:#000c;align-items:center;justify-content:center;padding:15px;z-index:10}
+.modal.show{display:flex}
+.dialog{width:100%;max-width:400px;background:#211a32;padding:23px;border-radius:16px;position:relative}
+.close{position:absolute;right:12px;top:8px;background:none;border:0;color:white;font-size:27px}
+.field{display:block;margin:13px 0;color:#ddd}
+.field input{display:block;width:100%;padding:13px;margin-top:7px;background:#100d1d;color:white;border:1px solid #554568;border-radius:8px;font-size:16px}
+.dialog .btn{width:100%}
+.notice{color:#ffd27a;font-size:13px;line-height:1.6}
+.switch{text-align:center;color:#ddd;font-size:14px}
+.switch a{color:#ffad26;cursor:pointer}
+#userBar{display:none;text-align:center;padding:16px;background:#211a32}
+footer{text-align:center;padding:25px;color:#aaa;background:#191427}
+@media(min-width:650px){.cards{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -66,49 +50,139 @@ footer{
  <div class="tiger">🐅</div>
  <h1>WELCOME TO TIGER LIVE</h1>
  <p>আপনার নিজের লাইভ কমিউনিটিতে স্বাগতম।<br>
- বন্ধুদের সাথে যুক্ত হন, লাইভ উপভোগ করুন।</p>
- <a class="btn" href="#login">শুরু করুন</a>
- <a class="btn btn2" href="#features">আরও জানুন</a>
+ বন্ধুদের সাথে যুক্ত হন এবং লাইভ উপভোগ করুন।</p>
+ <button class="btn" onclick="openAuth('register')">এখনই যোগ দিন</button>
+ <a href="#features"><button class="btn secondary">আরও জানুন</button></a>
 </div>
 
 <section id="features">
  <h2>✨ TIGER LIVE FEATURES</h2>
  <div class="cards">
-  <div class="card">
-   <div class="emoji">📺</div>
-   <h3>লাইভ রুম</h3>
-   <p>লাইভ সম্প্রচারের সুবিধা</p>
-  </div>
-  <div class="card">
-   <div class="emoji">🎁</div>
-   <h3>ভার্চুয়াল গিফট</h3>
-   <p>বন্ধুদের গিফট পাঠান</p>
-  </div>
-  <div class="card">
-   <div class="emoji">👤</div>
-   <h3>প্রোফাইল</h3>
-   <p>নিজের অ্যাকাউন্ট পরিচালনা</p>
-  </div>
-  <div class="card">
-   <div class="emoji">💬</div>
-   <h3>চ্যাট</h3>
-   <p>সবার সাথে যোগাযোগ</p>
-  </div>
+  <div class="card"><div class="emoji">📺</div><h3>লাইভ রুম</h3><p>লাইভ সম্প্রচার</p></div>
+  <div class="card"><div class="emoji">🎁</div><h3>গিফট</h3><p>ভার্চুয়াল উপহার</p></div>
+  <div class="card"><div class="emoji">👤</div><h3>প্রোফাইল</h3><p>নিজের অ্যাকাউন্ট</p></div>
+  <div class="card"><div class="emoji">💬</div><h3>চ্যাট</h3><p>বন্ধুদের সাথে যোগাযোগ</p></div>
  </div>
 </section>
 
-<section id="login">
- <div class="admin">
+<section>
+ <div class="join">
   <h2>🐅 TIGER LIVE-এ যোগ দিন</h2>
-  <p>আপনার অ্যাকাউন্ট তৈরি করে শুরু করুন।</p>
-  <button class="btn" onclick="alert('লগইন ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে')">লগইন</button>
-  <button class="btn btn2" onclick="alert('রেজিস্ট্রেশন ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে')">রেজিস্ট্রেশন</button>
+  <p>আপনার অ্যাকাউন্ট তৈরি করুন অথবা লগইন করুন।</p>
+  <button class="btn" onclick="openAuth('login')">লগইন</button>
+  <button class="btn secondary" onclick="openAuth('register')">রেজিস্ট্রেশন</button>
  </div>
 </section>
 
-<footer>
- © 2026 TIGER LIVE | All Rights Reserved
-</footer>
+<div id="userBar"></div>
 
+<footer>© 2026 TIGER LIVE | All Rights Reserved</footer>
+
+<div class="modal" id="authModal">
+ <div class="dialog">
+  <button class="close" onclick="closeAuth()">×</button>
+  <h2 id="authTitle">লগইন</h2>
+  <form id="authForm">
+   <div id="nameField" style="display:none">
+    <label class="field">আপনার নাম
+     <input id="fullName" type="text" maxlength="60">
+    </label>
+   </div>
+   <label class="field">ইমেইল
+    <input id="email" type="email" required placeholder="আপনার ইমেইল">
+   </label>
+   <label class="field">পাসওয়ার্ড
+    <input id="password" type="password" minlength="6" required placeholder="কমপক্ষে ৬ অক্ষর">
+   </label>
+   <button class="btn" id="submitBtn" type="submit">লগইন করুন</button>
+   <p class="notice" id="notice" aria-live="polite"></p>
+  </form>
+  <div class="switch" id="switchText"></div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+let mode='login';
+
+function openAuth(type){
+ mode=type;
+ document.getElementById('authModal').classList.add('show');
+ document.getElementById('authTitle').textContent=type==='login'?'TIGER LIVE লগইন':'নতুন অ্যাকাউন্ট তৈরি';
+ document.getElementById('nameField').style.display=type==='register'?'block':'none';
+ document.getElementById('submitBtn').textContent=type==='login'?'লগইন করুন':'রেজিস্ট্রেশন করুন';
+ document.getElementById('switchText').innerHTML=type==='login'
+ ?'নতুন ব্যবহারকারী? <a onclick="openAuth(\\'register\\')">রেজিস্ট্রেশন করুন</a>'
+ :'আগে অ্যাকাউন্ট আছে? <a onclick="openAuth(\\'login\\')">লগইন করুন</a>';
+ document.getElementById('notice').textContent='';
+}
+function closeAuth(){
+ document.getElementById('authModal').classList.remove('show');
+}
+function showUser(user){
+ const bar=document.getElementById('userBar');
+ if(!user){bar.style.display='none';bar.textContent='';return;}
+ bar.style.display='block';
+ bar.textContent='স্বাগতম, '+(user.user_metadata?.full_name||user.email||'ব্যবহারকারী')+' ';
+ const btn=document.createElement('button');
+ btn.className='btn secondary';
+ btn.textContent='লগআউট';
+ btn.onclick=signOut;
+ bar.appendChild(btn);
+}
+async function signOut(){
+ const {error}=await window.supabaseClient.auth.signOut();
+ if(error) alert(error.message);
+}
+document.getElementById('authForm').addEventListener('submit',async function(e){
+ e.preventDefault();
+ const client=window.supabaseClient;
+ const notice=document.getElementById('notice');
+ const button=document.getElementById('submitBtn');
+ if(!client){notice.textContent='Supabase সংযোগ পাওয়া যায়নি।';return;}
+ const email=document.getElementById('email').value.trim();
+ const password=document.getElementById('password').value;
+ button.disabled=true;
+ notice.textContent='অপেক্ষা করুন...';
+ try{
+  if(mode==='register'){
+   const name=document.getElementById('fullName').value.trim();
+   if(!name){notice.textContent='আপনার নাম লিখুন।';return;}
+   const {data,error}=await client.auth.signUp({
+    email:email,
+    password:password,
+    options:{data:{full_name:name}}
+   });
+   if(error)throw error;
+   if(data.session){
+    showUser(data.user);
+    closeAuth();
+    alert('রেজিস্ট্রেশন সফল হয়েছে!');
+   }else{
+    notice.textContent='রেজিস্ট্রেশন সফল। ইমেইলে নিশ্চিতকরণ লিংক এলে সেটি খুলুন।';
+   }
+  }else{
+   const {data,error}=await client.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   showUser(data.user);
+   closeAuth();
+   alert('লগইন সফল হয়েছে!');
+  }
+ }catch(error){
+  notice.textContent=error.message||'সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+ }finally{
+  button.disabled=false;
+  button.textContent=mode==='login'?'লগইন করুন':'রেজিস্ট্রেশন করুন';
+ }
+});
+(async function(){
+ const client=window.supabaseClient;
+ if(!client)return;
+ const {data}=await client.auth.getSession();
+ showUser(data.session?.user||null);
+ client.auth.onAuthStateChange((_event,session)=>showUser(session?.user||null));
+})();
+</script>
 </body>
-</html>upabae
+</html>
