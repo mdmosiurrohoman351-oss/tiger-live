@@ -1,248 +1,422 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#100d1d">
-<title>TIGER LIVE</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#100d1d;color:white;font-family:Arial,sans-serif}
-header{padding:17px;display:flex;justify-content:space-between;background:#191427;border-bottom:1px solid #44344f}
-.logo{font-size:23px;font-weight:bold;color:#ffad26}
-.lang{color:#ddd}
-.hero{text-align:center;padding:55px 15px;background:linear-gradient(145deg,#54205f,#21152f,#100d1d)}
-.tiger{font-size:70px}
-h1{color:#ffad26;font-size:35px}
-.hero p{line-height:1.9;color:#eee}
-.btn{padding:13px 22px;margin:7px;border:0;border-radius:10px;background:#ffad26;color:#21152b;font-weight:bold;font-size:15px;cursor:pointer}
-.btn:disabled{opacity:.6}
-.secondary{background:#392d4d;color:white}
-section{padding:30px 15px}
-h2{text-align:center;color:#ffad26}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;max-width:700px;margin:auto}
-.card{background:#211a32;padding:22px 10px;border:1px solid #44344f;border-radius:14px;text-align:center}
-.emoji{font-size:34px}
-.card p{color:#bbb;font-size:13px}
-.join{max-width:500px;margin:auto;background:#211a32;padding:22px;border-radius:15px;text-align:center}
-.modal{display:none;position:fixed;inset:0;background:#000c;align-items:center;justify-content:center;padding:15px;z-index:10}
-.modal.show{display:flex}
-.dialog{width:100%;max-width:400px;background:#211a32;padding:23px;border-radius:16px;position:relative}
-.close{position:absolute;right:12px;top:8px;background:none;border:0;color:white;font-size:27px}
-.field{display:block;margin:13px 0;color:#ddd}
-.field input{display:block;width:100%;padding:13px;margin-top:7px;background:#100d1d;color:white;border:1px solid #554568;border-radius:8px;font-size:16px}
-.dialog .btn{width:100%}
-.notice{color:#ffd27a;font-size:13px;line-height:1.6}
-.switch{text-align:center;color:#ddd;font-size:14px}
-.switch a{color:#ffad26;cursor:pointer}
-#userBar{display:none;text-align:center;padding:16px;background:#211a32}
-footer{text-align:center;padding:25px;color:#aaa;background:#191427}
-@media(min-width:650px){.cards{grid-template-columns:repeat(4,1fr)}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIGER LIVE</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg,#10051f,#241044,#090512);
+      min-height: 100vh;
+    }
+    header {
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ffffff22;
+    }
+    .logo {
+      color: #ffd45c;
+      font-size: 25px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .top-btn, button {
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 18px;
+      background: linear-gradient(90deg,#ffbd35,#ffdf75);
+      color: #241044;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hero {
+      text-align: center;
+      padding: 65px 18px 35px;
+    }
+    .hero h1 {
+      color: #ffd45c;
+      font-size: 38px;
+      margin: 10px 0;
+    }
+    .hero p {
+      color: #ddd;
+      line-height: 1.7;
+    }
+    .main-btn {
+      margin: 12px 5px;
+      min-width: 135px;
+    }
+    .features {
+      max-width: 950px;
+      margin: 25px auto;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+      gap: 16px;
+    }
+    .feature {
+      background: #ffffff0d;
+      border: 1px solid #ffffff20;
+      border-radius: 14px;
+      padding: 25px 15px;
+      text-align: center;
+    }
+    .feature h3 { color: #ffd45c; }
+    .feature p { color: #ccc; line-height: 1.6; }
+    .user-area {
+      text-align: center;
+      padding: 15px;
+      color: #ffd45c;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: #000b;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+    .modal-box {
+      width: 100%;
+      max-width: 400px;
+      background: #211239;
+      border: 1px solid #d9a83d;
+      border-radius: 16px;
+      padding: 25px;
+      position: relative;
+    }
+    .modal-box h2 {
+      color: #ffd45c;
+      text-align: center;
+      margin-top: 5px;
+    }
+    .close {
+      position: absolute;
+      right: 14px;
+      top: 10px;
+      background: transparent;
+      color: white;
+      font-size: 25px;
+      padding: 2px 8px;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ffffff40;
+      background: #100820;
+      color: white;
+      outline: none;
+    }
+    input:focus { border-color: #ffd45c; }
+    .submit-btn { width: 100%; margin-top: 12px; }
+    .switch {
+      text-align: center;
+      color: #ddd;
+      margin-top: 17px;
+      font-size: 14px;
+    }
+    .switch a {
+      color: #ffd45c;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    #notice {
+      text-align: center;
+      padding: 10px;
+      color: #ffd45c;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 10px;
+      color: #aaa;
+      border-top: 1px solid #ffffff20;
+      margin-top: 35px;
+    }
+  </style>
 </head>
 <body>
 
 <header>
- <div class="logo">🐅 TIGER LIVE</div>
- <div class="lang">বাংলা | EN</div>
+  <div class="logo">🐯 TIGER LIVE</div>
+  <button class="top-btn" onclick="openAuth('login')">Login</button>
 </header>
 
-<div class="hero">
- <div class="tiger">🐅</div>
- <h1>WELCOME TO TIGER LIVE</h1>
- <p>আপনার নিজের লাইভ কমিউনিটিতে স্বাগতম।<br>
- বন্ধুদের সাথে যুক্ত হন এবং লাইভ উপভোগ করুন।</p>
- <button class="btn" onclick="openAuth('register')">এখনই যোগ দিন</button>
- <a href="#features"><button class="btn secondary">আরও জানুন</button></a>
-</div>
-
-<section id="features">
- <h2>✨ TIGER LIVE FEATURES</h2>
- <div class="cards">
-  <div class="card"><div class="emoji">📺</div><h3>লাইভ রুম</h3><p>লাইভ সম্প্রচার</p></div>
-  <div class="card"><div class="emoji">🎁</div><h3>গিফট</h3><p>ভার্চুয়াল উপহার</p></div>
-  <div class="card"><div class="emoji">👤</div><h3>প্রোফাইল</h3><p>নিজের অ্যাকাউন্ট</p></div>
-  <div class="card"><div class="emoji">💬</div><h3>চ্যাট</h3><p>বন্ধুদের সাথে যোগাযোগ</p></div>
- </div>
+<section class="hero">
+  <h1>WELCOME TO TIGER LIVE</h1>
+  <p>আপনার নিজের লাইভ কমিউনিটিতে স্বাগতম।<br>
+  Join, Connect, Chat and Enjoy!</p>
+  <button class="main-btn" onclick="openAuth('register')">Join Now</button>
+  <button class="main-btn" onclick="openAuth('login')">Login</button>
 </section>
 
-<section>
- <div class="join">
-  <h2>🐅 TIGER LIVE-এ যোগ দিন</h2>
-  <p>আপনার অ্যাকাউন্ট তৈরি করুন অথবা লগইন করুন।</p>
-  <button class="btn" onclick="openAuth('login')">লগইন</button>
-  <button class="btn secondary" onclick="openAuth('register')">রেজিস্ট্রেশন</button>
- </div>
+<div id="userArea" class="user-area"></div>
+
+<section class="features">
+  <div class="feature">
+    <h3>🎥 LIVE ROOM</h3>
+    <p>বন্ধুদের সঙ্গে লাইভ রুমে যুক্ত হওয়ার সুবিধা।</p>
+  </div>
+  <div class="feature">
+    <h3>💬 LIVE CHAT</h3>
+    <p>বন্ধুদের সঙ্গে কথা বলুন এবং যোগাযোগ রাখুন।</p>
+  </div>
+  <div class="feature">
+    <h3>🎁 GIFTS</h3>
+    <p>লাইভ কমিউনিটিতে উপহার পাঠানোর ফিচার।</p>
+  </div>
+  <div class="feature">
+    <h3>👤 PROFILE</h3>
+    <p>নিজের অ্যাকাউন্ট ও প্রোফাইল পরিচালনা করুন।</p>
+  </div>
 </section>
 
-<div id="userBar"></div>
-<footer>© 2026 TIGER LIVE | All Rights Reserved</footer>
+<footer>
+  © 2026 TIGER LIVE. All Rights Reserved.
+</footer>
 
 <div class="modal" id="authModal">
- <div class="dialog">
-  <button class="close" onclick="closeAuth()">×</button>
-  <h2 id="authTitle">লগইন</h2>
-  <form id="authForm">
-   <div id="nameField" style="display:none">
-    <label class="field">আপনার নাম
-     <input id="fullName" type="text" maxlength="60">
-    </label>
-   </div>
-   <label class="field">ইমেইল
-    <input id="email" type="email" required placeholder="আপনার ইমেইল">
-   </label>
-   <label class="field">পাসওয়ার্ড
-    <input id="password" type="password" minlength="6" required placeholder="কমপক্ষে ৬ অক্ষর">
-   </label>
-   <button class="btn" id="submitBtn" type="submit">লগইন করুন</button>
-   <p class="notice" id="notice" aria-live="polite"></p>
-  </form>
-  <div class="switch" id="switchText"></div>
- </div>
+  <div class="modal-box">
+    <button class="close" onclick="closeAuth()">×</button>
+    <h2 id="formTitle">TIGER LIVE</h2>
+    <form id="authForm">
+      <div id="nameGroup" style="display:none">
+        <input id="name" type="text" placeholder="আপনার নাম">
+      </div>
+
+      <input id="email" type="email" placeholder="Email Address" required>
+
+      <div id="passwordGroup">
+        <input id="password" type="password"
+          placeholder="Password" minlength="6">
+      </div>
+
+      <button id="submitBtn" class="submit-btn" type="submit">
+        Login
+      </button>
+    </form>
+
+    <div id="notice"></div>
+    <div id="switchArea" class="switch"></div>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-
 <script>
-let mode = 'login';
+  const client = window.supabaseClient;
 
-function openAuth(type) {
- mode = type;
+  let mode = "login";
 
- document.getElementById('authModal').classList.add('show');
- document.getElementById('authTitle').textContent =
-  type === 'login' ? 'TIGER LIVE লগইন' : 'নতুন অ্যাকাউন্ট তৈরি';
+  const modal = document.getElementById("authModal");
+  const form = document.getElementById("authForm");
+  const title = document.getElementById("formTitle");
+  const nameGroup = document.getElementById("nameGroup");
+  const passwordGroup = document.getElementById("passwordGroup");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const submitBtn = document.getElementById("submitBtn");
+  const notice = document.getElementById("notice");
+  const switchArea = document.getElementById("switchArea");
 
- document.getElementById('nameField').style.display =
-  type === 'register' ? 'block' : 'none';
-
- document.getElementById('submitBtn').textContent =
-  type === 'login' ? 'লগইন করুন' : 'রেজিস্ট্রেশন করুন';
-
- const switchText = document.getElementById('switchText');
-
- switchText.innerHTML = type === 'login'
-  ? 'নতুন ব্যবহারকারী? <a href="#" id="switchAuth">রেজিস্ট্রেশন করুন</a>'
-  : 'আগে অ্যাকাউন্ট আছে? <a href="#" id="switchAuth">লগইন করুন</a>';
-
- switchText.querySelector('#switchAuth').addEventListener('click', function(e) {
-  e.preventDefault();
-  openAuth(mode === 'login' ? 'register' : 'login');
- });
-
- document.getElementById('notice').textContent = '';
-}
-
-function closeAuth() {
- document.getElementById('authModal').classList.remove('show');
-}
-
-function showUser(user) {
- const bar = document.getElementById('userBar');
-
- if (!user) {
-  bar.style.display = 'none';
-  bar.textContent = '';
-  return;
- }
-
- bar.style.display = 'block';
- bar.textContent = 'স্বাগতম, ' +
-  (user.user_metadata?.full_name || user.email || 'ব্যবহারকারী') + ' ';
-
- const btn = document.createElement('button');
- btn.className = 'btn secondary';
- btn.textContent = 'লগআউট';
- btn.onclick = signOut;
- bar.appendChild(btn);
-}
-
-async function signOut() {
- const client = window.supabaseClient;
- if (!client) return;
-
- const {error} = await client.auth.signOut();
- if (error) alert(error.message);
-}
-
-document.getElementById('authForm').addEventListener('submit', async function(e) {
- e.preventDefault();
-
- const client = window.supabaseClient;
- const notice = document.getElementById('notice');
- const button = document.getElementById('submitBtn');
-
- if (!client) {
-  notice.textContent = 'Supabase সংযোগ পাওয়া যায়নি।';
-  return;
- }
-
- const email = document.getElementById('email').value.trim();
- const password = document.getElementById('password').value;
-
- button.disabled = true;
- notice.textContent = 'অপেক্ষা করুন...';
-
- try {
-  if (mode === 'register') {
-   const name = document.getElementById('fullName').value.trim();
-
-   if (!name) {
-    notice.textContent = 'আপনার নাম লিখুন।';
-    return;
-   }
-
-   const {data, error} = await client.auth.signUp({
-    email: email,
-    password: password,
-    options: {data: {full_name: name}}
-   });
-
-   if (error) throw error;
-
-   if (data.session) {
-    showUser(data.user);
-    closeAuth();
-    alert('রেজিস্ট্রেশন সফল হয়েছে!');
-   } else {
-    notice.textContent =
-     'রেজিস্ট্রেশন সফল। ইমেইলে নিশ্চিতকরণ লিংক এলে সেটি খুলুন।';
-   }
-  } else {
-   const {data, error} = await client.auth.signInWithPassword({
-    email: email,
-    password: password
-   });
-
-   if (error) throw error;
-
-   showUser(data.user);
-   closeAuth();
-   alert('লগইন সফল হয়েছে!');
+  function message(text) {
+    notice.textContent = text;
   }
- } catch (error) {
-  notice.textContent = error.message || 'সমস্যা হয়েছে। আবার চেষ্টা করুন।';
- } finally {
-  button.disabled = false;
-  button.textContent = mode === 'login' ? 'লগইন করুন' : 'রেজিস্ট্রেশন করুন';
- }
-});
 
-(async function() {
- const client = window.supabaseClient;
- if (!client) return;
+  function openAuth(type) {
+    mode = type;
+    modal.style.display = "flex";
+    notice.textContent = "";
 
- const {data, error} = await client.auth.getSession();
+    nameGroup.style.display = type === "register" ? "block" : "none";
+    passwordGroup.style.display =
+      type === "forgot" ? "none" : "block";
 
- if (!error) {
-  showUser(data.session?.user || null);
- }
+    nameInput.required = type === "register";
+    passwordInput.required =
+      type === "login" || type === "register" || type === "recovery";
 
- client.auth.onAuthStateChange(function(event, session) {
-  showUser(session?.user || null);
- });
-})();
+    if (type === "login") {
+      title.textContent = "Welcome Back";
+      submitBtn.textContent = "Login";
+      passwordInput.placeholder = "Password";
+      switchArea.innerHTML =
+        'নতুন অ্যাকাউন্ট? <a onclick="openAuth(\'register\')">Register</a><br><br>' +
+        '<a onclick="openAuth(\'forgot\')">পাসওয়ার্ড ভুলে গেছেন?</a>';
+    }
+
+    if (type === "register") {
+      title.textContent = "Create Account";
+      submitBtn.textContent = "Register";
+      passwordInput.placeholder = "Create Password (minimum 6 characters)";
+      switchArea.innerHTML =
+        'আগে অ্যাকাউন্ট আছে? <a onclick="openAuth(\'login\')">Login</a>';
+    }
+
+    if (type === "forgot") {
+      title.textContent = "Reset Password";
+      submitBtn.textContent = "Send Reset Link";
+      switchArea.innerHTML =
+        '<a onclick="openAuth(\'login\')">Login-এ ফিরে যান</a>';
+    }
+
+    if (type === "recovery") {
+      title.textContent = "নতুন পাসওয়ার্ড দিন";
+      submitBtn.textContent = "Update Password";
+      passwordInput.placeholder = "New Password (minimum 6 characters)";
+      switchArea.innerHTML = "";
+    }
+  }
+
+  function closeAuth() {
+    modal.style.display = "none";
+    form.reset();
+    notice.textContent = "";
+  }
+
+  function showUser(user) {
+    const area = document.getElementById("userArea");
+    area.replaceChildren();
+
+    if (!user) return;
+
+    const text = document.createElement("p");
+    text.textContent = "স্বাগতম, " + (user.email || "User");
+    area.appendChild(text);
+
+    const logout = document.createElement("button");
+    logout.textContent = "Logout";
+    logout.onclick = async function() {
+      if (!client) return;
+      const { error } = await client.auth.signOut();
+      if (error) message(error.message);
+    };
+    area.appendChild(logout);
+  }
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    if (!client) {
+      message("Supabase সংযোগ পাওয়া যায়নি। supabase.js ফাইল পরীক্ষা করুন।");
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const name = nameInput.value.trim();
+    const submittedMode = mode;
+
+    submitBtn.disabled = true;
+    message("অনুগ্রহ করে অপেক্ষা করুন...");
+
+    try {
+      if (submittedMode === "register") {
+        const { data, error } = await client.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { full_name: name }
+          }
+        });
+
+        if (error) throw error;
+
+        message(
+          "রেজিস্ট্রেশন সফল হয়েছে। ইমেইলে confirmation link এলে সেটি খুলুন।"
+        );
+        form.reset();
+      }
+
+      else if (submittedMode === "login") {
+        const { data, error } =
+          await client.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+        if (error) throw error;
+
+        message("লগইন সফল হয়েছে!");
+        showUser(data.user);
+        closeAuth();
+      }
+
+      else if (submittedMode === "forgot") {
+        const { error } = await client.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo:
+              "https://mdmosiurrohoman351-oss.github.io/tiger-live/"
+          }
+        );
+
+        if (error) throw error;
+
+        message("পাসওয়ার্ড রিসেট করার লিংক আপনার ইমেইলে পাঠানো হয়েছে।");
+      }
+
+      else if (submittedMode === "recovery") {
+        if (password.length < 6) {
+          throw new Error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+        }
+
+        const { error } = await client.auth.updateUser({
+          password: password
+        });
+
+        if (error) throw error;
+
+        message("নতুন পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে।");
+        form.reset();
+        setTimeout(function() {
+          openAuth("login");
+        }, 1500);
+      }
+
+    } catch (error) {
+      message("সমস্যা হয়েছে: " + error.message);
+    } finally {
+      submitBtn.disabled = false;
+
+      if (mode === "login") submitBtn.textContent = "Login";
+      if (mode === "register") submitBtn.textContent = "Register";
+      if (mode === "forgot") submitBtn.textContent = "Send Reset Link";
+      if (mode === "recovery") submitBtn.textContent = "Update Password";
+    }
+  });
+
+  if (client) {
+    client.auth.getSession().then(function(result) {
+      if (result.data && result.data.session) {
+        showUser(result.data.session.user);
+      }
+    });
+
+    client.auth.onAuthStateChange(function(event, session) {
+      if (session && session.user) {
+        showUser(session.user);
+      }
+
+      if (event === "PASSWORD_RECOVERY") {
+        openAuth("recovery");
+      }
+    });
+  } else {
+    message("Supabase সংযোগ পাওয়া যায়নি।");
+  }
 </script>
 
 </body>
