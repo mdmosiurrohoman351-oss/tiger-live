@@ -1,78 +1,164 @@
--- TIGER LIVE USER DATABASE
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIGER LIVE</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;min-height:100vh;padding:20px;
+display:flex;align-items:center;justify-content:center;
+font-family:Arial,sans-serif;color:white;
+background:linear-gradient(135deg,#08091d,#251044,#090b20);
+}
+.container{
+width:100%;max-width:420px;padding:28px;
+border-radius:22px;text-align:center;
+background:#111126;border:1px solid #d69b43;
+box-shadow:0 0 30px #9d642b55;
+}
+h1{color:#ffc45c;font-size:32px}
+input{
+width:100%;padding:14px;margin:8px 0;
+border-radius:10px;border:1px solid #66517e;
+background:#211d35;color:white;font-size:16px;
+}
+button{
+width:100%;padding:14px;margin-top:10px;
+border:0;border-radius:10px;
+background:linear-gradient(90deg,#e9a52f,#ffda79);
+color:#21152b;font-weight:bold;font-size:16px;
+}
+.google{background:white;color:#222}
+a{color:#ffd078;cursor:pointer}
+.hidden{display:none}
+#message{overflow-wrap:anywhere;color:#ffd078}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🐅 TIGER LIVE</h1>
+<p>Welcome to TIGER LIVE</p>
 
-create table if not exists public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  user_id text unique not null,
-  display_name text,
-  created_at timestamptz default now()
-);
+<div id="loginBox">
+<h3>Login / লগইন</h3>
+<input id="loginEmail" placeholder="Email Address">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button class="google" onclick="googleLogin()">Continue with Google</button>
+<p><a onclick="showRegister()">Create New Account</a></p>
+<p><a onclick="resetPassword()">Forgot Password?</a></p>
+</div>
 
--- Automatically create unique TIGER LIVE User ID
+<div id="registerBox" class="hidden">
+<h3>নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+<input id="regName" placeholder="আপনার নাম">
+<input id="regEmail" type="email" placeholder="Email">
+<input id="regPassword" type="password" placeholder="Password (কমপক্ষে ৬ অক্ষর)">
+<button onclick="register()">Register</button>
+<p><a onclick="showLogin()">Back to Login</a></p>
+</div>
 
-create or replace function public.create_tiger_profile()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  new_user_id text;
-begin
-  loop
-    new_user_id :=
-      'TL' || upper(substr(
-        replace(gen_random_uuid()::text, '-', ''), 1, 8
-      ));
+<div id="profileBox" class="hidden">
+<h3>স্বাগতম TIGER LIVE-এ!</h3>
+<p id="profileName"></p>
+<p id="profileId"></p>
+<button onclick="logout()">Logout</button>
+</div>
 
-    exit when not exists (
-      select 1 from public.profiles
-      where user_id = new_user_id
-    );
-  end loop;
+<p id="message"></p>
+</div>
 
-  insert into public.profiles (
-    id,
-    user_id,
-    display_name
-  )
-  values (
-    new.id,
-    new_user_id,
-    coalesce(
-      new.raw_user_meta_data->>'full_name',
-      new.raw_user_meta_data->>'name',
-      split_part(new.email, '@', 1),
-      'TIGER User'
-    )
-  );
+<script>
+const sb=window.supabaseClient;
 
-  return new;
-end;
-$$;
+function msg(t){document.getElementById("message").textContent=t}
+function showRegister(){
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.remove("hidden");
+msg("");
+}
+function showLogin(){
+document.getElementById("registerBox").classList.add("hidden");
+document.getElementById("loginBox").classList.remove("hidden");
+msg("");
+}
 
--- Create profile automatically for every new account
+async function register(){
+if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+const name=document.getElementById("regName").value.trim();
+const email=document.getElementById("regEmail").value.trim();
+const password=document.getElementById("regPassword").value;
+if(!name||!email||!password)return msg("সব ঘর পূরণ করুন");
+if(password.length<6)return msg("Password কমপক্ষে ৬ অক্ষরের দিন");
+msg("অ্যাকাউন্ট তৈরি হচ্ছে...");
+const {data,error}=await sb.auth.signUp({
+email,password,options:{data:{full_name:name}}
+});
+if(error)return msg(error.message);
+if(data.session)await loadProfile(data.user);
+else{showLogin();msg("ইমেইল যাচাই করে লগইন করুন");}
+}
 
-drop trigger if exists on_tiger_user_created on auth.users;
+async function login(){
+if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+const email=document.getElementById("loginEmail").value.trim();
+const password=document.getElementById("loginPassword").value;
+if(!email||!password)return msg("Email ও Password দিন");
+if(!email.includes("@"))return msg("আপাতত Email দিয়ে লগইন করুন। User ID লগইন পরে চালু হবে।");
+msg("লগইন হচ্ছে...");
+const {data,error}=await sb.auth.signInWithPassword({email,password});
+if(error)return msg(error.message);
+await loadProfile(data.user);
+}
 
-create trigger on_tiger_user_created
-after insert on auth.users
-for each row
-execute function public.create_tiger_profile();
+async function googleLogin(){
+if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+const {error}=await sb.auth.signInWithOAuth({
+provider:"google",
+options:{redirectTo:location.origin+location.pathname}
+});
+if(error)msg(error.message);
+}
 
--- Enable security
+async function resetPassword(){
+if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+const email=document.getElementById("loginEmail").value.trim();
+if(!email.includes("@"))return msg("প্রথমে Email লিখুন");
+const {error}=await sb.auth.resetPasswordForEmail(email,{
+redirectTo:location.origin+location.pathname
+});
+if(error)return msg(error.message);
+msg("Password reset link ইমেইলে পাঠানো হয়েছে");
+}
 
-alter table public.profiles enable row level security;
+async function loadProfile(user){
+const {data,error}=await sb.from("profiles")
+.select("user_id,full_name").eq("id",user.id).maybeSingle();
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.add("hidden");
+document.getElementById("profileBox").classList.remove("hidden");
+document.getElementById("profileName").textContent="নাম: "+(data?.full_name||user.email);
+document.getElementById("profileId").textContent="TIGER LIVE ID: "+(data?.user_id||"পাওয়া যায়নি");
+msg(error?"Profile পড়তে সমস্যা: "+error.message:"স্বাগতম!");
+}
 
-revoke all on public.profiles from anon;
-revoke all on public.profiles from authenticated;
+async function logout(){
+const {error}=await sb.auth.signOut();
+if(error)return msg(error.message);
+document.getElementById("profileBox").classList.add("hidden");
+showLogin();msg("Logout সফল হয়েছে");
+}
 
-grant select on public.profiles to authenticated;
-
-drop policy if exists "Users can view own profile"
-on public.profiles;
-
-create policy "Users can view own profile"
-on public.profiles
-for select
-to authenticated
-using (auth.uid() = id);
+async function checkSession(){
+if(!sb)return msg("supabase.js সংযোগ পরীক্ষা করুন");
+const {data}=await sb.auth.getSession();
+if(data.session)await loadProfile(data.session.user);
+}
+checkSession();
+</script>
+</body>
+</html>
