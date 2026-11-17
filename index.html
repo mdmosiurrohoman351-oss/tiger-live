@@ -4,62 +4,168 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TIGER LIVE</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+
 <style>
 *{box-sizing:border-box}
+
 body{
-margin:0;min-height:100vh;padding:20px;
-display:flex;align-items:center;justify-content:center;
-font-family:Arial,sans-serif;color:white;
-background:linear-gradient(135deg,#08091d,#251044,#090b20);
+ margin:0;
+ min-height:100vh;
+ padding:12px;
+ font-family:Arial,sans-serif;
+ color:white;
+ background:#08091d;
+ position:relative;
+ isolation:isolate;
 }
+
+body::before{
+ content:"";
+ position:fixed;
+ inset:-5%;
+ z-index:-2;
+ background:
+ linear-gradient(180deg,rgba(5,7,22,.55),rgba(5,7,22,.48),rgba(5,7,22,.82)),
+ url("https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=1600&q=90");
+ background-size:cover;
+ background-position:center;
+ animation:tigerMove 22s ease-in-out infinite alternate;
+}
+
+body::after{
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.45));
+ pointer-events:none;
+}
+
+@keyframes tigerMove{
+ from{transform:scale(1);background-position:55% center}
+ to{transform:scale(1.09);background-position:45% center}
+}
+
 .container{
-width:100%;max-width:420px;padding:28px;
-border-radius:22px;text-align:center;
-background:#111126;border:1px solid #d69b43;
-box-shadow:0 0 30px #9d642b55;
+ width:100%;
+ max-width:430px;
+ margin:8px auto 20px;
+ padding:22px;
+ text-align:center;
+ border-radius:22px;
+ background:rgba(9,12,30,.84);
+ border:1px solid #e5ad50;
+ box-shadow:0 10px 40px #0009,0 0 25px #b77b3344;
+ backdrop-filter:blur(10px);
+ -webkit-backdrop-filter:blur(10px);
 }
-h1{color:#ffc45c;font-size:32px}
+
+.owner-photo{
+ width:105px;
+ height:105px;
+ border-radius:50%;
+ object-fit:cover;
+ border:4px solid #ffc45c;
+ box-shadow:0 0 25px #ffc45c88;
+}
+
+h1{
+ color:#ffc45c;
+ font-size:30px;
+ margin:12px 0;
+ text-shadow:0 2px 12px #000;
+}
+
+h3{color:#ffcf76}
+
 input{
-width:100%;padding:14px;margin:8px 0;
-border-radius:10px;border:1px solid #66517e;
-background:#211d35;color:white;font-size:16px;
+ width:100%;
+ padding:14px;
+ margin:8px 0;
+ border-radius:10px;
+ border:1px solid #8a704b;
+ background:#171a30;
+ color:white;
+ font-size:16px;
 }
+
 button{
-width:100%;padding:14px;margin-top:10px;
-border:0;border-radius:10px;
-background:linear-gradient(90deg,#e9a52f,#ffda79);
-color:#21152b;font-weight:bold;font-size:16px;
+ width:100%;
+ padding:14px;
+ margin-top:10px;
+ border:0;
+ border-radius:10px;
+ background:linear-gradient(90deg,#e9a52f,#ffda79);
+ color:#21152b;
+ font-weight:bold;
+ font-size:16px;
+ cursor:pointer;
 }
-.google{background:white;color:#222}
-a{color:#ffd078;cursor:pointer}
+
+.google{
+ background:white;
+ color:#222;
+}
+
+a{
+ color:#ffd078;
+ cursor:pointer;
+}
+
 .hidden{display:none}
-#message{overflow-wrap:anywhere;color:#ffd078}
+
+#message{
+ color:#ffd078;
+ overflow-wrap:anywhere;
+}
+
+@media(prefers-reduced-motion:reduce){
+ body::before{animation:none}
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
+
+<img
+ class="owner-photo"
+ src="file_00000000c60c81f48c6ecc7cf40d76b8.png"
+ alt="TIGER LIVE Owner">
+
 <h1>🐅 TIGER LIVE</h1>
-<p>Welcome to TIGER LIVE</p>
+<p>স্বাগতম TIGER LIVE-এ</p>
 
 <div id="loginBox">
 <h3>Login / লগইন</h3>
+
 <input id="loginEmail" placeholder="Email Address">
 <input id="loginPassword" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<button class="google" onclick="googleLogin()">Continue with Google</button>
-<p><a onclick="showRegister()">Create New Account</a></p>
-<p><a onclick="resetPassword()">Forgot Password?</a></p>
+
+<button onclick="login()">Login / লগইন</button>
+
+<button class="google" onclick="googleLogin()">
+Continue with Google
+</button>
+
+<p><a onclick="showRegister()">নতুন অ্যাকাউন্ট তৈরি করুন</a></p>
+<p><a onclick="resetPassword()">পাসওয়ার্ড ভুলে গেছেন?</a></p>
 </div>
 
 <div id="registerBox" class="hidden">
 <h3>নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+
 <input id="regName" placeholder="আপনার নাম">
 <input id="regEmail" type="email" placeholder="Email">
 <input id="regPassword" type="password" placeholder="Password (কমপক্ষে ৬ অক্ষর)">
-<button onclick="register()">Register</button>
-<p><a onclick="showLogin()">Back to Login</a></p>
+
+<button onclick="register()">Register / নিবন্ধন</button>
+
+<p><a onclick="showLogin()">লগইন পেজে ফিরে যান</a></p>
 </div>
 
 <div id="profileBox" class="hidden">
@@ -70,95 +176,146 @@ a{color:#ffd078;cursor:pointer}
 </div>
 
 <p id="message"></p>
+
 </div>
 
 <script>
 const sb=window.supabaseClient;
 
-function msg(t){document.getElementById("message").textContent=t}
-function showRegister(){
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("registerBox").classList.remove("hidden");
-msg("");
+function msg(t){
+ document.getElementById("message").textContent=t;
 }
+
+function showRegister(){
+ document.getElementById("loginBox").classList.add("hidden");
+ document.getElementById("registerBox").classList.remove("hidden");
+ msg("");
+}
+
 function showLogin(){
-document.getElementById("registerBox").classList.add("hidden");
-document.getElementById("loginBox").classList.remove("hidden");
-msg("");
+ document.getElementById("registerBox").classList.add("hidden");
+ document.getElementById("loginBox").classList.remove("hidden");
+ msg("");
 }
 
 async function register(){
-if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
-const name=document.getElementById("regName").value.trim();
-const email=document.getElementById("regEmail").value.trim();
-const password=document.getElementById("regPassword").value;
-if(!name||!email||!password)return msg("সব ঘর পূরণ করুন");
-if(password.length<6)return msg("Password কমপক্ষে ৬ অক্ষরের দিন");
-msg("অ্যাকাউন্ট তৈরি হচ্ছে...");
-const {data,error}=await sb.auth.signUp({
-email,password,options:{data:{full_name:name}}
-});
-if(error)return msg(error.message);
-if(data.session)await loadProfile(data.user);
-else{showLogin();msg("ইমেইল যাচাই করে লগইন করুন");}
+ if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+
+ const name=document.getElementById("regName").value.trim();
+ const email=document.getElementById("regEmail").value.trim();
+ const password=document.getElementById("regPassword").value;
+
+ if(!name||!email||!password)return msg("সব ঘর পূরণ করুন");
+ if(password.length<6)return msg("Password কমপক্ষে ৬ অক্ষরের দিন");
+
+ msg("অ্যাকাউন্ট তৈরি হচ্ছে...");
+
+ const {data,error}=await sb.auth.signUp({
+  email,
+  password,
+  options:{data:{full_name:name}}
+ });
+
+ if(error)return msg(error.message);
+
+ if(data.session){
+  await loadProfile(data.user);
+ }else{
+  showLogin();
+  msg("ইমেইল যাচাই করে লগইন করুন");
+ }
 }
 
 async function login(){
-if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
-const email=document.getElementById("loginEmail").value.trim();
-const password=document.getElementById("loginPassword").value;
-if(!email||!password)return msg("Email ও Password দিন");
-if(!email.includes("@"))return msg("আপাতত Email দিয়ে লগইন করুন। User ID লগইন পরে চালু হবে।");
-msg("লগইন হচ্ছে...");
-const {data,error}=await sb.auth.signInWithPassword({email,password});
-if(error)return msg(error.message);
-await loadProfile(data.user);
+ if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+
+ const email=document.getElementById("loginEmail").value.trim();
+ const password=document.getElementById("loginPassword").value;
+
+ if(!email||!password)return msg("Email ও Password দিন");
+
+ if(!email.includes("@"))
+  return msg("আপাতত Email দিয়ে লগইন করুন।");
+
+ msg("লগইন হচ্ছে...");
+
+ const {data,error}=await sb.auth.signInWithPassword({
+  email,password
+ });
+
+ if(error)return msg(error.message);
+
+ await loadProfile(data.user);
 }
 
 async function googleLogin(){
-if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
-const {error}=await sb.auth.signInWithOAuth({
-provider:"google",
-options:{redirectTo:location.origin+location.pathname}
-});
-if(error)msg(error.message);
+ if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+
+ const {error}=await sb.auth.signInWithOAuth({
+  provider:"google",
+  options:{
+   redirectTo:location.origin+location.pathname
+  }
+ });
+
+ if(error)msg(error.message);
 }
 
 async function resetPassword(){
-if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
-const email=document.getElementById("loginEmail").value.trim();
-if(!email.includes("@"))return msg("প্রথমে Email লিখুন");
-const {error}=await sb.auth.resetPasswordForEmail(email,{
-redirectTo:location.origin+location.pathname
-});
-if(error)return msg(error.message);
-msg("Password reset link ইমেইলে পাঠানো হয়েছে");
+ if(!sb)return msg("Supabase সংযোগ পাওয়া যায়নি");
+
+ const email=document.getElementById("loginEmail").value.trim();
+
+ if(!email.includes("@"))return msg("প্রথমে Email লিখুন");
+
+ const {error}=await sb.auth.resetPasswordForEmail(email,{
+  redirectTo:location.origin+location.pathname
+ });
+
+ if(error)return msg(error.message);
+
+ msg("Password reset link ইমেইলে পাঠানো হয়েছে");
 }
 
 async function loadProfile(user){
-const {data,error}=await sb.from("profiles")
-.select("user_id,full_name").eq("id",user.id).maybeSingle();
-document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("registerBox").classList.add("hidden");
-document.getElementById("profileBox").classList.remove("hidden");
-document.getElementById("profileName").textContent="নাম: "+(data?.full_name||user.email);
-document.getElementById("profileId").textContent="TIGER LIVE ID: "+(data?.user_id||"পাওয়া যায়নি");
-msg(error?"Profile পড়তে সমস্যা: "+error.message:"স্বাগতম!");
+ const {data,error}=await sb.from("profiles")
+ .select("user_id,full_name")
+ .eq("id",user.id)
+ .maybeSingle();
+
+ document.getElementById("loginBox").classList.add("hidden");
+ document.getElementById("registerBox").classList.add("hidden");
+ document.getElementById("profileBox").classList.remove("hidden");
+
+ document.getElementById("profileName").textContent=
+ "নাম: "+(data?.full_name||user.email);
+
+ document.getElementById("profileId").textContent=
+ "TIGER LIVE ID: "+(data?.user_id||"পাওয়া যায়নি");
+
+ msg(error?"Profile পড়তে সমস্যা: "+error.message:"স্বাগতম!");
 }
 
 async function logout(){
-const {error}=await sb.auth.signOut();
-if(error)return msg(error.message);
-document.getElementById("profileBox").classList.add("hidden");
-showLogin();msg("Logout সফল হয়েছে");
+ const {error}=await sb.auth.signOut();
+
+ if(error)return msg(error.message);
+
+ document.getElementById("profileBox").classList.add("hidden");
+ showLogin();
+ msg("Logout সফল হয়েছে");
 }
 
 async function checkSession(){
-if(!sb)return msg("supabase.js সংযোগ পরীক্ষা করুন");
-const {data}=await sb.auth.getSession();
-if(data.session)await loadProfile(data.session.user);
+ if(!sb)return msg("supabase.js সংযোগ পরীক্ষা করুন");
+
+ const {data}=await sb.auth.getSession();
+
+ if(data.session)await loadProfile(data.session.user);
 }
+
 checkSession();
 </script>
+
 </body>
 </html>
