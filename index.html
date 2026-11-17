@@ -1,286 +1,78 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TIGER LIVE</title>
+-- TIGER LIVE USER DATABASE
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  user_id text unique not null,
+  display_name text,
+  created_at timestamptz default now()
+);
 
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: linear-gradient(135deg,#10051f,#281044,#090512);
-      min-height: 100vh;
-    }
-    header {
-      padding: 18px;
-      border-bottom: 1px solid #ffffff25;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo { color: #ffd45c; font-size: 25px; font-weight: bold; }
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 13px 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .gold {
-      background: linear-gradient(90deg,#ffbd35,#ffdf75);
-      color: #241044;
-    }
-    .hero { text-align: center; padding: 55px 15px 30px; }
-    .hero h1 { color: #ffd45c; font-size: 38px; }
-    .hero p { color: #ddd; line-height: 1.7; }
-    .features {
-      max-width: 950px;
-      margin: 20px auto;
-      padding: 15px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(190px,1fr));
-      gap: 15px;
-    }
-    .feature {
-      text-align: center;
-      padding: 22px 12px;
-      background: #ffffff10;
-      border: 1px solid #ffffff25;
-      border-radius: 14px;
-    }
-    .feature h3 { color: #ffd45c; }
-    .feature p { color: #ccc; }
-    .login-box {
-      width: calc(100% - 30px);
-      max-width: 420px;
-      margin: 25px auto;
-      padding: 25px;
-      background: #211239;
-      border: 1px solid #d9a83d;
-      border-radius: 16px;
-      text-align: center;
-    }
-    .login-box h2 { color: #ffd45c; }
-    .login-box p { color: #ddd; line-height: 1.5; }
-    .google-btn {
-      width: 100%;
-      background: white;
-      color: #222;
-      margin: 10px 0;
-      font-size: 15px;
-    }
-    .email-btn { width: 100%; margin-top: 10px; }
-    input {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      background: #100820;
-      border: 1px solid #ffffff45;
-      border-radius: 8px;
-      color: white;
-      font-size: 15px;
-    }
-    #notice {
-      color: #ffd45c;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-top: 15px;
-      overflow-wrap: anywhere;
-    }
-    #userArea { text-align: center; color: #ffd45c; padding: 15px; }
-    footer {
-      text-align: center;
-      color: #aaa;
-      padding: 30px 10px;
-      margin-top: 35px;
-      border-top: 1px solid #ffffff20;
-    }
-  </style>
-</head>
+-- Automatically create unique TIGER LIVE User ID
 
-<body>
+create or replace function public.create_tiger_profile()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  new_user_id text;
+begin
+  loop
+    new_user_id :=
+      'TL' || upper(substr(
+        replace(gen_random_uuid()::text, '-', ''), 1, 8
+      ));
 
-<header>
-  <div class="logo">🐯 TIGER LIVE</div>
-  <button class="gold" onclick="showLogin()">Login</button>
-</header>
-
-<section class="hero">
-  <h1>WELCOME TO TIGER LIVE</h1>
-  <p>Join TIGER LIVE<br>Connect, Chat and Enjoy!</p>
-  <button class="gold" onclick="showLogin()">Join Now</button>
-</section>
-
-<section class="features">
-  <div class="feature">
-    <h3>📺 Live Room</h3>
-    <p>Live broadcast</p>
-  </div>
-  <div class="feature">
-    <h3>🎁 Gift</h3>
-    <p>Virtual gift</p>
-  </div>
-  <div class="feature">
-    <h3>👤 Profile</h3>
-    <p>Own account</p>
-  </div>
-  <div class="feature">
-    <h3>💬 Chat</h3>
-    <p>Contact with friends</p>
-  </div>
-</section>
-
-<div id="loginBox" class="login-box">
-  <h2>🐅 Join TIGER LIVE</h2>
-  <p>Create your account or log in.<br>
-     পাসওয়ার্ড ছাড়াই লগইন করুন।</p>
-
-  <button class="google-btn" onclick="googleLogin()">
-    <span>🌐 Continue with Google</span>
-  </button>
-
-  <p>— OR LOGIN WITH EMAIL —</p>
-
-  <input
-    id="email"
-    type="email"
-    placeholder="Your email address"
-    autocomplete="email"
-    required
-  >
-
-  <button class="gold email-btn" onclick="emailLogin()">
-    Send Login Link
-  </button>
-
-  <div id="notice"></div>
-</div>
-
-<div id="userArea"></div>
-
-<footer>
-  © 2026 TIGER LIVE. All Rights Reserved.
-</footer>
-
-<script>
-  const client = window.supabaseClient;
-
-  const SITE_URL =
-    "https://mdmosiurrohoman351-oss.github.io/tiger-live/";
-
-  function showLogin() {
-    document.getElementById("loginBox").scrollIntoView({
-      behavior: "smooth"
-    });
-  }
-
-  function showMessage(text) {
-    document.getElementById("notice").textContent = text;
-  }
-
-  async function googleLogin() {
-    if (!client) {
-      showMessage("Supabase connection পাওয়া যাচ্ছে না।");
-      return;
-    }
-
-    showMessage("Google Login চালু হচ্ছে...");
-
-    const { error } = await client.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: SITE_URL
-      }
-    });
-
-    if (error) {
-      showMessage("Google Login সমস্যা: " + error.message);
-    }
-  }
-
-  async function emailLogin() {
-    if (!client) {
-      showMessage("Supabase connection পাওয়া যাচ্ছে না।");
-      return;
-    }
-
-    const email = document.getElementById("email").value.trim();
-
-    if (!email) {
-      showMessage("আপনার ইমেইল ঠিকানা লিখুন।");
-      return;
-    }
-
-    showMessage("আপনার ইমেইলে Login Link পাঠানো হচ্ছে...");
-
-    const { error } = await client.auth.signInWithOtp({
-      email: email,
-      options: {
-        emailRedirectTo: SITE_URL,
-        shouldCreateUser: true
-      }
-    });
-
-    if (error) {
-      showMessage("সমস্যা হয়েছে: " + error.message);
-      return;
-    }
-
-    showMessage(
-      "লগইন লিংক আপনার ইমেইলে পাঠানো হয়েছে। Gmail খুলে লিংকে চাপ দিন।"
+    exit when not exists (
+      select 1 from public.profiles
+      where user_id = new_user_id
     );
-  }
+  end loop;
 
-  function showUser(user) {
-    const area = document.getElementById("userArea");
-    area.replaceChildren();
+  insert into public.profiles (
+    id,
+    user_id,
+    display_name
+  )
+  values (
+    new.id,
+    new_user_id,
+    coalesce(
+      new.raw_user_meta_data->>'full_name',
+      new.raw_user_meta_data->>'name',
+      split_part(new.email, '@', 1),
+      'TIGER User'
+    )
+  );
 
-    if (!user) return;
+  return new;
+end;
+$$;
 
-    const welcome = document.createElement("p");
-    welcome.textContent = "Welcome to TIGER LIVE: " + user.email;
-    area.appendChild(welcome);
+-- Create profile automatically for every new account
 
-    const logout = document.createElement("button");
-    logout.className = "gold";
-    logout.textContent = "Logout";
+drop trigger if exists on_tiger_user_created on auth.users;
 
-    logout.onclick = async function() {
-      const { error } = await client.auth.signOut();
+create trigger on_tiger_user_created
+after insert on auth.users
+for each row
+execute function public.create_tiger_profile();
 
-      if (error) {
-        showMessage(error.message);
-      } else {
-        area.replaceChildren();
-        showMessage("আপনি লগআউট করেছেন।");
-      }
-    };
+-- Enable security
 
-    area.appendChild(logout);
-  }
+alter table public.profiles enable row level security;
 
-  if (client) {
-    client.auth.getSession().then(function(result) {
-      if (result.data && result.data.session) {
-        showUser(result.data.session.user);
-      }
-    });
+revoke all on public.profiles from anon;
+revoke all on public.profiles from authenticated;
 
-    client.auth.onAuthStateChange(function(event, session) {
-      if (session && session.user) {
-        showUser(session.user);
-      }
-    });
-  } else {
-    showMessage("Supabase সংযোগ পাওয়া যায়নি।");
-  }
-</script>
+grant select on public.profiles to authenticated;
 
-</body>
-</html>
+drop policy if exists "Users can view own profile"
+on public.profiles;
+
+create policy "Users can view own profile"
+on public.profiles
+for select
+to authenticated
+using (auth.uid() = id);
