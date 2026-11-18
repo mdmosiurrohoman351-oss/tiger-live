@@ -1,238 +1,86 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIGER LIVE</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:white;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:18px}
+.card{width:100%;max-width:430px;background:#202020;border:1px solid #bd862c;border-radius:18px;overflow:hidden;text-align:center}
+.hero{width:100%;height:220px;object-fit:cover}
+h1{color:#ffb52e;letter-spacing:3px;margin:15px 0 5px}
+p{color:#ddd}
+.box{padding:20px}
+input{width:100%;padding:14px;margin:8px 0;background:#111;color:white;border:1px solid #80602c;border-radius:9px;font-size:16px}
+button{width:100%;padding:14px;margin:7px 0;border:0;border-radius:9px;font-size:15px;font-weight:bold;cursor:pointer}
+.gold{background:#f5ad29;color:#111}
+.gray{background:#444;color:white}
+.google{background:white;color:#222}
+.hidden{display:none}
+#message{color:#ffcf75;min-height:25px;font-size:14px}
+a{color:#ffbd4a}
+</style>
+</head>
+<body>
+<div class="card">
+<img class="hero" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Walking_tiger_female.jpg/1280px-Walking_tiger_female.jpg" alt="Tiger">
+<h1>TIGER LIVE</h1>
+<p>স্বাগতম TIGER LIVE-এ | Welcome</p>
+
+<div class="box" id="loginBox">
+<input id="loginEmail" type="email" placeholder="Email address">
+<input id="loginPassword" type="password" placeholder="Password">
+<button class="gold" onclick="login()">Login</button>
+<button class="google" onclick="googleLogin()">Continue with Google</button>
+<button class="gray" onclick="showRegister()">Create New Account</button>
+<button class="gray" onclick="resetPassword()">Forgot Password?</button>
+</div>
+
+<div class="box hidden" id="registerBox">
+<input id="registerName" placeholder="আপনার নাম | Full name">
+<input id="registerEmail" type="email" placeholder="Email address">
+<input id="registerPassword" type="password" placeholder="Password (কমপক্ষে ৬ অক্ষর)">
+<button class="gold" onclick="register()">Create Account</button>
+<button class="gray" onclick="showLogin()">Back to Login</button>
+</div>
+
+<div class="box hidden" id="recoveryBox">
+<input id="newPassword" type="password" placeholder="New Password">
+<input id="confirmPassword" type="password" placeholder="Confirm Password">
+<button class="gold" onclick="updatePassword()">Update Password</button>
+</div>
+
+<div class="box hidden" id="profileBox">
+<h2>Login Successful!</h2>
+<p id="profileName"></p>
+<p id="profileEmail"></p>
+<p id="profileId"></p>
+<button class="gold" onclick="logout()">Logout</button>
+</div>
+
+<div class="box"><div id="message"></div></div>
+<p style="font-size:11px">TIGER LIVE</p>
+</div>
+
 <script>
-const sb = window.supabaseClient;
-
-function redirectUrl() {
-  return window.location.origin + window.location.pathname;
-}
-
-function showMessage(text) {
-  document.getElementById("message").textContent = text;
-}
-
-function hideAll() {
-  ["loginBox", "registerBox", "recoveryBox", "profileBox"]
-    .forEach(id => document.getElementById(id).classList.add("hidden"));
-}
-
-function showLogin() {
-  hideAll();
-  document.getElementById("loginBox").classList.remove("hidden");
-  showMessage("");
-}
-
-function showRegister() {
-  hideAll();
-  document.getElementById("registerBox").classList.remove("hidden");
-  showMessage("");
-}
-
-function showRecovery() {
-  hideAll();
-  document.getElementById("recoveryBox").classList.remove("hidden");
-  showMessage("নতুন পাসওয়ার্ড লিখুন।");
-}
-
-function showProfile(user) {
-  hideAll();
-  document.getElementById("profileBox").classList.remove("hidden");
-
-  document.getElementById("profileName").textContent =
-    "Name: " + (
-      user.user_metadata?.full_name ||
-      user.user_metadata?.name ||
-      "TIGER LIVE User"
-    );
-
-  document.getElementById("profileEmail").textContent =
-    "Email: " + (user.email || "");
-
-  document.getElementById("profileId").textContent =
-    "User ID: " + user.id;
-
-  showMessage("লগইন সফল হয়েছে!");
-}
-
-// Email Registration
-async function register() {
-  const name = document.getElementById("registerName").value.trim();
-  const email = document.getElementById("registerEmail").value.trim();
-  const password = document.getElementById("registerPassword").value;
-
-  if (!name || !email || !password)
-    return showMessage("সব ঘর পূরণ করুন।");
-
-  if (password.length < 6)
-    return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
-
-  showMessage("অ্যাকাউন্ট তৈরি হচ্ছে...");
-
-  try {
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: name },
-        emailRedirectTo: redirectUrl()
-      }
-    });
-
-    if (error) return showMessage(error.message);
-
-    if (data.session) {
-      showProfile(data.user);
-    } else {
-      showLogin();
-      showMessage("অ্যাকাউন্ট তৈরি হয়েছে। ইমেইল যাচাই করুন।");
-    }
-  } catch (error) {
-    showMessage(error.message);
-  }
-}
-
-// Email and Password Login
-async function login() {
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
-
-  if (!email || !password)
-    return showMessage("ইমেইল ও পাসওয়ার্ড লিখুন।");
-
-  showMessage("লগইন হচ্ছে...");
-
-  try {
-    const { data, error } = await sb.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) return showMessage(error.message);
-
-    showProfile(data.user);
-  } catch (error) {
-    showMessage(error.message);
-  }
-}
-
-// Direct Google Gmail Login
-async function googleLogin() {
-  showMessage("Google Login চালু হচ্ছে...");
-
-  try {
-    const { error } = await sb.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl(),
-        queryParams: {
-          access_type: "offline",
-          prompt: "select_account"
-        }
-      }
-    });
-
-    if (error) showMessage(error.message);
-  } catch (error) {
-    showMessage(error.message);
-  }
-}
-
-// Password Recovery
-async function resetPassword() {
-  const email = document.getElementById("loginEmail").value.trim();
-
-  if (!email)
-    return showMessage("আগে আপনার Gmail লিখুন।");
-
-  showMessage("রিসেট ইমেইল পাঠানো হচ্ছে...");
-
-  try {
-    const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl()
-    });
-
-    if (error) return showMessage(error.message);
-
-    showMessage("রিসেট লিংক ইমেইলে পাঠানো হয়েছে।");
-  } catch (error) {
-    showMessage(error.message);
-  }
-}
-
-// Update Password
-async function updatePassword() {
-  const password = document.getElementById("newPassword").value;
-  const confirm = document.getElementById("confirmPassword").value;
-
-  if (!password || !confirm)
-    return showMessage("দুইটি পাসওয়ার্ড লিখুন।");
-
-  if (password.length < 6)
-    return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
-
-  if (password !== confirm)
-    return showMessage("দুইটি পাসওয়ার্ড মিলছে না।");
-
-  showMessage("পাসওয়ার্ড পরিবর্তন হচ্ছে...");
-
-  try {
-    const { error } = await sb.auth.updateUser({ password });
-
-    if (error) return showMessage(error.message);
-
-    await sb.auth.signOut();
-    showLogin();
-    showMessage("পাসওয়ার্ড পরিবর্তন সফল হয়েছে।");
-  } catch (error) {
-    showMessage(error.message);
-  }
-}
-
-// Logout
-async function logout() {
-  const { error } = await sb.auth.signOut();
-
-  if (error) return showMessage(error.message);
-
-  showLogin();
-  showMessage("আপনি লগআউট করেছেন।");
-}
-
-// Authentication Initialization
-if (!sb) {
-  showMessage("Supabase সংযোগ পাওয়া যায়নি। supabase.js পরীক্ষা করুন।");
-} else {
-  sb.auth.onAuthStateChange((event, session) => {
-    if (event === "PASSWORD_RECOVERY") {
-      showRecovery();
-      return;
-    }
-
-    if (event === "SIGNED_IN" && session?.user) {
-      showProfile(session.user);
-    }
-
-    if (event === "SIGNED_OUT") {
-      showLogin();
-    }
-  });
-
-  async function checkSession() {
-    const { data, error } = await sb.auth.getSession();
-
-    if (error) {
-      showMessage(error.message);
-      return;
-    }
-
-    if (data.session?.user) {
-      showProfile(data.session.user);
-    } else {
-      showLogin();
-    }
-  }
-
-  checkSession();
-}
+const sb=window.supabaseClient;
+function redirectUrl(){return location.origin+location.pathname}
+function showMessage(t){document.getElementById("message").textContent=t}
+function hideAll(){["loginBox","registerBox","recoveryBox","profileBox"].forEach(id=>document.getElementById(id).classList.add("hidden"))}
+function showLogin(){hideAll();document.getElementById("loginBox").classList.remove("hidden");showMessage("")}
+function showRegister(){hideAll();document.getElementById("registerBox").classList.remove("hidden");showMessage("")}
+function showRecovery(){hideAll();document.getElementById("recoveryBox").classList.remove("hidden");showMessage("নতুন পাসওয়ার্ড লিখুন।")}
+function showProfile(user){hideAll();document.getElementById("profileBox").classList.remove("hidden");document.getElementById("profileName").textContent="Name: "+(user.user_metadata?.full_name||user.user_metadata?.name||"TIGER LIVE User");document.getElementById("profileEmail").textContent="Email: "+(user.email||"");document.getElementById("profileId").textContent="User ID: "+user.id;showMessage("লগইন সফল হয়েছে!")}
+async function register(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const name=registerName.value.trim(),email=registerEmail.value.trim(),password=registerPassword.value;if(!name||!email||!password)return showMessage("সব ঘর পূরণ করুন।");if(password.length<6)return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");showMessage("অ্যাকাউন্ট তৈরি হচ্ছে...");const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:redirectUrl()}});if(error)return showMessage(error.message);if(data.session)showProfile(data.user);else{showLogin();showMessage("অ্যাকাউন্ট তৈরি হয়েছে। ইমেইল যাচাই করুন।")}}
+async function login(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const email=loginEmail.value.trim(),password=loginPassword.value;if(!email||!password)return showMessage("ইমেইল ও পাসওয়ার্ড লিখুন।");showMessage("লগইন হচ্ছে...");const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return showMessage(error.message);showProfile(data.user)}
+async function googleLogin(){if(!sb)return showMessage("Supabase সংযোগ নেই।");showMessage("Google Login চালু হচ্ছে...");const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:redirectUrl(),queryParams:{prompt:"select_account"}}});if(error)showMessage(error.message)}
+async function resetPassword(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const email=loginEmail.value.trim();if(!email)return showMessage("আগে আপনার Gmail লিখুন।");showMessage("রিসেট ইমেইল পাঠানো হচ্ছে...");const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl()});showMessage(error?error.message:"রিসেট লিংক ইমেইলে পাঠানো হয়েছে।")}
+async function updatePassword(){const password=newPassword.value,confirm=confirmPassword.value;if(password.length<6)return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");if(password!==confirm)return showMessage("দুইটি পাসওয়ার্ড মিলছে না।");const {error}=await sb.auth.updateUser({password});if(error)return showMessage(error.message);await sb.auth.signOut();showLogin();showMessage("পাসওয়ার্ড পরিবর্তন সফল হয়েছে।")}
+async function logout(){const {error}=await sb.auth.signOut();if(error)return showMessage(error.message);showLogin();showMessage("লগআউট হয়েছে।")}
+if(!sb){showMessage("Supabase সংযোগ পাওয়া যায়নি। supabase.js পরীক্ষা করুন।")}else{sb.auth.onAuthStateChange((event,session)=>{if(event==="PASSWORD_RECOVERY")showRecovery();else if(session?.user)showProfile(session.user);else if(event==="SIGNED_OUT")showLogin()});sb.auth.getSession().then(({data})=>{if(data.session?.user)showProfile(data.session.user);else showLogin()})}
 </script>
 </body>
 </html>
-      
