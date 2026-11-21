@@ -4,83 +4,380 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TIGER LIVE</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#111;color:white;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:18px}
-.card{width:100%;max-width:430px;background:#202020;border:1px solid #bd862c;border-radius:18px;overflow:hidden;text-align:center}
-.hero{width:100%;height:220px;object-fit:cover}
-h1{color:#ffb52e;letter-spacing:3px;margin:15px 0 5px}
-p{color:#ddd}
-.box{padding:20px}
-input{width:100%;padding:14px;margin:8px 0;background:#111;color:white;border:1px solid #80602c;border-radius:9px;font-size:16px}
-button{width:100%;padding:14px;margin:7px 0;border:0;border-radius:9px;font-size:15px;font-weight:bold;cursor:pointer}
+body{
+ margin:0;background:#101010;color:white;
+ font-family:Arial,sans-serif;padding:15px;
+}
+.container{max-width:600px;margin:auto}
+.card{
+ background:#202020;border:1px solid #a97928;
+ border-radius:16px;padding:20px;margin:12px 0;
+}
+h1,h2{color:#ffbd45;text-align:center}
+p{text-align:center;color:#ddd}
+input{
+ width:100%;padding:14px;margin:7px 0;
+ border-radius:9px;border:1px solid #80602c;
+ background:#111;color:white;font-size:16px;
+}
+button{
+ width:100%;padding:13px;margin:6px 0;
+ border:0;border-radius:9px;font-weight:bold;
+ font-size:15px;cursor:pointer;
+}
 .gold{background:#f5ad29;color:#111}
-.gray{background:#444;color:white}
 .google{background:white;color:#222}
-.hidden{display:none}
-#message{color:#ffcf75;min-height:25px;font-size:14px}
-a{color:#ffbd4a}
+.gray{background:#444;color:white}
+.grid{
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.feature{
+ background:#292929;border:1px solid #725321;
+ border-radius:12px;padding:15px;text-align:center;
+}
+.feature button{font-size:13px}
+.hidden{display:none!important}
+#message{color:#ffcc76;text-align:center;min-height:25px}
+.small{font-size:12px;color:#aaa}
 </style>
 </head>
+
 <body>
+<div class="container">
+
 <div class="card">
-<img class="hero" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Walking_tiger_female.jpg/1280px-Walking_tiger_female.jpg" alt="Tiger">
-<h1>TIGER LIVE</h1>
-<p>স্বাগতম TIGER LIVE-এ | Welcome</p>
-
-<div class="box" id="loginBox">
-<input id="loginEmail" type="email" placeholder="Email address">
-<input id="loginPassword" type="password" placeholder="Password">
-<button class="gold" onclick="login()">Login</button>
-<button class="google" onclick="googleLogin()">Continue with Google</button>
-<button class="gray" onclick="showRegister()">Create New Account</button>
-<button class="gray" onclick="resetPassword()">Forgot Password?</button>
+<h1>🐅 TIGER LIVE</h1>
+<p>বাংলা ও English Live Platform</p>
 </div>
 
-<div class="box hidden" id="registerBox">
-<input id="registerName" placeholder="আপনার নাম | Full name">
-<input id="registerEmail" type="email" placeholder="Email address">
-<input id="registerPassword" type="password" placeholder="Password (কমপক্ষে ৬ অক্ষর)">
-<button class="gold" onclick="register()">Create Account</button>
-<button class="gray" onclick="showLogin()">Back to Login</button>
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+<h2>লগইন করুন</h2>
+
+<input id="loginPhone" type="tel"
+placeholder="ফোন নম্বর (+964...)">
+
+<input id="loginPassword" type="password"
+placeholder="পাসওয়ার্ড">
+
+<button class="gold" onclick="phoneLogin()">
+ফোন নম্বর দিয়ে লগইন
+</button>
+
+<button class="google" onclick="googleLogin()">
+Continue with Google
+</button>
+
+<button class="gray" onclick="showRegister()">
+নতুন অ্যাকাউন্ট তৈরি করুন
+</button>
+
+<p class="small">
+ফোন নম্বর আন্তর্জাতিক ফরম্যাটে লিখুন।
+</p>
 </div>
 
-<div class="box hidden" id="recoveryBox">
-<input id="newPassword" type="password" placeholder="New Password">
-<input id="confirmPassword" type="password" placeholder="Confirm Password">
-<button class="gold" onclick="updatePassword()">Update Password</button>
+<!-- REGISTER -->
+<div class="card hidden" id="registerBox">
+<h2>নতুন অ্যাকাউন্ট</h2>
+
+<input id="registerName" placeholder="আপনার নাম">
+<input id="registerPhone" type="tel"
+placeholder="ফোন নম্বর (+964...)">
+<input id="registerPassword" type="password"
+placeholder="নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
+
+<button class="gold" onclick="phoneRegister()">
+অ্যাকাউন্ট তৈরি করুন
+</button>
+
+<button class="gray" onclick="showLogin()">
+ফিরে যান
+</button>
 </div>
 
-<div class="box hidden" id="profileBox">
-<h2>Login Successful!</h2>
-<p id="profileName"></p>
-<p id="profileEmail"></p>
-<p id="profileId"></p>
-<button class="gold" onclick="logout()">Logout</button>
+<!-- DASHBOARD -->
+<div class="hidden" id="dashboard">
+
+<div class="card">
+<h2>স্বাগতম TIGER LIVE-এ</h2>
+<p id="userName">ব্যবহারকারী</p>
+<p id="userPhone"></p>
+<p id="userId"></p>
+<button class="gray" onclick="logout()">লগআউট</button>
 </div>
 
-<div class="box"><div id="message"></div></div>
-<p style="font-size:11px">TIGER LIVE</p>
+<div class="card">
+<h2>🎙️ অডিও রুম</h2>
+<p>২০টি অডিও রুমের বিভাগ</p>
+<div class="grid" id="audioRooms"></div>
+</div>
+
+<div class="card">
+<h2>📹 ভিডিও রুম</h2>
+<p>২০টি ভিডিও রুমের বিভাগ</p>
+<div class="grid" id="videoRooms"></div>
+</div>
+
+<div class="card">
+<h2>💎 TIGER LIVE সিস্টেম</h2>
+<div class="grid">
+
+<div class="feature">
+<h3>💎 Wallet</h3>
+<p>ডায়মন্ড ব্যালেন্স</p>
+<button class="gold" onclick="featureNotice('Wallet')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🎁 Gifts</h3>
+<p>গিফট পাঠানো</p>
+<button class="gold" onclick="featureNotice('Gifts')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>👑 VIP</h3>
+<p>VIP সুবিধা</p>
+<button class="gold" onclick="featureNotice('VIP')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🏆 Level</h3>
+<p>লেভেল সিস্টেম</p>
+<button class="gold" onclick="featureNotice('Level')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🎤 Host</h3>
+<p>হোস্টিং আবেদন</p>
+<button class="gold" onclick="featureNotice('Host')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🏢 Agency</h3>
+<p>এজেন্সি আইডি</p>
+<button class="gold" onclick="featureNotice('Agency')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🪪 Reseller</h3>
+<p>রিসেলার আইডি</p>
+<button class="gold" onclick="featureNotice('Reseller')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>💰 Recharge</h3>
+<p>ডায়মন্ড রিচার্জ</p>
+<button class="gold" onclick="featureNotice('Recharge')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🔁 Transfer</h3>
+<p>ডায়মন্ড ট্রান্সফার</p>
+<button class="gold" onclick="featureNotice('Transfer')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>👤 Profile</h3>
+<p>প্রোফাইল সেটিংস</p>
+<button class="gold" onclick="featureNotice('Profile')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🎮 Games</h3>
+<p>গেম সিস্টেম</p>
+<button class="gold" onclick="featureNotice('Games')">খুলুন</button>
+</div>
+
+<div class="feature">
+<h3>🛡️ Admin</h3>
+<p>অ্যাডমিন নিয়ন্ত্রণ</p>
+<button class="gold" onclick="featureNotice('Admin')">খুলুন</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="card">
+<div id="message"></div>
+<p class="small">TIGER LIVE © 2026</p>
+</div>
+
 </div>
 
 <script>
-const sb=window.supabaseClient;
-function redirectUrl(){return location.origin+location.pathname}
-function showMessage(t){document.getElementById("message").textContent=t}
-function hideAll(){["loginBox","registerBox","recoveryBox","profileBox"].forEach(id=>document.getElementById(id).classList.add("hidden"))}
-function showLogin(){hideAll();document.getElementById("loginBox").classList.remove("hidden");showMessage("")}
-function showRegister(){hideAll();document.getElementById("registerBox").classList.remove("hidden");showMessage("")}
-function showRecovery(){hideAll();document.getElementById("recoveryBox").classList.remove("hidden");showMessage("নতুন পাসওয়ার্ড লিখুন।")}
-function showProfile(user){hideAll();document.getElementById("profileBox").classList.remove("hidden");document.getElementById("profileName").textContent="Name: "+(user.user_metadata?.full_name||user.user_metadata?.name||"TIGER LIVE User");document.getElementById("profileEmail").textContent="Email: "+(user.email||"");document.getElementById("profileId").textContent="User ID: "+user.id;showMessage("লগইন সফল হয়েছে!")}
-async function register(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const name=registerName.value.trim(),email=registerEmail.value.trim(),password=registerPassword.value;if(!name||!email||!password)return showMessage("সব ঘর পূরণ করুন।");if(password.length<6)return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");showMessage("অ্যাকাউন্ট তৈরি হচ্ছে...");const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:redirectUrl()}});if(error)return showMessage(error.message);if(data.session)showProfile(data.user);else{showLogin();showMessage("অ্যাকাউন্ট তৈরি হয়েছে। ইমেইল যাচাই করুন।")}}
-async function login(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const email=loginEmail.value.trim(),password=loginPassword.value;if(!email||!password)return showMessage("ইমেইল ও পাসওয়ার্ড লিখুন।");showMessage("লগইন হচ্ছে...");const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return showMessage(error.message);showProfile(data.user)}
-async function googleLogin(){if(!sb)return showMessage("Supabase সংযোগ নেই।");showMessage("Google Login চালু হচ্ছে...");const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:redirectUrl(),queryParams:{prompt:"select_account"}}});if(error)showMessage(error.message)}
-async function resetPassword(){if(!sb)return showMessage("Supabase সংযোগ নেই।");const email=loginEmail.value.trim();if(!email)return showMessage("আগে আপনার Gmail লিখুন।");showMessage("রিসেট ইমেইল পাঠানো হচ্ছে...");const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl()});showMessage(error?error.message:"রিসেট লিংক ইমেইলে পাঠানো হয়েছে।")}
-async function updatePassword(){const password=newPassword.value,confirm=confirmPassword.value;if(password.length<6)return showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");if(password!==confirm)return showMessage("দুইটি পাসওয়ার্ড মিলছে না।");const {error}=await sb.auth.updateUser({password});if(error)return showMessage(error.message);await sb.auth.signOut();showLogin();showMessage("পাসওয়ার্ড পরিবর্তন সফল হয়েছে।")}
-async function logout(){const {error}=await sb.auth.signOut();if(error)return showMessage(error.message);showLogin();showMessage("লগআউট হয়েছে।")}
-if(!sb){showMessage("Supabase সংযোগ পাওয়া যায়নি। supabase.js পরীক্ষা করুন।")}else{sb.auth.onAuthStateChange((event,session)=>{if(event==="PASSWORD_RECOVERY")showRecovery();else if(session?.user)showProfile(session.user);else if(event==="SIGNED_OUT")showLogin()});sb.auth.getSession().then(({data})=>{if(data.session?.user)showProfile(data.session.user);else showLogin()})}
+const sb = window.supabaseClient;
+
+function msg(text){
+ document.getElementById("message").textContent=text;
+}
+
+function hideAll(){
+ ["loginBox","registerBox","dashboard"].forEach(id=>{
+  document.getElementById(id).classList.add("hidden");
+ });
+}
+
+function showLogin(){
+ hideAll();
+ document.getElementById("loginBox").classList.remove("hidden");
+ msg("");
+}
+
+function showRegister(){
+ hideAll();
+ document.getElementById("registerBox").classList.remove("hidden");
+ msg("");
+}
+
+function showDashboard(user){
+ hideAll();
+ document.getElementById("dashboard").classList.remove("hidden");
+
+ document.getElementById("userName").textContent =
+  user.user_metadata?.full_name ||
+  user.user_metadata?.name ||
+  "TIGER LIVE User";
+
+ document.getElementById("userPhone").textContent =
+  user.phone || user.email || "";
+
+ document.getElementById("userId").textContent =
+  "Account ID: " + user.id;
+}
+
+function validPhone(phone){
+ return /^\+[1-9]\d{7,14}$/.test(phone);
+}
+
+async function phoneRegister(){
+ if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+
+ const name=document.getElementById("registerName").value.trim();
+ const phone=document.getElementById("registerPhone").value.trim();
+ const password=document.getElementById("registerPassword").value;
+
+ if(!name || !phone || !password)
+  return msg("সব তথ্য পূরণ করুন।");
+
+ if(!validPhone(phone))
+  return msg("ফোন নম্বর +964... এর মতো আন্তর্জাতিক ফরম্যাটে লিখুন।");
+
+ if(password.length<6)
+  return msg("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+
+ msg("অ্যাকাউন্ট তৈরি হচ্ছে...");
+
+ const {data,error}=await sb.auth.signUp({
+  phone:phone,
+  password:password,
+  options:{data:{full_name:name}}
+ });
+
+ if(error) return msg(error.message);
+
+ if(data.session && data.user){
+  showDashboard(data.user);
+  msg("অ্যাকাউন্ট তৈরি সফল হয়েছে।");
+ }else{
+  msg("অ্যাকাউন্ট তৈরি হয়েছে। Supabase-এ Phone Confirmation বন্ধ আছে কি না পরীক্ষা করুন।");
+ }
+}
+
+async function phoneLogin(){
+ if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+
+ const phone=document.getElementById("loginPhone").value.trim();
+ const password=document.getElementById("loginPassword").value;
+
+ if(!phone || !password)
+  return msg("ফোন নম্বর ও পাসওয়ার্ড লিখুন।");
+
+ if(!validPhone(phone))
+  return msg("ফোন নম্বর সঠিক আন্তর্জাতিক ফরম্যাটে লিখুন।");
+
+ msg("লগইন হচ্ছে...");
+
+ const {data,error}=await sb.auth.signInWithPassword({
+  phone:phone,
+  password:password
+ });
+
+ if(error) return msg(error.message);
+
+ showDashboard(data.user);
+ msg("লগইন সফল হয়েছে।");
+}
+
+async function googleLogin(){
+ if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+
+ msg("Google লগইন চালু হচ্ছে...");
+
+ const {error}=await sb.auth.signInWithOAuth({
+  provider:"google",
+  options:{
+   redirectTo:location.origin+location.pathname,
+   queryParams:{prompt:"select_account"}
+  }
+ });
+
+ if(error) msg(error.message);
+}
+
+async function logout(){
+ const {error}=await sb.auth.signOut();
+ if(error) return msg(error.message);
+ showLogin();
+ msg("লগআউট হয়েছে।");
+}
+
+function featureNotice(name){
+ msg(name+" ফিচারটি চালু করতে ডেটাবেস ও সার্ভার সংযোগ তৈরি করতে হবে।");
+}
+
+function createRoomButtons(){
+ const audio=document.getElementById("audioRooms");
+ const video=document.getElementById("videoRooms");
+
+ for(let i=1;i<=20;i++){
+  const a=document.createElement("div");
+  a.className="feature";
+  a.innerHTML="<h3>অডিও রুম "+i+"</h3><button class='gold'>রুম খুলুন</button>";
+  a.querySelector("button").onclick=()=>featureNotice("Audio Room "+i);
+  audio.appendChild(a);
+
+  const v=document.createElement("div");
+  v.className="feature";
+  v.innerHTML="<h3>ভিডিও রুম "+i+"</h3><button class='gold'>রুম খুলুন</button>";
+  v.querySelector("button").onclick=()=>featureNotice("Video Room "+i);
+  video.appendChild(v);
+ }
+}
+
+createRoomButtons();
+
+if(!sb){
+ msg("Supabase সংযোগ নেই। supabase.js পরীক্ষা করুন।");
+}else{
+ sb.auth.onAuthStateChange((event,session)=>{
+  if(session?.user) showDashboard(session.user);
+  else if(event==="SIGNED_OUT") showLogin();
+ });
+
+ sb.auth.getSession().then(({data,error})=>{
+  if(error) msg(error.message);
+  else if(data.session?.user) showDashboard(data.session.user);
+  else showLogin();
+ });
+}
 </script>
 </body>
 </html>
