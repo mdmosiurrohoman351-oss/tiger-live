@@ -2,381 +2,510 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b12">
 <title>TIGER LIVE</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
 
 <style>
+:root{
+ --bg:#090b12;--panel:#151c2b;--gold:#f5c451;
+ --gold2:#ffe39a;--text:#fff;--muted:#aab2c4;
+ --line:#303b52;
+}
 *{box-sizing:border-box}
 body{
- margin:0;background:#101010;color:white;
- font-family:Arial,sans-serif;padding:15px;
+ margin:0;background:radial-gradient(circle at top,#20283b,#090b12 65%);
+ color:var(--text);font-family:Arial,sans-serif;min-height:100vh
 }
-.container{max-width:600px;margin:auto}
+.wrap{max-width:950px;margin:auto;padding:15px}
+.brand{text-align:center;padding:20px}
+.logo{
+ width:70px;height:70px;margin:auto;border-radius:22px;
+ display:grid;place-items:center;
+ background:linear-gradient(135deg,#ffe39a,#c58a18);
+ font-size:38px
+}
+h1{color:var(--gold);letter-spacing:2px}
+h2{color:var(--gold2);font-size:20px}
 .card{
- background:#202020;border:1px solid #a97928;
- border-radius:16px;padding:20px;margin:12px 0;
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:17px;padding:19px;margin:14px 0
 }
-h1,h2{color:#ffbd45;text-align:center}
-p{text-align:center;color:#ddd}
+label{display:block;color:var(--muted);margin:12px 0 6px;font-size:14px}
 input{
- width:100%;padding:14px;margin:7px 0;
- border-radius:9px;border:1px solid #80602c;
- background:#111;color:white;font-size:16px;
+ width:100%;padding:13px;border-radius:10px;
+ border:1px solid #39445c;background:#0b101b;
+ color:white;font-size:15px
 }
 button{
- width:100%;padding:13px;margin:6px 0;
- border:0;border-radius:9px;font-weight:bold;
- font-size:15px;cursor:pointer;
+ border:0;border-radius:10px;padding:12px 15px;
+ background:linear-gradient(135deg,#ffe39a,#d59a28);
+ color:#17120a;font-weight:bold;cursor:pointer
 }
-.gold{background:#f5ad29;color:#111}
+button:disabled{opacity:.5}
+.btn{width:100%;margin-top:13px}
+.secondary{background:#293348;color:white}
 .google{background:white;color:#222}
-.gray{background:#444;color:white}
-.grid{
- display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
-.feature{
- background:#292929;border:1px solid #725321;
- border-radius:12px;padding:15px;text-align:center;
-}
-.feature button{font-size:13px}
+.danger{background:#672a37;color:white}
 .hidden{display:none!important}
-#message{color:#ffcc76;text-align:center;min-height:25px}
-.small{font-size:12px;color:#aaa}
+.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.notice{
+ display:none;padding:12px;border-radius:10px;
+ background:#26334a;margin:12px 0;font-size:14px
+}
+.error{background:#572630;color:#ffe0e4}
+.success{background:#174233;color:#d4ffeb}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{border:1px solid #80672f;border-radius:30px;padding:5px 10px;color:var(--gold2);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px}
+.tile{
+ background:#202a3e;border:1px solid #39445c;
+ border-radius:12px;padding:15px;text-align:center;cursor:pointer
+}
+.tile span{display:block;font-size:25px;margin-bottom:7px}
+.room{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;background:#202a3e;border-radius:12px;
+ padding:12px;margin:8px 0
+}
+.room small{display:block;color:var(--muted);margin-top:4px}
+.room button{padding:9px}
+.footer{text-align:center;color:#778096;padding:20px;font-size:12px}
 </style>
 </head>
 
 <body>
-<div class="container">
+<div class="wrap">
 
-<div class="card">
-<h1>🐅 TIGER LIVE</h1>
-<p>বাংলা ও English Live Platform</p>
-</div>
+<header class="brand">
+ <div class="logo">🐯</div>
+ <h1>TIGER LIVE</h1>
+ <div class="muted">বাংলা • English | Live Community</div>
+</header>
 
 <!-- LOGIN -->
-<div class="card" id="loginBox">
-<h2>লগইন করুন</h2>
+<main id="authArea">
 
-<input id="loginPhone" type="tel"
-placeholder="ফোন নম্বর (+964...)">
+<section class="card" id="loginPanel">
+ <h2>লগইন করুন</h2>
+ <div id="loginMsg" class="notice"></div>
 
-<input id="loginPassword" type="password"
-placeholder="পাসওয়ার্ড">
+ <label>ফোন নম্বর (দেশের কোডসহ)</label>
+ <input id="loginPhone" type="tel" placeholder="+9647XXXXXXXXX">
 
-<button class="gold" onclick="phoneLogin()">
-ফোন নম্বর দিয়ে লগইন
-</button>
+ <label>পাসওয়ার্ড</label>
+ <input id="loginPassword" type="password" placeholder="আপনার পাসওয়ার্ড">
 
-<button class="google" onclick="googleLogin()">
-Continue with Google
-</button>
+ <button class="btn" id="phoneLoginBtn" onclick="phoneLogin()">
+ ফোন নম্বর দিয়ে লগইন
+ </button>
 
-<button class="gray" onclick="showRegister()">
-নতুন অ্যাকাউন্ট তৈরি করুন
-</button>
+ <button class="btn google" id="googleLoginBtn" onclick="googleLogin()">
+ 🌐 Continue with Google
+ </button>
 
-<p class="small">
-ফোন নম্বর আন্তর্জাতিক ফরম্যাটে লিখুন।
-</p>
-</div>
+ <p class="muted" style="text-align:center">নতুন ব্যবহারকারী?</p>
+ <button class="btn secondary" onclick="showRegister()">
+ নতুন অ্যাকাউন্ট তৈরি করুন
+ </button>
+
+ <p class="muted">
+ OTP ছাড়া ফোন নম্বরের মালিকানা যাচাই করা যায় না।
+ তাই এই লগইন পদ্ধতি প্রাথমিক পরীক্ষার জন্য।
+ </p>
+</section>
 
 <!-- REGISTER -->
-<div class="card hidden" id="registerBox">
-<h2>নতুন অ্যাকাউন্ট</h2>
+<section class="card hidden" id="registerPanel">
+ <h2>নতুন অ্যাকাউন্ট তৈরি</h2>
+ <div id="registerMsg" class="notice"></div>
 
-<input id="registerName" placeholder="আপনার নাম">
-<input id="registerPhone" type="tel"
-placeholder="ফোন নম্বর (+964...)">
-<input id="registerPassword" type="password"
-placeholder="নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
+ <label>আপনার নাম</label>
+ <input id="regName" type="text" placeholder="আপনার নাম">
 
-<button class="gold" onclick="phoneRegister()">
-অ্যাকাউন্ট তৈরি করুন
-</button>
+ <label>ফোন নম্বর (দেশের কোডসহ)</label>
+ <input id="regPhone" type="tel" placeholder="+9647XXXXXXXXX">
 
-<button class="gray" onclick="showLogin()">
-ফিরে যান
-</button>
-</div>
+ <label>পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)</label>
+ <input id="regPassword" type="password" placeholder="নতুন পাসওয়ার্ড">
+
+ <label>পাসওয়ার্ড নিশ্চিত করুন</label>
+ <input id="regPassword2" type="password" placeholder="আবার পাসওয়ার্ড লিখুন">
+
+ <button class="btn" id="registerBtn" onclick="phoneRegister()">
+ রেজিস্ট্রেশন করুন
+ </button>
+
+ <button class="btn secondary" onclick="showLogin()">
+ লগইন পেজে ফিরে যান
+ </button>
+
+ <p class="muted">
+ ফোন নম্বরের জন্য অভ্যন্তরীণ লগইন ঠিকানা তৈরি করা হয়।
+ এটি আসল ইমেইল ঠিকানা নয়।
+ </p>
+</section>
+
+</main>
 
 <!-- DASHBOARD -->
-<div class="hidden" id="dashboard">
+<main id="dashboard" class="hidden">
 
-<div class="card">
-<h2>স্বাগতম TIGER LIVE-এ</h2>
-<p id="userName">ব্যবহারকারী</p>
-<p id="userPhone"></p>
-<p id="userId"></p>
-<button class="gray" onclick="logout()">লগআউট</button>
-</div>
+<section class="card">
+ <div class="topbar">
+  <div>
+   <span class="pill">TIGER LIVE ACCOUNT</span>
+   <h2 id="welcomeName">স্বাগতম</h2>
+   <div class="muted" id="userContact"></div>
+  </div>
+  <button class="danger" onclick="logout()">লগআউট</button>
+ </div>
 
-<div class="card">
-<h2>🎙️ অডিও রুম</h2>
-<p>২০টি অডিও রুমের বিভাগ</p>
-<div class="grid" id="audioRooms"></div>
-</div>
+ <div class="grid" style="margin-top:15px">
+  <div class="tile">
+   <span>🆔</span><b>Account ID</b>
+   <div class="muted" id="accountId">—</div>
+  </div>
+  <div class="tile">
+   <span>💎</span><b>Diamond</b>
+   <div class="muted">শীঘ্রই চালু হবে</div>
+  </div>
+  <div class="tile">
+   <span>⭐</span><b>Level</b>
+   <div class="muted">0</div>
+  </div>
+ </div>
+</section>
 
-<div class="card">
-<h2>📹 ভিডিও রুম</h2>
-<p>২০টি ভিডিও রুমের বিভাগ</p>
-<div class="grid" id="videoRooms"></div>
-</div>
+<!-- AUDIO ROOMS -->
+<section class="card">
+ <div class="topbar">
+  <h2>🎙️ অডিও রুম</h2>
+  <span class="pill">২০টি রুম</span>
+ </div>
+ <div id="audioRooms"></div>
+ <p class="muted">
+ অডিও রুমের তালিকা তৈরি আছে। লাইভ কথা বলার ব্যবস্থা
+ আলাদা Audio Server সংযুক্ত করে চালু করতে হবে।
+ </p>
+</section>
 
-<div class="card">
-<h2>💎 TIGER LIVE সিস্টেম</h2>
-<div class="grid">
+<!-- VIDEO ROOMS -->
+<section class="card">
+ <div class="topbar">
+  <h2>📹 ভিডিও রুম</h2>
+  <span class="pill">২০টি রুম</span>
+ </div>
+ <div id="videoRooms"></div>
+ <p class="muted">
+ ভিডিও কল, ক্যামেরা এবং বিউটি ফিল্টার চালু করতে
+ আলাদা ভিডিও সার্ভিস সংযুক্ত করতে হবে।
+ </p>
+</section>
 
-<div class="feature">
-<h3>💎 Wallet</h3>
-<p>ডায়মন্ড ব্যালেন্স</p>
-<button class="gold" onclick="featureNotice('Wallet')">খুলুন</button>
-</div>
+<!-- FEATURES -->
+<section class="card">
+ <h2>✨ TIGER LIVE ফিচার</h2>
+ <div class="grid">
 
-<div class="feature">
-<h3>🎁 Gifts</h3>
-<p>গিফট পাঠানো</p>
-<button class="gold" onclick="featureNotice('Gifts')">খুলুন</button>
-</div>
+  <div class="tile" onclick="featureNotice('Wallet')"><span>👛</span><b>Wallet</b></div>
+  <div class="tile" onclick="featureNotice('Gifts')"><span>🎁</span><b>Gifts</b></div>
+  <div class="tile" onclick="featureNotice('VIP')"><span>👑</span><b>VIP</b></div>
+  <div class="tile" onclick="featureNotice('Host')"><span>🎤</span><b>Host</b></div>
+  <div class="tile" onclick="featureNotice('Agency')"><span>🏢</span><b>Agency</b></div>
+  <div class="tile" onclick="featureNotice('Reseller')"><span>🤝</span><b>Reseller</b></div>
+  <div class="tile" onclick="featureNotice('Recharge')"><span>💎</span><b>Recharge</b></div>
+  <div class="tile" onclick="featureNotice('Transfer')"><span>🔁</span><b>Transfer</b></div>
+  <div class="tile" onclick="featureNotice('Profile')"><span>👤</span><b>Profile</b></div>
+  <div class="tile" onclick="featureNotice('Games')"><span>🎮</span><b>Games</b></div>
+  <div class="tile" onclick="featureNotice('Admin')"><span>🛡️</span><b>Admin</b></div>
+  <div class="tile" onclick="featureNotice('Support')"><span>💬</span><b>Support</b></div>
 
-<div class="feature">
-<h3>👑 VIP</h3>
-<p>VIP সুবিধা</p>
-<button class="gold" onclick="featureNotice('VIP')">খুলুন</button>
-</div>
+ </div>
+ <div id="featureMsg" class="notice"></div>
+ <p class="muted">
+ এই মেনুগুলো এখন প্রাথমিক UI। ডায়মন্ড, গিফট, ওয়ালেট,
+ হোস্ট, এজেন্সি ও অ্যাডমিন কার্যক্রম নিরাপদ backend
+ যুক্ত করার পর চালু হবে।
+ </p>
+</section>
 
-<div class="feature">
-<h3>🏆 Level</h3>
-<p>লেভেল সিস্টেম</p>
-<button class="gold" onclick="featureNotice('Level')">খুলুন</button>
-</div>
+</main>
 
-<div class="feature">
-<h3>🎤 Host</h3>
-<p>হোস্টিং আবেদন</p>
-<button class="gold" onclick="featureNotice('Host')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>🏢 Agency</h3>
-<p>এজেন্সি আইডি</p>
-<button class="gold" onclick="featureNotice('Agency')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>🪪 Reseller</h3>
-<p>রিসেলার আইডি</p>
-<button class="gold" onclick="featureNotice('Reseller')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>💰 Recharge</h3>
-<p>ডায়মন্ড রিচার্জ</p>
-<button class="gold" onclick="featureNotice('Recharge')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>🔁 Transfer</h3>
-<p>ডায়মন্ড ট্রান্সফার</p>
-<button class="gold" onclick="featureNotice('Transfer')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>👤 Profile</h3>
-<p>প্রোফাইল সেটিংস</p>
-<button class="gold" onclick="featureNotice('Profile')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>🎮 Games</h3>
-<p>গেম সিস্টেম</p>
-<button class="gold" onclick="featureNotice('Games')">খুলুন</button>
-</div>
-
-<div class="feature">
-<h3>🛡️ Admin</h3>
-<p>অ্যাডমিন নিয়ন্ত্রণ</p>
-<button class="gold" onclick="featureNotice('Admin')">খুলুন</button>
-</div>
-
-</div>
-</div>
-</div>
-
-<div class="card">
-<div id="message"></div>
-<p class="small">TIGER LIVE © 2026</p>
-</div>
-
+<footer class="footer">TIGER LIVE • Live Community</footer>
 </div>
 
 <script>
-const sb = window.supabaseClient;
+// SUPABASE CONFIGURATION
+const SUPABASE_URL = "https://yehheffwgloegvmexqzy.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
 
-function msg(text){
- document.getElementById("message").textContent=text;
+const sb = window.supabase
+ ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)
+ : null;
+
+function el(id){return document.getElementById(id)}
+
+function message(id,text,type=""){
+ const box=el(id);
+ box.textContent=text;
+ box.className="notice "+type;
+ box.style.display="block";
 }
 
-function hideAll(){
- ["loginBox","registerBox","dashboard"].forEach(id=>{
-  document.getElementById(id).classList.add("hidden");
- });
+function clearMessage(id){
+ const box=el(id);
+ box.textContent="";
+ box.style.display="none";
+}
+
+function busy(id,on,text="অপেক্ষা করুন…"){
+ const b=el(id);
+ if(on){
+  b.dataset.old=b.textContent;
+  b.textContent=text;
+  b.disabled=true;
+ }else{
+  b.textContent=b.dataset.old||b.textContent;
+  b.disabled=false;
+ }
 }
 
 function showLogin(){
- hideAll();
- document.getElementById("loginBox").classList.remove("hidden");
- msg("");
+ el("authArea").classList.remove("hidden");
+ el("dashboard").classList.add("hidden");
+ el("loginPanel").classList.remove("hidden");
+ el("registerPanel").classList.add("hidden");
+ clearMessage("loginMsg");
+ clearMessage("registerMsg");
 }
 
 function showRegister(){
- hideAll();
- document.getElementById("registerBox").classList.remove("hidden");
- msg("");
+ el("loginPanel").classList.add("hidden");
+ el("registerPanel").classList.remove("hidden");
+ clearMessage("registerMsg");
 }
 
-function showDashboard(user){
- hideAll();
- document.getElementById("dashboard").classList.remove("hidden");
-
- document.getElementById("userName").textContent =
-  user.user_metadata?.full_name ||
-  user.user_metadata?.name ||
-  "TIGER LIVE User";
-
- document.getElementById("userPhone").textContent =
-  user.phone || user.email || "";
-
- document.getElementById("userId").textContent =
-  "Account ID: " + user.id;
+function normalizePhone(phone){
+ const p=String(phone||"").trim().replace(/[()\s-]/g,"");
+ if(!/^\+[1-9]\d{7,14}$/.test(p)){
+  throw new Error("দেশের কোডসহ ফোন নম্বর লিখুন। যেমন: +9647XXXXXXXXX");
+ }
+ return p;
 }
 
-function validPhone(phone){
- return /^\+[1-9]\d{7,14}$/.test(phone);
+// ফোন নম্বর থেকে স্থায়ী অভ্যন্তরীণ লগইন ইমেইল তৈরি
+// ব্যবহারকারীর কাছে এই ঠিকানা দেখানো হবে না।
+function phoneToInternalEmail(phone){
+ const normalized=normalizePhone(phone);
+ return "u"+normalized.replace(/\D/g,"")+"@login.tigerlive.com";
 }
 
+// PHONE REGISTRATION
 async function phoneRegister(){
- if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+ if(!sb){
+  message("registerMsg","Supabase সংযোগ পাওয়া যায়নি।","error");
+  return;
+ }
 
- const name=document.getElementById("registerName").value.trim();
- const phone=document.getElementById("registerPhone").value.trim();
- const password=document.getElementById("registerPassword").value;
+ busy("registerBtn",true,"অ্যাকাউন্ট তৈরি হচ্ছে…");
 
- if(!name || !phone || !password)
-  return msg("সব তথ্য পূরণ করুন।");
+ try{
+  const name=el("regName").value.trim();
+  const phone=normalizePhone(el("regPhone").value);
+  const password=el("regPassword").value;
+  const confirm=el("regPassword2").value;
 
- if(!validPhone(phone))
-  return msg("ফোন নম্বর +964... এর মতো আন্তর্জাতিক ফরম্যাটে লিখুন।");
+  if(name.length<2)throw new Error("সঠিক নাম লিখুন।");
+  if(password.length<8)throw new Error("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
+  if(password!==confirm)throw new Error("দুইটি পাসওয়ার্ড মিলছে না।");
 
- if(password.length<6)
-  return msg("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+  const email=phoneToInternalEmail(phone);
 
- msg("অ্যাকাউন্ট তৈরি হচ্ছে...");
+  const {data,error}=await sb.auth.signUp({
+   email:email,
+   password:password,
+   options:{
+    data:{
+     full_name:name,
+     phone_number:phone,
+     login_method:"phone_password"
+    }
+   }
+  });
 
- const {data,error}=await sb.auth.signUp({
-  phone:phone,
-  password:password,
-  options:{data:{full_name:name}}
- });
+  if(error)throw error;
 
- if(error) return msg(error.message);
+  if(data.session){
+   await renderDashboard(data.user);
+  }else{
+   message("registerMsg",
+    "অ্যাকাউন্ট তৈরি হয়েছে। Supabase-এ Confirm Email OFF আছে কি না পরীক্ষা করুন।",
+    "success"
+   );
+   showLogin();
+   el("loginPhone").value=phone;
+  }
 
- if(data.session && data.user){
-  showDashboard(data.user);
-  msg("অ্যাকাউন্ট তৈরি সফল হয়েছে।");
- }else{
-  msg("অ্যাকাউন্ট তৈরি হয়েছে। Supabase-এ Phone Confirmation বন্ধ আছে কি না পরীক্ষা করুন।");
+ }catch(e){
+  message("registerMsg",e.message||"রেজিস্ট্রেশন করা যায়নি।","error");
+ }finally{
+  busy("registerBtn",false);
  }
 }
 
+// PHONE LOGIN
 async function phoneLogin(){
- if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+ if(!sb){
+  message("loginMsg","Supabase সংযোগ পাওয়া যায়নি।","error");
+  return;
+ }
 
- const phone=document.getElementById("loginPhone").value.trim();
- const password=document.getElementById("loginPassword").value;
+ busy("phoneLoginBtn",true,"লগইন হচ্ছে…");
 
- if(!phone || !password)
-  return msg("ফোন নম্বর ও পাসওয়ার্ড লিখুন।");
+ try{
+  const phone=normalizePhone(el("loginPhone").value);
+  const password=el("loginPassword").value;
 
- if(!validPhone(phone))
-  return msg("ফোন নম্বর সঠিক আন্তর্জাতিক ফরম্যাটে লিখুন।");
+  if(!password)throw new Error("পাসওয়ার্ড লিখুন।");
 
- msg("লগইন হচ্ছে...");
+  const email=phoneToInternalEmail(phone);
 
- const {data,error}=await sb.auth.signInWithPassword({
-  phone:phone,
-  password:password
- });
+  const {data,error}=await sb.auth.signInWithPassword({
+   email:email,
+   password:password
+  });
 
- if(error) return msg(error.message);
+  if(error)throw error;
 
- showDashboard(data.user);
- msg("লগইন সফল হয়েছে।");
+  await renderDashboard(data.user);
+
+ }catch(e){
+  message("loginMsg",e.message||"লগইন করা যায়নি।","error");
+ }finally{
+  busy("phoneLoginBtn",false);
+ }
 }
 
+// GOOGLE LOGIN
 async function googleLogin(){
- if(!sb) return msg("Supabase সংযোগ পাওয়া যায়নি।");
+ if(!sb){
+  message("loginMsg","Supabase সংযোগ পাওয়া যায়নি।","error");
+  return;
+ }
 
- msg("Google লগইন চালু হচ্ছে...");
+ busy("googleLoginBtn",true,"Google-এ সংযোগ হচ্ছে…");
 
- const {error}=await sb.auth.signInWithOAuth({
-  provider:"google",
-  options:{
-   redirectTo:location.origin+location.pathname,
-   queryParams:{prompt:"select_account"}
-  }
- });
+ try{
+  const {error}=await sb.auth.signInWithOAuth({
+   provider:"google",
+   options:{
+    redirectTo:window.location.origin+window.location.pathname
+   }
+  });
 
- if(error) msg(error.message);
+  if(error)throw error;
+
+ }catch(e){
+  message("loginMsg",e.message||"Google লগইন করা যায়নি।","error");
+  busy("googleLoginBtn",false);
+ }
+}
+
+// DASHBOARD
+async function renderDashboard(user){
+ if(!user)return;
+
+ const meta=user.user_metadata||{};
+ const name=meta.full_name||meta.name||"TIGER LIVE User";
+ const phone=meta.phone_number||"Google Account";
+
+ el("welcomeName").textContent="স্বাগতম, "+name;
+ el("userContact").textContent=phone;
+ el("accountId").textContent=user.id.slice(0,8).toUpperCase();
+
+ el("authArea").classList.add("hidden");
+ el("dashboard").classList.remove("hidden");
+
+ createRoomLists();
 }
 
 async function logout(){
- const {error}=await sb.auth.signOut();
- if(error) return msg(error.message);
+ if(sb)await sb.auth.signOut();
  showLogin();
- msg("লগআউট হয়েছে।");
 }
 
+// FEATURE PLACEHOLDER
 function featureNotice(name){
- msg(name+" ফিচারটি চালু করতে ডেটাবেস ও সার্ভার সংযোগ তৈরি করতে হবে।");
+ message("featureMsg",name+" ফিচারটি backend যুক্ত হলে চালু হবে।");
 }
 
-function createRoomButtons(){
- const audio=document.getElementById("audioRooms");
- const video=document.getElementById("videoRooms");
+// CREATE 20 AUDIO + 20 VIDEO ROOMS
+function createRoomLists(){
+ const audio=el("audioRooms");
+ const video=el("videoRooms");
+
+ if(audio.dataset.ready)return;
 
  for(let i=1;i<=20;i++){
   const a=document.createElement("div");
-  a.className="feature";
-  a.innerHTML="<h3>অডিও রুম "+i+"</h3><button class='gold'>রুম খুলুন</button>";
-  a.querySelector("button").onclick=()=>featureNotice("Audio Room "+i);
+  a.className="room";
+
+  const at=document.createElement("div");
+  at.innerHTML="<b>🎙️ অডিও রুম "+i+"</b><small>Live Audio Room</small>";
+
+  const ab=document.createElement("button");
+  ab.textContent="প্রবেশ";
+  ab.onclick=()=>featureNotice("অডিও রুম "+i);
+
+  a.append(at,ab);
   audio.appendChild(a);
 
   const v=document.createElement("div");
-  v.className="feature";
-  v.innerHTML="<h3>ভিডিও রুম "+i+"</h3><button class='gold'>রুম খুলুন</button>";
-  v.querySelector("button").onclick=()=>featureNotice("Video Room "+i);
+  v.className="room";
+
+  const vt=document.createElement("div");
+  vt.innerHTML="<b>📹 ভিডিও রুম "+i+"</b><small>Live Video Room</small>";
+
+  const vb=document.createElement("button");
+  vb.textContent="প্রবেশ";
+  vb.onclick=()=>featureNotice("ভিডিও রুম "+i);
+
+  v.append(vt,vb);
   video.appendChild(v);
  }
+
+ audio.dataset.ready="1";
 }
 
-createRoomButtons();
+// AUTH SESSION CHECK
+if(sb){
 
-if(!sb){
- msg("Supabase সংযোগ নেই। supabase.js পরীক্ষা করুন।");
-}else{
  sb.auth.onAuthStateChange((event,session)=>{
-  if(session?.user) showDashboard(session.user);
-  else if(event==="SIGNED_OUT") showLogin();
+  if(session&&session.user){
+   renderDashboard(session.user);
+  }else if(event==="SIGNED_OUT"){
+   showLogin();
+  }
  });
 
  sb.auth.getSession().then(({data,error})=>{
-  if(error) msg(error.message);
-  else if(data.session?.user) showDashboard(data.session.user);
-  else showLogin();
+  if(error){
+   console.error(error);
+   return;
+  }
+
+  if(data.session&&data.session.user){
+   renderDashboard(data.session.user);
+  }else{
+   showLogin();
+  }
  });
+
+}else{
+ message("loginMsg","Supabase JavaScript লোড হয়নি। ইন্টারনেট পরীক্ষা করুন।","error");
 }
 </script>
 </body>
