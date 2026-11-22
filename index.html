@@ -33,7 +33,7 @@ h2{color:var(--gold2);font-size:20px}
  border-radius:17px;padding:19px;margin:14px 0
 }
 label{display:block;color:var(--muted);margin:12px 0 6px;font-size:14px}
-input{
+input,select{
  width:100%;padding:13px;border-radius:10px;
  border:1px solid #39445c;background:#0b101b;
  color:white;font-size:15px
@@ -91,28 +91,35 @@ button:disabled{opacity:.5}
  <h2>লগইন করুন</h2>
  <div id="loginMsg" class="notice"></div>
 
- <label>ফোন নম্বর (দেশের কোডসহ)</label>
- <input id="loginPhone" type="tel" placeholder="+9647XXXXXXXXX">
+ <label>দেশ নির্বাচন করুন</label>
+ <select id="loginCountry">
+  <option value="+880" selected>🇧🇩 বাংলাদেশ (+880)</option>
+  <option value="+964">🇮🇶 ইরাক (+964)</option>
+  <option value="+44">🇬🇧 যুক্তরাজ্য (+44)</option>
+ </select>
+
+ <label>ফোন নম্বর</label>
+ <input id="loginPhone" type="tel" placeholder="01XXXXXXXXX">
 
  <label>পাসওয়ার্ড</label>
  <input id="loginPassword" type="password" placeholder="আপনার পাসওয়ার্ড">
 
  <button class="btn" id="phoneLoginBtn" onclick="phoneLogin()">
- ফোন নম্বর দিয়ে লগইন
+  ফোন নম্বর দিয়ে লগইন
  </button>
 
  <button class="btn google" id="googleLoginBtn" onclick="googleLogin()">
- 🌐 Continue with Google
+  🌐 Continue with Google
  </button>
 
  <p class="muted" style="text-align:center">নতুন ব্যবহারকারী?</p>
  <button class="btn secondary" onclick="showRegister()">
- নতুন অ্যাকাউন্ট তৈরি করুন
+  নতুন অ্যাকাউন্ট তৈরি করুন
  </button>
 
  <p class="muted">
- OTP ছাড়া ফোন নম্বরের মালিকানা যাচাই করা যায় না।
- তাই এই লগইন পদ্ধতি প্রাথমিক পরীক্ষার জন্য।
+  OTP ছাড়া ফোন নম্বরের মালিকানা যাচাই করা যায় না।
+  তাই এই লগইন পদ্ধতি প্রাথমিক পরীক্ষার জন্য।
  </p>
 </section>
 
@@ -124,8 +131,15 @@ button:disabled{opacity:.5}
  <label>আপনার নাম</label>
  <input id="regName" type="text" placeholder="আপনার নাম">
 
- <label>ফোন নম্বর (দেশের কোডসহ)</label>
- <input id="regPhone" type="tel" placeholder="+9647XXXXXXXXX">
+ <label>দেশ নির্বাচন করুন</label>
+ <select id="regCountry">
+  <option value="+880" selected>🇧🇩 বাংলাদেশ (+880)</option>
+  <option value="+964">🇮🇶 ইরাক (+964)</option>
+  <option value="+44">🇬🇧 যুক্তরাজ্য (+44)</option>
+ </select>
+
+ <label>ফোন নম্বর</label>
+ <input id="regPhone" type="tel" placeholder="01XXXXXXXXX">
 
  <label>পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)</label>
  <input id="regPassword" type="password" placeholder="নতুন পাসওয়ার্ড">
@@ -134,16 +148,16 @@ button:disabled{opacity:.5}
  <input id="regPassword2" type="password" placeholder="আবার পাসওয়ার্ড লিখুন">
 
  <button class="btn" id="registerBtn" onclick="phoneRegister()">
- রেজিস্ট্রেশন করুন
+  রেজিস্ট্রেশন করুন
  </button>
 
  <button class="btn secondary" onclick="showLogin()">
- লগইন পেজে ফিরে যান
+  লগইন পেজে ফিরে যান
  </button>
 
  <p class="muted">
- ফোন নম্বরের জন্য অভ্যন্তরীণ লগইন ঠিকানা তৈরি করা হয়।
- এটি আসল ইমেইল ঠিকানা নয়।
+  ফোন নম্বরের জন্য অভ্যন্তরীণ লগইন ঠিকানা তৈরি করা হয়।
+  এটি আসল ইমেইল ঠিকানা নয়।
  </p>
 </section>
 
@@ -186,8 +200,8 @@ button:disabled{opacity:.5}
  </div>
  <div id="audioRooms"></div>
  <p class="muted">
- অডিও রুমের তালিকা তৈরি আছে। লাইভ কথা বলার ব্যবস্থা
- আলাদা Audio Server সংযুক্ত করে চালু করতে হবে।
+  অডিও রুমের তালিকা তৈরি আছে। লাইভ কথা বলার ব্যবস্থা
+  আলাদা Audio Server সংযুক্ত করে চালু করতে হবে।
  </p>
 </section>
 
@@ -199,8 +213,8 @@ button:disabled{opacity:.5}
  </div>
  <div id="videoRooms"></div>
  <p class="muted">
- ভিডিও কল, ক্যামেরা এবং বিউটি ফিল্টার চালু করতে
- আলাদা ভিডিও সার্ভিস সংযুক্ত করতে হবে।
+  ভিডিও কল, ক্যামেরা এবং বিউটি ফিল্টার চালু করতে
+  আলাদা ভিডিও সার্ভিস সংযুক্ত করতে হবে।
  </p>
 </section>
 
@@ -225,9 +239,9 @@ button:disabled{opacity:.5}
  </div>
  <div id="featureMsg" class="notice"></div>
  <p class="muted">
- এই মেনুগুলো এখন প্রাথমিক UI। ডায়মন্ড, গিফট, ওয়ালেট,
- হোস্ট, এজেন্সি ও অ্যাডমিন কার্যক্রম নিরাপদ backend
- যুক্ত করার পর চালু হবে।
+  এই মেনুগুলো এখন প্রাথমিক UI। ডায়মন্ড, গিফট, ওয়ালেট,
+  হোস্ট, এজেন্সি ও অ্যাডমিন কার্যক্রম নিরাপদ backend
+  যুক্ত করার পর চালু হবে।
  </p>
 </section>
 
@@ -288,16 +302,38 @@ function showRegister(){
  clearMessage("registerMsg");
 }
 
+// COUNTRY CODE + PHONE NUMBER
 function normalizePhone(phone){
  const p=String(phone||"").trim().replace(/[()\s-]/g,"");
  if(!/^\+[1-9]\d{7,14}$/.test(p)){
-  throw new Error("দেশের কোডসহ ফোন নম্বর লিখুন। যেমন: +9647XXXXXXXXX");
+  throw new Error("সঠিক ফোন নম্বর লিখুন।");
  }
  return p;
 }
 
-// ফোন নম্বর থেকে স্থায়ী অভ্যন্তরীণ লগইন ইমেইল তৈরি
-// ব্যবহারকারীর কাছে এই ঠিকানা দেখানো হবে না।
+function phoneWithCountry(countryId,phoneId){
+ const country=el(countryId).value;
+ let digits=String(el(phoneId).value||"").trim().replace(/\D/g,"");
+ const code=country.replace(/\D/g,"");
+
+ if(!digits){
+  throw new Error("ফোন নম্বর লিখুন।");
+ }
+
+ // Country code আগে থেকেই লেখা থাকলে পুনরাবৃত্তি বাদ
+ if(digits.startsWith(code)){
+  digits=digits.slice(code.length);
+ }
+
+ // স্থানীয় নম্বরের প্রথম 0 বাদ
+ if(digits.startsWith("0")){
+  digits=digits.slice(1);
+ }
+
+ return normalizePhone(country+digits);
+}
+
+// NEW PHONE ACCOUNT EMAIL FORMAT
 function phoneToInternalEmail(phone){
  const normalized=normalizePhone(phone);
  return "u"+normalized.replace(/\D/g,"")+"@login.tigerlive.com";
@@ -314,7 +350,7 @@ async function phoneRegister(){
 
  try{
   const name=el("regName").value.trim();
-  const phone=normalizePhone(el("regPhone").value);
+  const phone=phoneWithCountry("regCountry","regPhone");
   const password=el("regPassword").value;
   const confirm=el("regPassword2").value;
 
@@ -338,15 +374,19 @@ async function phoneRegister(){
 
   if(error)throw error;
 
-  if(data.session){
+  if(data.session&&data.user){
    await renderDashboard(data.user);
   }else{
-   message("registerMsg",
-    "অ্যাকাউন্ট তৈরি হয়েছে। Supabase-এ Confirm Email OFF আছে কি না পরীক্ষা করুন।",
+   message(
+    "registerMsg",
+    "রেজিস্ট্রেশন অনুরোধ সম্পন্ন হয়েছে। Supabase Auth Users-এ অ্যাকাউন্ট তৈরি হয়েছে কি না পরীক্ষা করুন।",
     "success"
    );
-   showLogin();
-   el("loginPhone").value=phone;
+   el("loginCountry").value=el("regCountry").value;
+   el("loginPhone").value=el("regPhone").value;
+   el("loginPassword").value="";
+   el("loginPanel").classList.remove("hidden");
+   el("registerPanel").classList.add("hidden");
   }
 
  }catch(e){
@@ -366,21 +406,30 @@ async function phoneLogin(){
  busy("phoneLoginBtn",true,"লগইন হচ্ছে…");
 
  try{
-  const phone=normalizePhone(el("loginPhone").value);
+  const phone=phoneWithCountry("loginCountry","loginPhone");
   const password=el("loginPassword").value;
 
   if(!password)throw new Error("পাসওয়ার্ড লিখুন।");
 
-  const email=phoneToInternalEmail(phone);
+  const digits=phone.replace(/\D/g,"");
 
-  const {data,error}=await sb.auth.signInWithPassword({
-   email:email,
+  // প্রথমে নতুন অ্যাকাউন্টের ইমেইল ফরম্যাটে চেষ্টা
+  let result=await sb.auth.signInWithPassword({
+   email:"u"+digits+"@login.tigerlive.com",
    password:password
   });
 
-  if(error)throw error;
+  // পুরোনো Mosiuru ফরম্যাটের অ্যাকাউন্টে চেষ্টা
+  if(result.error){
+   result=await sb.auth.signInWithPassword({
+    email:"Mosiuru"+digits+"@login.tigerlive.com",
+    password:password
+   });
+  }
 
-  await renderDashboard(data.user);
+  if(result.error)throw result.error;
+
+  await renderDashboard(result.data.user);
 
  }catch(e){
   message("loginMsg",e.message||"লগইন করা যায়নি।","error");
