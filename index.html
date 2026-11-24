@@ -116,27 +116,40 @@ function normalizePhone(){
 }
 /* Supabase Auth uses Email/Password here because native Phone Auth requires an SMS provider.
    The generated internal email is NOT a real mailbox and does not prove phone ownership. */
-function phoneToAuthEmail(e164){
- return "u"+e164.replace(/\D/g,"")+"@login.tigerlive.com";
+function phoneToAuthEmails(e164){
+ const digits=e164.replace(/\D/g,"");
+ // Support both the original u-prefix account and the older p-prefix account.
+ return ["u"+digits+"@login.tigerlive.com", "p"+digits+"@login.tigerlive.com"];
 }
 async function handleAuth(event){
  event.preventDefault();clearMessage();
  const t=translations[lang], phone=normalizePhone(), password=$("password").value;
  if(!phone){setMessage(t.phoneErr);return;}
  if(password.length<6){setMessage(t.passErr);return;}
- const email=phoneToAuthEmail(phone);
+ const emails=phoneToAuthEmails(phone);
  $("submitBtn").disabled=true;$("submitBtn").textContent="...";
  try{
   if(mode==="signup"){
    if(password!==$("confirmPassword").value){setMessage(t.matchErr);return;}
-   const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{phone_number:phone,app_name:"TIGER LIVE"}}});
+   // New registrations continue to use the canonical u-prefix account.
+   const {data,error}=await supabaseClient.auth.signUp({email:emails[0],password,options:{data:{phone_number:phone,app_name:"TIGER LIVE"}}});
    if(error) throw error;
    if(data.session){showDashboard(data.user);}
    else setMessage(t.signupOk,"success");
   }else{
-   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-   if(error) throw error;
-   showDashboard(data.user);
+   let loginData=null;
+   let loginError=null;
+   for(const email of emails){
+    const result=await supabaseClient.auth.signInWithPassword({email,password});
+    if(!result.error){loginData=result.data;break;}
+    loginError=result.error;
+    // Try the legacy p-prefix only when the canonical account credentials do not match.
+    const message=String(result.error.message||"").toLowerCase();
+    const invalidCredentials=result.error.code==="invalid_credentials" || message.includes("invalid login credentials");
+    if(!invalidCredentials) break;
+   }
+   if(!loginData) throw loginError || new Error(t.loginErr);
+   showDashboard(loginData.user);
   }
  }catch(err){
   console.error("Authentication error:",err);
@@ -148,7 +161,7 @@ async function handleAuth(event){
 async function googleLogin(){
  clearMessage();
  try{
-  const {error}=await supabaseClient.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}});
+  const {error}=await supabaseClient.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname}});
   if(error) throw error;
  }catch(err){console.error(err);setMessage(translations[lang].googleErr);}
 }
