@@ -18,6 +18,23 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .dashboard{display:none}.welcome{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px;padding:23px 25px;border:1px solid #5a472a;border-radius:22px;background:linear-gradient(110deg,#251c10,#151923 60%,#21180e)}.welcome h2{margin:0;color:var(--gold2)}.welcome p{color:#c3b9a8;margin:6px 0 0}.logout{border:1px solid #6a5735;background:#1b202b;color:#fff;padding:10px 15px;border-radius:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:linear-gradient(145deg,#1a202c,#10151e);border:1px solid #3d3b36;padding:17px;border-radius:15px}.stat b{display:block;font-size:24px;color:var(--gold)}.stat small{color:var(--muted)}.section-title{display:flex;align-items:center;justify-content:space-between;margin:27px 0 13px}.section-title h3{margin:0;font-size:18px;color:var(--gold2)}.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.room{background:linear-gradient(145deg,#1c2532,#10151e);border:1px solid #383e48;border-radius:15px;padding:16px;min-height:112px;transition:transform .18s,border-color .18s}.room:hover{transform:translateY(-2px);border-color:#a67a35}.room .emoji{font-size:25px}.room b{display:block;margin:7px 0 3px}.room small{color:var(--muted)}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feature{background:linear-gradient(145deg,#1c2430,#10151d);border:1px solid #3b414b;padding:16px;border-radius:14px;color:#e8e2d6}.feature strong{display:block;font-size:23px;margin-bottom:7px}.footer{text-align:center;color:#777b85;font-size:11px;margin-top:30px;letter-spacing:1px}
 @media(max-width:650px){.wrap{padding:13px 14px 38px}.hero{grid-template-columns:1fr .65fr;min-height:190px;padding:20px 17px;gap:5px}.hero h2{font-size:25px}.hero p{font-size:12px}.tiger-emblem{width:125px;height:125px;font-size:75px}.hero-wordmark{font-size:8px;letter-spacing:2px}.panel{padding:19px}.brand h1{font-size:18px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.phone-row{grid-template-columns:116px 1fr}.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.feature-grid{grid-template-columns:repeat(3,1fr)}.feature{padding:12px 9px;font-size:12px}}
 @media(max-width:380px){.hero{grid-template-columns:1fr}.hero-art{display:none}.rooms{grid-template-columns:1fr}.feature-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* Super Admin panel */
+.admin-entry{border:1px solid #b98a3e;background:linear-gradient(135deg,#332610,#171b25);color:#ffe4a0;padding:10px 14px;border-radius:10px;font-weight:800;margin-right:8px}
+.admin-panel{display:none;margin-top:22px;border:1px solid #9a7335;border-radius:20px;padding:20px;background:linear-gradient(145deg,#171b25,#0d1119);box-shadow:0 18px 45px #0008}
+.admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.admin-head h2{margin:0;color:var(--gold2);font-size:23px}
+.admin-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #80612e;border-radius:999px;color:#ffe4a0;font-size:11px;font-weight:800}
+.admin-warning{padding:12px 14px;border:1px solid #785c2d;border-radius:12px;background:#2a2114;color:#f4dca9;font-size:13px;line-height:1.55;margin:12px 0 18px}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.admin-card{border:1px solid #3e4652;border-radius:14px;padding:16px;background:linear-gradient(145deg,#202938,#121821);min-height:118px}
+.admin-card strong{display:block;font-size:16px;color:#ffe4a0;margin-bottom:7px}
+.admin-card p{margin:0;color:#aeb7c5;font-size:12px;line-height:1.5}
+.admin-card small{display:inline-block;margin-top:10px;color:#f2c66d;font-size:10px;font-weight:800;letter-spacing:.4px}
+.admin-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.admin-back{border:1px solid #6a5735;background:#1b202b;color:#fff;padding:11px 15px;border-radius:10px}
+@media(max-width:520px){.admin-grid{grid-template-columns:1fr}.admin-entry{margin-right:0}}
+
 </style>
 </head>
 <body>
@@ -56,12 +73,26 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 </section>
 
 <section class="dashboard" id="dashboard">
-  <div class="welcome"><div><h2 id="welcomeTitle">স্বাগতম!</h2><p id="userLine">আপনি TIGER LIVE-এ লগইন করেছেন।</p></div><button class="logout" id="logoutBtn">লগআউট</button></div>
+  <div class="welcome"><div><h2 id="welcomeTitle">স্বাগতম!</h2><p id="userLine">আপনি TIGER LIVE-এ লগইন করেছেন।</p></div><div><button class="admin-entry" id="adminOpenBtn" type="button" style="display:none">🛡️ Super Admin</button><button class="logout" id="logoutBtn">লগআউট</button></div></div>
   <div class="stats"><div class="stat"><b>20</b><small id="audioStat">অডিও রুম</small></div><div class="stat"><b>20</b><small id="videoStat">ভিডিও রুম</small></div><div class="stat"><b>24/7</b><small id="liveStat">লাইভ কমিউনিটি</small></div></div>
   <div class="section-title"><h3 id="audioTitle">🎙️ অডিও রুম</h3></div><div class="rooms" id="audioRooms"></div>
   <div class="section-title"><h3 id="videoTitle">📹 ভিডিও রুম</h3></div><div class="rooms" id="videoRooms"></div>
   <div class="section-title"><h3 id="featureTitle">✨ অন্যান্য ফিচার</h3></div>
   <div class="feature-grid"><div class="feature"><strong>🎁</strong><span data-bn="গিফট" data-en="Gifts">গিফট</span></div><div class="feature"><strong>💬</strong><span data-bn="চ্যাট" data-en="Chat">চ্যাট</span></div><div class="feature"><strong>👥</strong><span data-bn="বন্ধু" data-en="Friends">বন্ধু</span></div><div class="feature"><strong>🏆</strong><span data-bn="র‍্যাঙ্কিং" data-en="Ranking">র‍্যাঙ্কিং</span></div><div class="feature"><strong>🎵</strong><span data-bn="মিউজিক" data-en="Music">মিউজিক</span></div><div class="feature"><strong>⚙️</strong><span data-bn="সেটিংস" data-en="Settings">সেটিংস</span></div></div>
+  <section class="admin-panel" id="adminPanel" aria-label="Super Admin Panel">
+    <div class="admin-head"><h2>🛡️ TIGER LIVE Super Admin</h2><span class="admin-chip">★ OWNER ACCESS</span></div>
+    <p class="sub">প্রধান নিয়ন্ত্রণ কেন্দ্র — শুধু অনুমোদিত মালিকের অ্যাকাউন্টে দেখানো হবে।</p>
+    <div class="admin-warning"><strong>নিরাপত্তা নোট:</strong> এটি Admin Panel-এর প্রথম ইন্টারফেস। ব্যবহারকারী ব্লক, Admin অনুমোদন, Diamond/Wallet পরিবর্তন বা Room নিয়ন্ত্রণ চালুর আগে Supabase Database, Row Level Security (RLS) এবং নিরাপদ server-side function সংযুক্ত করতে হবে। তাই এখন কোনো অর্থ/অ্যাকাউন্ট পরিবর্তনের বোতাম সক্রিয় করা হয়নি।</div>
+    <div class="admin-grid">
+      <div class="admin-card"><strong>👤 User Management</strong><p>ব্যবহারকারীর তালিকা, প্রোফাইল, Block/Unblock এবং রিপোর্ট পর্যালোচনা।</p><small>DATABASE CONNECTION REQUIRED</small></div>
+      <div class="admin-card"><strong>🛡️ Admin & Moderator</strong><p>Admin/Moderator আবেদন দেখা এবং মালিকের অনুমোদনে ভূমিকা নির্ধারণ।</p><small>OWNER APPROVAL REQUIRED</small></div>
+      <div class="admin-card"><strong>🎙️ Audio & Video Rooms</strong><p>রুম চালু/বন্ধ, রুমের নাম, Host এবং রুমের নিয়ম পরিচালনা।</p><small>LIVE ROOM SERVICE REQUIRED</small></div>
+      <div class="admin-card"><strong>💎 Wallet & Diamonds</strong><p>ব্যালেন্স, Recharge, Transfer ও লেনদেনের হিসাব যাচাই।</p><small>SECURE LEDGER REQUIRED</small></div>
+      <div class="admin-card"><strong>🎁 Gifts & VIP</strong><p>Gift catalog, মূল্য, VIP সুবিধা এবং Ranking-এর নিয়ম।</p><small>DATABASE CONNECTION REQUIRED</small></div>
+      <div class="admin-card"><strong>⚙️ App Settings & Support</strong><p>বাংলা/English সেটিংস, Support requests এবং অ্যাপের সাধারণ নিয়ন্ত্রণ।</p><small>SETTINGS SERVICE REQUIRED</small></div>
+    </div>
+    <div class="admin-actions"><button class="admin-back" id="adminBackBtn" type="button">← Dashboard-এ ফিরে যান</button></div>
+  </section>
 </section>
 </main>
 <div class="footer">TIGER LIVE © 2026</div>
@@ -76,6 +107,11 @@ const $ = (id) => document.getElementById(id);
 let mode = "login";
 let lang = "bn";
 let currentUser = null;
+// Known owner accounts for this prototype. Real admin authorization must also be enforced by Supabase RLS/server functions.
+const SUPER_ADMIN_USER_IDS = new Set([
+ "4a543e0e-f70b-49de-9ffb-e8425ada8e1c",
+ "6366b837-ebb1-44fd-b6dc-f1cd9f847b59"
+]);
 
 const translations = {
  bn:{login:"লগইন",signup:"নতুন অ্যাকাউন্ট",title:"TIGER LIVE-এ স্বাগতম",subLogin:"ফোন নম্বর ও পাসওয়ার্ড দিয়ে প্রবেশ করুন।",subSignup:"নতুন অ্যাকাউন্ট খুলতে ফোন নম্বর ও পাসওয়ার্ড দিন।",phone:"ফোন নম্বর",password:"পাসওয়ার্ড",confirm:"পাসওয়ার্ড আবার লিখুন",submitLogin:"লগইন করুন",submitSignup:"অ্যাকাউন্ট তৈরি করুন",or:"অথবা",google:"Google দিয়ে চালিয়ে যান",note:"ফোন নম্বরটি অ্যাকাউন্ট শনাক্ত করতে ব্যবহার হবে। এই পদ্ধতিতে SMS/OTP পাঠানো হয় না এবং ফোন নম্বরের মালিকানা যাচাই হয় না।",welcome:"স্বাগতম!",logged:"আপনি TIGER LIVE-এ লগইন করেছেন।",logout:"লগআউট",audio:"অডিও রুম",video:"ভিডিও রুম",live:"লাইভ কমিউনিটি",features:"অন্যান্য ফিচার",tag:"লাইভ রুম • সংযোগ • আনন্দ",phoneErr:"সঠিক ফোন নম্বর লিখুন।",passErr:"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",matchErr:"দুইটি পাসওয়ার্ড মিলছে না।",signupOk:"অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।",loginErr:"লগইন করা যায়নি। ফোন নম্বর ও পাসওয়ার্ড পরীক্ষা করুন।",signupErr:"অ্যাকাউন্ট তৈরি করা যায়নি। নম্বরটি আগে ব্যবহার করা হয়েছে কি না দেখুন।",googleErr:"Google লগইন শুরু করা যায়নি। Supabase-এ Google provider সেটিংস পরীক্ষা করুন।",rooms:"রুম",account:"অ্যাকাউন্ট"},
@@ -167,13 +203,16 @@ async function googleLogin(){
 }
 function showDashboard(user){
  currentUser=user;$("authPanel").style.display="none";$("dashboard").style.display="block";
+ $("adminPanel").style.display="none";
+ const isOwner=!!user?.id && SUPER_ADMIN_USER_IDS.has(user.id);
+ $("adminOpenBtn").style.display=isOwner?"inline-block":"none";
  const phone=user?.user_metadata?.phone_number;
  const accountId=user?.id?user.id.slice(0,8).toUpperCase():"—";
  const identity=phone||user?.email||translations[lang].logged;
  $("userLine").textContent=(lang==="bn"?"অ্যাকাউন্ট আইডি: ":"Account ID: ")+accountId+"  •  "+identity;
 }
 async function logout(){
- await supabaseClient.auth.signOut();currentUser=null;$("dashboard").style.display="none";$("authPanel").style.display="block";$("password").value="";$("confirmPassword").value="";
+ await supabaseClient.auth.signOut();currentUser=null;$("dashboard").style.display="none";$("adminPanel").style.display="none";$("adminOpenBtn").style.display="none";$("authPanel").style.display="block";$("password").value="";$("confirmPassword").value="";
 }
 function makeRooms(target,emoji,prefix){
  const root=$(target);root.innerHTML="";
@@ -185,6 +224,8 @@ $("signupTab").addEventListener("click",()=>{mode="signup";clearMessage();render
 $("authForm").addEventListener("submit",handleAuth);
 $("googleBtn").addEventListener("click",googleLogin);
 $("logoutBtn").addEventListener("click",logout);
+$("adminOpenBtn").addEventListener("click",()=>{if(!currentUser?.id || !SUPER_ADMIN_USER_IDS.has(currentUser.id)) return;$("adminPanel").style.display="block";$("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});});
+$("adminBackBtn").addEventListener("click",()=>{$("adminPanel").style.display="none";$("dashboard").scrollIntoView({behavior:"smooth",block:"start"});});
 $("language").addEventListener("change",e=>{lang=e.target.value;renderMode();renderRooms();});
 (async function init(){
  renderMode();renderRooms();
