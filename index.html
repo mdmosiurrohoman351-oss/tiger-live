@@ -3,43 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090b12">
+<meta name="theme-color" content="#09080a">
+<meta name="description" content="TIGER LIVE — বাংলা লাইভ কমিউনিটি">
 <title>TIGER LIVE</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#090b12;--panel:#151c2b;--panel2:#1b2639;--gold:#f6c453;--gold2:#ffdf8a;--text:#f7f8fb;--muted:#9ca8bb;--line:#2b3850;--red:#ff6b75;--green:#54d69a}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#202c45 0,#090b12 42%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
-button,input,select{font:inherit}button{cursor:pointer}
-.wrap{width:min(1100px,94%);margin:auto;padding:26px 0 50px}
-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#ffdf8a,#d68a18);color:#211400;font-size:27px;font-weight:900;box-shadow:0 8px 28px #e5a52b44}
-.brand h1{font-size:23px;letter-spacing:1.5px;margin:0}.brand small{color:var(--muted)}
-.lang{background:#182338;border:1px solid var(--line);color:var(--text);padding:9px 12px;border-radius:10px}
-.panel{background:linear-gradient(145deg,#182236f2,#101725f5);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 55px #0005}
-.auth{max-width:510px;margin:28px auto}.tabs{display:flex;gap:8px;background:#0c1320;padding:5px;border-radius:13px;margin-bottom:22px}
-.tabs button{flex:1;border:0;border-radius:9px;padding:11px;background:transparent;color:var(--muted);font-weight:700}.tabs button.active{background:var(--gold);color:#211400}
-h2{margin:0 0 8px;font-size:25px}.sub{color:var(--muted);margin:0 0 20px;font-size:14px;line-height:1.55}
-.field{margin:14px 0}.field label{display:block;font-size:13px;color:#c4cede;margin-bottom:7px}
-input,select{width:100%;border:1px solid var(--line);background:#0c1422;color:var(--text);padding:13px 14px;border-radius:11px;outline:none}
-input:focus,select:focus{border-color:var(--gold)}.phone-row{display:grid;grid-template-columns:125px 1fr;gap:8px}
-.primary{width:100%;border:0;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--gold2),#e7a52c);color:#211400;font-weight:850;margin-top:8px}
-.google{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:#202124;font-weight:750;margin-top:12px}
-.google span{font-weight:900;margin-right:8px;color:#4285f4}.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:16px 0}.or:before,.or:after{content:"";height:1px;background:var(--line);flex:1}
-.note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:15px}.msg{display:none;padding:11px 13px;border-radius:10px;margin:12px 0;font-size:13px;line-height:1.5}.msg.error{display:block;background:#3a1d29;color:#ffb6bd;border:1px solid #713544}.msg.success{display:block;background:#143326;color:#9cf0c5;border:1px solid #28664b}
-.dashboard{display:none}.welcome{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:22px}.welcome p{color:var(--muted);margin:5px 0 0}.logout{border:1px solid var(--line);background:#202c40;color:#fff;padding:10px 15px;border-radius:10px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:#101a2a;border:1px solid var(--line);padding:16px;border-radius:15px}.stat b{display:block;font-size:22px;color:var(--gold)}.stat small{color:var(--muted)}
-.section-title{display:flex;align-items:center;justify-content:space-between;margin:25px 0 13px}.section-title h3{margin:0;font-size:18px}.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.room{background:linear-gradient(145deg,#202d43,#121b2a);border:1px solid var(--line);border-radius:15px;padding:16px;min-height:112px}.room .emoji{font-size:25px}.room b{display:block;margin:7px 0 3px}.room small{color:var(--muted)}.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px}.feature{background:#111b2b;border:1px solid var(--line);padding:14px;border-radius:13px;color:#dce4f1}.feature strong{display:block;font-size:21px;margin-bottom:5px}.footer{text-align:center;color:#66758d;font-size:12px;margin-top:28px}
-@media(max-width:560px){.wrap{padding-top:16px}.panel{padding:18px}.brand h1{font-size:19px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.phone-row{grid-template-columns:112px 1fr}}
+:root{--bg:#07080c;--panel:#11151f;--panel2:#1b2230;--gold:#f4c45e;--gold2:#ffe4a0;--text:#fbf8ef;--muted:#a6adbb;--line:#34313a;--green:#62dda4;--red:#ff7782}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% -15%,#59401b 0,transparent 42%),radial-gradient(ellipse at 100% 55%,#1d1720 0,transparent 38%),#07080c;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background:repeating-linear-gradient(132deg,transparent 0 44px,#d89b32 45px 48px,transparent 49px 92px);mask-image:linear-gradient(90deg,#000,transparent 45%,#000)}
+button,input,select{font:inherit}button{cursor:pointer}.wrap{position:relative;width:min(1120px,100%);margin:auto;padding:20px 22px 54px;z-index:1}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#ffe7a8,#d99522);color:#211400;font-size:27px;box-shadow:0 8px 28px #e5a52b35}.brand h1{font-size:21px;letter-spacing:2px;margin:0;color:var(--gold2)}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.7px;margin-top:3px}.lang{background:#151a24;border:1px solid #55452b;color:var(--text);padding:9px 12px;border-radius:11px}
+.hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;min-height:240px;padding:28px 34px;margin:0 0 22px;border:1px solid #5b4728;border-radius:26px;overflow:hidden;background:linear-gradient(105deg,#17130e 0%,#171820 55%,#21180e 100%);box-shadow:0 18px 55px #0008}.hero:after{content:"";position:absolute;right:-80px;top:-150px;width:440px;height:440px;border:1px solid #b9842d33;border-radius:50%;box-shadow:0 0 0 28px #b9842d0d,0 0 0 58px #b9842d0a}.hero-copy{position:relative;z-index:1}.eyebrow{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2.5px}.hero h2{font-size:clamp(26px,4vw,42px);line-height:1.08;margin:12px 0 9px;max-width:550px}.hero p{color:#c0b8a9;margin:0;line-height:1.6;font-size:14px}.hero-art{position:relative;z-index:1;display:grid;place-items:center;min-height:175px}.tiger-emblem{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;font-size:106px;background:radial-gradient(circle,#7b5723 0,#2b2115 53%,#100e0d 72%);border:2px solid #b98a3e;box-shadow:0 0 0 9px #c99a3b13,0 0 55px #d49a3540,inset 0 0 35px #0009}.hero-wordmark{position:absolute;bottom:-3px;font-size:10px;letter-spacing:4px;font-weight:900;color:var(--gold2);text-shadow:0 2px 9px #000}
+.panel{background:linear-gradient(145deg,#171c27f5,#0e121bf7);border:1px solid #59472b;border-radius:22px;padding:24px;box-shadow:0 20px 55px #0008}.auth{max-width:520px;margin:0 auto 28px}.tabs{display:flex;gap:8px;background:#090d14;padding:5px;border:1px solid #252b35;border-radius:13px;margin-bottom:22px}.tabs button{flex:1;border:0;border-radius:9px;padding:11px;background:transparent;color:var(--muted);font-weight:750}.tabs button.active{background:linear-gradient(135deg,var(--gold2),#d99a2b);color:#211400}.panel h2{margin:0 0 8px;font-size:25px}.sub{color:var(--muted);margin:0 0 20px;font-size:14px;line-height:1.55}.field{margin:14px 0}.field label{display:block;font-size:13px;color:#d6d0c5;margin-bottom:7px}input,select{width:100%;border:1px solid #3b414d;background:#090e17;color:var(--text);padding:13px 14px;border-radius:11px;outline:none}input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px #f4c45e18}.phone-row{display:grid;grid-template-columns:135px 1fr;gap:8px}.primary{width:100%;border:0;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--gold2),#d99522);color:#211400;font-weight:900;margin-top:8px;box-shadow:0 8px 22px #d9952228}.primary:disabled{opacity:.65}.google{width:100%;border:1px solid #414653;border-radius:12px;padding:12px;background:#f8f8f8;color:#202124;font-weight:750;margin-top:12px}.google span:first-child{font-weight:900;margin-right:8px;color:#4285f4}.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:16px 0}.or:before,.or:after{content:"";height:1px;background:#343b47;flex:1}.note{font-size:11px;color:#929aaa;line-height:1.55;margin-top:15px}.msg{display:none;padding:11px 13px;border-radius:10px;margin:12px 0;font-size:13px;line-height:1.5}.msg.error{display:block;background:#3a1d29;color:#ffb6bd;border:1px solid #713544}.msg.success{display:block;background:#143326;color:#9cf0c5;border:1px solid #28664b}
+.dashboard{display:none}.welcome{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px;padding:23px 25px;border:1px solid #5a472a;border-radius:22px;background:linear-gradient(110deg,#251c10,#151923 60%,#21180e)}.welcome h2{margin:0;color:var(--gold2)}.welcome p{color:#c3b9a8;margin:6px 0 0}.logout{border:1px solid #6a5735;background:#1b202b;color:#fff;padding:10px 15px;border-radius:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:linear-gradient(145deg,#1a202c,#10151e);border:1px solid #3d3b36;padding:17px;border-radius:15px}.stat b{display:block;font-size:24px;color:var(--gold)}.stat small{color:var(--muted)}.section-title{display:flex;align-items:center;justify-content:space-between;margin:27px 0 13px}.section-title h3{margin:0;font-size:18px;color:var(--gold2)}.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.room{background:linear-gradient(145deg,#1c2532,#10151e);border:1px solid #383e48;border-radius:15px;padding:16px;min-height:112px;transition:transform .18s,border-color .18s}.room:hover{transform:translateY(-2px);border-color:#a67a35}.room .emoji{font-size:25px}.room b{display:block;margin:7px 0 3px}.room small{color:var(--muted)}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feature{background:linear-gradient(145deg,#1c2430,#10151d);border:1px solid #3b414b;padding:16px;border-radius:14px;color:#e8e2d6}.feature strong{display:block;font-size:23px;margin-bottom:7px}.footer{text-align:center;color:#777b85;font-size:11px;margin-top:30px;letter-spacing:1px}
+@media(max-width:650px){.wrap{padding:13px 14px 38px}.hero{grid-template-columns:1fr .65fr;min-height:190px;padding:20px 17px;gap:5px}.hero h2{font-size:25px}.hero p{font-size:12px}.tiger-emblem{width:125px;height:125px;font-size:75px}.hero-wordmark{font-size:8px;letter-spacing:2px}.panel{padding:19px}.brand h1{font-size:18px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.phone-row{grid-template-columns:116px 1fr}.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.feature-grid{grid-template-columns:repeat(3,1fr)}.feature{padding:12px 9px;font-size:12px}}
+@media(max-width:380px){.hero{grid-template-columns:1fr}.hero-art{display:none}.rooms{grid-template-columns:1fr}.feature-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div class="brand"><div class="logo">虎</div><div><h1>TIGER LIVE</h1><small id="tagline">Live rooms • Connect • Enjoy</small></div></div>
+  <div class="brand"><div class="logo">🐅</div><div><h1>TIGER LIVE</h1><small id="tagline">Live rooms • Connect • Enjoy</small></div></div>
   <select class="lang" id="language" aria-label="Language"><option value="bn">বাংলা</option><option value="en">English</option></select>
 </header>
 
 <main>
+<section class="hero" aria-label="TIGER LIVE welcome">
+  <div class="hero-copy"><div class="eyebrow">YOUR STAGE • YOUR COMMUNITY</div><h2>বাংলা • English<br>TIGER LIVE</h2><p>লাইভ কমিউনিটি, নতুন বন্ধু আর আনন্দের এক ঠিকানা।</p></div>
+  <div class="hero-art"><div class="tiger-emblem">🐅</div><div class="hero-wordmark">TIGER LIVE</div></div>
+</section>
 <section class="panel auth" id="authPanel">
   <div class="tabs"><button id="loginTab" class="active" type="button">লগইন</button><button id="signupTab" type="button">নতুন অ্যাকাউন্ট</button></div>
   <h2 id="authTitle">TIGER LIVE-এ স্বাগতম</h2>
@@ -105,16 +97,27 @@ function renderMode(){
  document.querySelectorAll("[data-bn]").forEach(el=>el.textContent=el.dataset[lang]);
 }
 function normalizePhone(){
- const code=$("country").value;
- let local=$("phone").value.trim().replace(/[^\d]/g,"");
- if(local.startsWith("0")) local=local.replace(/^0+/,"");
- if(!local || local.length<5 || local.length>14) return null;
- return code+local;
+ const raw=$("phone").value.trim();
+ const digits=raw.replace(/\D/g,"");
+ let e164;
+ // If the user enters a complete international number, keep that country code.
+ if(raw.startsWith("+") || raw.startsWith("00")){
+  const international=raw.startsWith("00")?digits.slice(2):digits;
+  if(international.length<7 || international.length>15) return null;
+  e164="+"+international;
+ }else{
+  let local=digits.replace(/^0+/,"");
+  if(!local || local.length<5 || local.length>14) return null;
+  e164=$("country").value+local;
+ }
+ const e164Digits=e164.replace(/\D/g,"");
+ if(e164Digits.length<7 || e164Digits.length>15) return null;
+ return e164;
 }
 /* Supabase Auth uses Email/Password here because native Phone Auth requires an SMS provider.
    The generated internal email is NOT a real mailbox and does not prove phone ownership. */
 function phoneToAuthEmail(e164){
- return "p"+e164.replace(/\D/g,"")+"@login.tigerlive.com";
+ return "u"+e164.replace(/\D/g,"")+"@login.tigerlive.com";
 }
 async function handleAuth(event){
  event.preventDefault();clearMessage();
@@ -152,7 +155,9 @@ async function googleLogin(){
 function showDashboard(user){
  currentUser=user;$("authPanel").style.display="none";$("dashboard").style.display="block";
  const phone=user?.user_metadata?.phone_number;
- $("userLine").textContent=phone||user?.email||translations[lang].logged;
+ const accountId=user?.id?user.id.slice(0,8).toUpperCase():"—";
+ const identity=phone||user?.email||translations[lang].logged;
+ $("userLine").textContent=(lang==="bn"?"অ্যাকাউন্ট আইডি: ":"Account ID: ")+accountId+"  •  "+identity;
 }
 async function logout(){
  await supabaseClient.auth.signOut();currentUser=null;$("dashboard").style.display="none";$("authPanel").style.display="block";$("password").value="";$("confirmPassword").value="";
