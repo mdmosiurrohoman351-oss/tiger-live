@@ -4,297 +4,651 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#09080a">
-<meta name="description" content="TIGER LIVE — বাংলা লাইভ কমিউনিটি">
 <title>TIGER LIVE</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#07080c;--panel:#11151f;--panel2:#1b2230;--gold:#f4c45e;--gold2:#ffe4a0;--text:#fbf8ef;--muted:#a6adbb;--line:#34313a;--green:#62dda4;--red:#ff7782}
-*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% -15%,#59401b 0,transparent 42%),radial-gradient(ellipse at 100% 55%,#1d1720 0,transparent 38%),#07080c;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background:repeating-linear-gradient(132deg,transparent 0 44px,#d89b32 45px 48px,transparent 49px 92px);mask-image:linear-gradient(90deg,#000,transparent 45%,#000)}
-button,input,select{font:inherit}button{cursor:pointer}.wrap{position:relative;width:min(1120px,100%);margin:auto;padding:20px 22px 54px;z-index:1}
-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#ffe7a8,#d99522);color:#211400;font-size:27px;box-shadow:0 8px 28px #e5a52b35}.brand h1{font-size:21px;letter-spacing:2px;margin:0;color:var(--gold2)}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.7px;margin-top:3px}.lang{background:#151a24;border:1px solid #55452b;color:var(--text);padding:9px 12px;border-radius:11px}
-.hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;min-height:240px;padding:28px 34px;margin:0 0 22px;border:1px solid #5b4728;border-radius:26px;overflow:hidden;background:linear-gradient(105deg,#17130e 0%,#171820 55%,#21180e 100%);box-shadow:0 18px 55px #0008}.hero:after{content:"";position:absolute;right:-80px;top:-150px;width:440px;height:440px;border:1px solid #b9842d33;border-radius:50%;box-shadow:0 0 0 28px #b9842d0d,0 0 0 58px #b9842d0a}.hero-copy{position:relative;z-index:1}.eyebrow{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:2.5px}.hero h2{font-size:clamp(26px,4vw,42px);line-height:1.08;margin:12px 0 9px;max-width:550px}.hero p{color:#c0b8a9;margin:0;line-height:1.6;font-size:14px}.hero-art{position:relative;z-index:1;display:grid;place-items:center;min-height:175px}.tiger-emblem{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;font-size:106px;background:radial-gradient(circle,#7b5723 0,#2b2115 53%,#100e0d 72%);border:2px solid #b98a3e;box-shadow:0 0 0 9px #c99a3b13,0 0 55px #d49a3540,inset 0 0 35px #0009}.hero-wordmark{position:absolute;bottom:-3px;font-size:10px;letter-spacing:4px;font-weight:900;color:var(--gold2);text-shadow:0 2px 9px #000}
-.panel{background:linear-gradient(145deg,#171c27f5,#0e121bf7);border:1px solid #59472b;border-radius:22px;padding:24px;box-shadow:0 20px 55px #0008}.auth{max-width:520px;margin:0 auto 28px}.tabs{display:flex;gap:8px;background:#090d14;padding:5px;border:1px solid #252b35;border-radius:13px;margin-bottom:22px}.tabs button{flex:1;border:0;border-radius:9px;padding:11px;background:transparent;color:var(--muted);font-weight:750}.tabs button.active{background:linear-gradient(135deg,var(--gold2),#d99a2b);color:#211400}.panel h2{margin:0 0 8px;font-size:25px}.sub{color:var(--muted);margin:0 0 20px;font-size:14px;line-height:1.55}.field{margin:14px 0}.field label{display:block;font-size:13px;color:#d6d0c5;margin-bottom:7px}input,select{width:100%;border:1px solid #3b414d;background:#090e17;color:var(--text);padding:13px 14px;border-radius:11px;outline:none}input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px #f4c45e18}.phone-row{display:grid;grid-template-columns:135px 1fr;gap:8px}.primary{width:100%;border:0;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--gold2),#d99522);color:#211400;font-weight:900;margin-top:8px;box-shadow:0 8px 22px #d9952228}.primary:disabled{opacity:.65}.google{width:100%;border:1px solid #414653;border-radius:12px;padding:12px;background:#f8f8f8;color:#202124;font-weight:750;margin-top:12px}.google span:first-child{font-weight:900;margin-right:8px;color:#4285f4}.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:16px 0}.or:before,.or:after{content:"";height:1px;background:#343b47;flex:1}.note{font-size:11px;color:#929aaa;line-height:1.55;margin-top:15px}.msg{display:none;padding:11px 13px;border-radius:10px;margin:12px 0;font-size:13px;line-height:1.5}.msg.error{display:block;background:#3a1d29;color:#ffb6bd;border:1px solid #713544}.msg.success{display:block;background:#143326;color:#9cf0c5;border:1px solid #28664b}
-.dashboard{display:none}.welcome{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px;padding:23px 25px;border:1px solid #5a472a;border-radius:22px;background:linear-gradient(110deg,#251c10,#151923 60%,#21180e)}.welcome h2{margin:0;color:var(--gold2)}.welcome p{color:#c3b9a8;margin:6px 0 0}.logout{border:1px solid #6a5735;background:#1b202b;color:#fff;padding:10px 15px;border-radius:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:linear-gradient(145deg,#1a202c,#10151e);border:1px solid #3d3b36;padding:17px;border-radius:15px}.stat b{display:block;font-size:24px;color:var(--gold)}.stat small{color:var(--muted)}.section-title{display:flex;align-items:center;justify-content:space-between;margin:27px 0 13px}.section-title h3{margin:0;font-size:18px;color:var(--gold2)}.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.room{background:linear-gradient(145deg,#1c2532,#10151e);border:1px solid #383e48;border-radius:15px;padding:16px;min-height:112px;transition:transform .18s,border-color .18s}.room:hover{transform:translateY(-2px);border-color:#a67a35}.room .emoji{font-size:25px}.room b{display:block;margin:7px 0 3px}.room small{color:var(--muted)}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feature{background:linear-gradient(145deg,#1c2430,#10151d);border:1px solid #3b414b;padding:16px;border-radius:14px;color:#e8e2d6}.feature strong{display:block;font-size:23px;margin-bottom:7px}.footer{text-align:center;color:#777b85;font-size:11px;margin-top:30px;letter-spacing:1px}
-@media(max-width:650px){.wrap{padding:13px 14px 38px}.hero{grid-template-columns:1fr .65fr;min-height:190px;padding:20px 17px;gap:5px}.hero h2{font-size:25px}.hero p{font-size:12px}.tiger-emblem{width:125px;height:125px;font-size:75px}.hero-wordmark{font-size:8px;letter-spacing:2px}.panel{padding:19px}.brand h1{font-size:18px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.phone-row{grid-template-columns:116px 1fr}.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.feature-grid{grid-template-columns:repeat(3,1fr)}.feature{padding:12px 9px;font-size:12px}}
-@media(max-width:380px){.hero{grid-template-columns:1fr}.hero-art{display:none}.rooms{grid-template-columns:1fr}.feature-grid{grid-template-columns:repeat(2,1fr)}}
-
-/* Super Admin panel */
-.admin-entry{border:1px solid #b98a3e;background:linear-gradient(135deg,#332610,#171b25);color:#ffe4a0;padding:10px 14px;border-radius:10px;font-weight:800;margin-right:8px}
-.admin-panel{display:none;margin-top:22px;border:1px solid #9a7335;border-radius:20px;padding:20px;background:linear-gradient(145deg,#171b25,#0d1119);box-shadow:0 18px 45px #0008}
-.admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.admin-head h2{margin:0;color:var(--gold2);font-size:23px}
-.admin-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #80612e;border-radius:999px;color:#ffe4a0;font-size:11px;font-weight:800}
-.admin-warning{padding:12px 14px;border:1px solid #785c2d;border-radius:12px;background:#2a2114;color:#f4dca9;font-size:13px;line-height:1.55;margin:12px 0 18px}
-.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.admin-card{border:1px solid #3e4652;border-radius:14px;padding:16px;background:linear-gradient(145deg,#202938,#121821);min-height:118px}
-.admin-card strong{display:block;font-size:16px;color:#ffe4a0;margin-bottom:7px}
-.admin-card p{margin:0;color:#aeb7c5;font-size:12px;line-height:1.5}
-.admin-card small{display:inline-block;margin-top:10px;color:#f2c66d;font-size:10px;font-weight:800;letter-spacing:.4px}
-.admin-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-.admin-back{border:1px solid #6a5735;background:#1b202b;color:#fff;padding:11px 15px;border-radius:10px}
-@media(max-width:520px){.admin-grid{grid-template-columns:1fr}.admin-entry{margin-right:0}}
-.identity-manager{border:1px solid #6d552e;background:#111722;border-radius:16px;padding:16px;margin:18px 0}
-.identity-manager h3{margin:0 0 7px;color:#ffe4a0}
-.identity-manager .help{font-size:12px;color:#aeb7c5;line-height:1.5;margin:0 0 14px}
-.identity-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.identity-form .field{margin:0}
-.identity-form .full{grid-column:1/-1}
-.identity-form label{display:block;color:#ddd2bb;font-size:12px;margin:0 0 6px}
-.identity-form input,.identity-form select{width:100%;min-width:0}
-.identity-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.identity-buttons button{border:0;border-radius:10px;padding:11px 15px;font-weight:800}
-.identity-save{background:linear-gradient(135deg,#ffe4a0,#d99522);color:#211400}
-.identity-refresh{background:#293343;color:#fff;border:1px solid #465267!important}
-.identity-result{font-size:12px;line-height:1.5;margin-top:10px;white-space:pre-wrap}
-.identity-table-wrap{overflow-x:auto;margin-top:14px}
-.identity-table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
-.identity-table th,.identity-table td{padding:10px 8px;text-align:left;border-bottom:1px solid #343e4c}
-.identity-table th{color:#f4d58d}
-.identity-table td{color:#e4e8ef;overflow-wrap:anywhere}
-@media(max-width:520px){.identity-form{grid-template-columns:1fr}.identity-form .full{grid-column:auto}}
-
+:root {
+  --bg:#09080a;
+  --panel:#151218;
+  --gold:#f5c451;
+  --text:#fff;
+  --muted:#aaa;
+  --border:#40331b;
+  --red:#e34c4c;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:16px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+.container { max-width:650px; margin:auto; }
+header { text-align:center; padding:22px 0; }
+.logo {
+  color:var(--gold);
+  font-size:35px;
+  font-weight:900;
+  letter-spacing:3px;
+  text-shadow:0 0 18px #b8862b;
+}
+.tagline { color:var(--muted); margin-top:8px; }
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  margin:15px 0;
+}
+h2,h3 { color:var(--gold); }
+input,select {
+  width:100%;
+  padding:14px;
+  margin:7px 0;
+  border:1px solid #514126;
+  border-radius:9px;
+  background:#09080a;
+  color:white;
+  font-size:16px;
+}
+button {
+  padding:13px 16px;
+  border:0;
+  border-radius:9px;
+  background:var(--gold);
+  color:#17110a;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+}
+button:disabled { opacity:.5; }
+.full { width:100%; margin-top:10px; }
+.secondary {
+  background:#29232e;
+  color:white;
+  border:1px solid var(--border);
+}
+.danger { background:var(--red); color:white; }
+.hidden { display:none !important; }
+.muted { color:var(--muted); font-size:13px; }
+.gold { color:var(--gold); }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.tile {
+  background:#211b25;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:17px 10px;
+  text-align:center;
+}
+.room {
+  background:#211b25;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  margin:7px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.room span { color:var(--gold); }
+.row {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.row button { flex:1; }
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+th,td {
+  border-bottom:1px solid #40331b;
+  padding:9px 5px;
+  text-align:left;
+  overflow-wrap:anywhere;
+}
+.table-wrap { overflow-x:auto; }
+.status { color:#6ee7a0; }
+.error { color:#ff8585; }
+footer {
+  text-align:center;
+  color:#777;
+  padding:25px 0;
+  font-size:12px;
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
+<div class="container">
+
 <header>
-  <div class="brand"><div class="logo">🐅</div><div><h1>TIGER LIVE</h1><small id="tagline">Live rooms • Connect • Enjoy</small></div></div>
-  <select class="lang" id="language" aria-label="Language"><option value="bn">বাংলা</option><option value="en">English</option></select>
+  <div class="logo">🐯 TIGER LIVE</div>
+  <div class="tagline">বাংলা • English | Live Community</div>
 </header>
 
-<main>
-<section class="hero" aria-label="TIGER LIVE welcome">
-  <div class="hero-copy"><div class="eyebrow">YOUR STAGE • YOUR COMMUNITY</div><h2>বাংলা • English<br>TIGER LIVE</h2><p>লাইভ কমিউনিটি, নতুন বন্ধু আর আনন্দের এক ঠিকানা।</p></div>
-  <div class="hero-art"><div class="tiger-emblem">🐅</div><div class="hero-wordmark">TIGER LIVE</div></div>
-</section>
-<section class="panel auth" id="authPanel">
-  <div class="tabs"><button id="loginTab" class="active" type="button">লগইন</button><button id="signupTab" type="button">নতুন অ্যাকাউন্ট</button></div>
-  <h2 id="authTitle">TIGER LIVE-এ স্বাগতম</h2>
-  <p class="sub" id="authSub">ফোন নম্বর ও পাসওয়ার্ড দিয়ে প্রবেশ করুন।</p>
-  <form id="authForm">
-    <div class="field"><label id="phoneLabel" for="phone">ফোন নম্বর</label>
-      <div class="phone-row">
-        <select id="country" aria-label="Country code">
-          <option value="+880">বাংলাদেশ (+880)</option><option value="+964" selected>ইরাক (+964)</option><option value="+91">ভারত (+91)</option><option value="+92">পাকিস্তান (+92)</option><option value="+1">যুক্তরাষ্ট্র/কানাডা (+1)</option><option value="+44">যুক্তরাজ্য (+44)</option><option value="+971">UAE (+971)</option><option value="+966">সৌদি আরব (+966)</option><option value="+974">কাতার (+974)</option><option value="+965">কুয়েত (+965)</option><option value="+968">ওমান (+968)</option><option value="+973">বাহরাইন (+973)</option><option value="+60">মালয়েশিয়া (+60)</option><option value="+65">সিঙ্গাপুর (+65)</option><option value="+61">অস্ট্রেলিয়া (+61)</option><option value="+49">জার্মানি (+49)</option><option value="+33">ফ্রান্স (+33)</option><option value="+39">ইতালি (+39)</option><option value="+34">স্পেন (+34)</option><option value="+90">তুরস্ক (+90)</option><option value="+81">জাপান (+81)</option><option value="+82">দক্ষিণ কোরিয়া (+82)</option><option value="+86">চীন (+86)</option><option value="+7">রাশিয়া (+7)</option><option value="+27">দক্ষিণ আফ্রিকা (+27)</option><option value="+234">নাইজেরিয়া (+234)</option><option value="+254">কেনিয়া (+254)</option><option value="+20">মিশর (+20)</option><option value="+94">শ্রীলঙ্কা (+94)</option><option value="+977">নেপাল (+977)</option><option value="+63">ফিলিপাইন (+63)</option><option value="+66">থাইল্যান্ড (+66)</option><option value="+84">ভিয়েতনাম (+84)</option><option value="+351">পর্তুগাল (+351)</option><option value="+31">নেদারল্যান্ডস (+31)</option><option value="+46">সুইডেন (+46)</option><option value="+47">নরওয়ে (+47)</option><option value="+41">সুইজারল্যান্ড (+41)</option><option value="+32">বেলজিয়াম (+32)</option><option value="+353">আয়ারল্যান্ড (+353)</option><option value="+52">মেক্সিকো (+52)</option><option value="+55">ব্রাজিল (+55)</option><option value="+64">নিউজিল্যান্ড (+64)</option>
-        </select>
-        <input id="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="7XXXXXXXXX" required>
-      </div>
-    </div>
-    <div class="field"><label id="passwordLabel" for="password">পাসওয়ার্ড</label><input id="password" type="password" autocomplete="current-password" minlength="6" placeholder="কমপক্ষে ৬ অক্ষর" required></div>
-    <div class="field" id="confirmField" style="display:none"><label id="confirmLabel" for="confirmPassword">পাসওয়ার্ড আবার লিখুন</label><input id="confirmPassword" type="password" minlength="6" autocomplete="new-password"></div>
-    <div class="msg" id="message" role="status" aria-live="polite"></div>
-    <button class="primary" id="submitBtn" type="submit">লগইন করুন</button>
-  </form>
-  <div class="or" id="orText">অথবা</div>
-  <button class="google" id="googleBtn" type="button"><span>G</span><span id="googleText">Google দিয়ে চালিয়ে যান</span></button>
-  <p class="note" id="authNote">ফোন নম্বরটি অ্যাকাউন্ট শনাক্ত করতে ব্যবহার হবে। এই পদ্ধতিতে SMS/OTP পাঠানো হয় না এবং ফোন নম্বরের মালিকানা যাচাই হয় না।</p>
+<!-- LOGIN / REGISTER -->
+<section id="authPanel" class="panel">
+  <h2 id="authTitle">TIGER LIVE Login</h2>
+
+  <div id="registerNameBox" class="hidden">
+    <input id="fullName" type="text" placeholder="আপনার নাম">
+  </div>
+
+  <label class="muted">Country / দেশ</label>
+  <select id="countryCode">
+    <option value="880">Bangladesh (+880)</option>
+    <option value="964" selected>Iraq (+964)</option>
+    <option value="44">United Kingdom (+44)</option>
+  </select>
+
+  <input id="phone" type="tel" placeholder="Phone Number" autocomplete="tel">
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+
+  <button id="authSubmit" class="full" onclick="submitAuth()">Login</button>
+
+  <button id="modeButton" class="full secondary" onclick="toggleMode()">
+    Create New Account / Register
+  </button>
+
+  <div style="text-align:center;margin:15px 0;color:#aaa">OR</div>
+
+  <button class="full secondary" onclick="googleLogin()">
+    Continue with Google
+  </button>
+
+  <p id="authMessage" class="muted"></p>
+  <p class="muted">
+    ফোন নম্বর ও পাসওয়ার্ড দিয়ে অ্যাকাউন্ট ব্যবহার করুন।
+  </p>
 </section>
 
-<section class="dashboard" id="dashboard">
-  <div class="welcome"><div><h2 id="welcomeTitle">স্বাগতম!</h2><p id="userLine">আপনি TIGER LIVE-এ লগইন করেছেন।</p></div><div><button class="admin-entry" id="adminOpenBtn" type="button" style="display:none">🛡️ Super Admin</button><button class="logout" id="logoutBtn">লগআউট</button></div></div>
-  <div class="stats"><div class="stat"><b>20</b><small id="audioStat">অডিও রুম</small></div><div class="stat"><b>20</b><small id="videoStat">ভিডিও রুম</small></div><div class="stat"><b>24/7</b><small id="liveStat">লাইভ কমিউনিটি</small></div></div>
-  <div class="section-title"><h3 id="audioTitle">🎙️ অডিও রুম</h3></div><div class="rooms" id="audioRooms"></div>
-  <div class="section-title"><h3 id="videoTitle">📹 ভিডিও রুম</h3></div><div class="rooms" id="videoRooms"></div>
-  <div class="section-title"><h3 id="featureTitle">✨ অন্যান্য ফিচার</h3></div>
-  <div class="feature-grid"><div class="feature"><strong>🎁</strong><span data-bn="গিফট" data-en="Gifts">গিফট</span></div><div class="feature"><strong>💬</strong><span data-bn="চ্যাট" data-en="Chat">চ্যাট</span></div><div class="feature"><strong>👥</strong><span data-bn="বন্ধু" data-en="Friends">বন্ধু</span></div><div class="feature"><strong>🏆</strong><span data-bn="র‍্যাঙ্কিং" data-en="Ranking">র‍্যাঙ্কিং</span></div><div class="feature"><strong>🎵</strong><span data-bn="মিউজিক" data-en="Music">মিউজিক</span></div><div class="feature"><strong>⚙️</strong><span data-bn="সেটিংস" data-en="Settings">সেটিংস</span></div></div>
-  <section class="admin-panel" id="adminPanel" aria-label="Super Admin Panel">
-    <div class="admin-head"><h2>🛡️ TIGER LIVE Super Admin</h2><span class="admin-chip">★ OWNER ACCESS</span></div>
-    <p class="sub">প্রধান নিয়ন্ত্রণ কেন্দ্র — শুধু অনুমোদিত মালিকের অ্যাকাউন্টে দেখানো হবে।</p>
-    <div class="admin-warning"><strong>নিরাপত্তা নোট:</strong> এটি Admin Panel-এর প্রথম ইন্টারফেস। ব্যবহারকারী ব্লক, Admin অনুমোদন, Diamond/Wallet পরিবর্তন বা Room নিয়ন্ত্রণ চালুর আগে Supabase Database, Row Level Security (RLS) এবং নিরাপদ server-side function সংযুক্ত করতে হবে। তাই এখন কোনো অর্থ/অ্যাকাউন্ট পরিবর্তনের বোতাম সক্রিয় করা হয়নি।</div>
-    <section class="identity-manager" aria-label="Identity ID Management">
-      <h3>🪪 Identity ID Management</h3>
-      <p class="help">প্রতিটি ব্যবহারকারীর জন্য আলাদা Reseller, Agency, ATS VIP অথবা SSC VIP ID লিখে বরাদ্দ করুন। User UUID Supabase Auth থেকে কপি করে দিন। একই custom ID একাধিক ব্যবহারকারীকে দেওয়া যাবে না।</p>
-      <form id="identityForm" class="identity-form">
-        <div class="field full"><label for="identityUserId">ব্যবহারকারীর User UUID</label><input id="identityUserId" type="text" placeholder="যেমন: 4a543e0e-f70b-49de-9ffb-e8425ada8e1c" autocomplete="off" required></div>
-        <div class="field"><label for="identityCategory">ID-এর ধরন</label><select id="identityCategory" required><option value="reseller">Reseller ID</option><option value="agency">Agency ID</option><option value="ats_vip">ATS VIP ID</option><option value="ssc_vip">SSC VIP ID</option></select></div>
-        <div class="field"><label for="identityCustomId">আপনার নির্ধারিত ID</label><input id="identityCustomId" type="text" maxlength="80" placeholder="নিজে ID লিখুন" autocomplete="off" required></div>
-        <div class="identity-buttons full"><button class="identity-save" id="identitySaveBtn" type="submit">ID বরাদ্দ / আপডেট করুন</button><button class="identity-refresh" id="identityRefreshBtn" type="button">তালিকা রিফ্রেশ</button></div>
-      </form>
-      <div id="identityResult" class="identity-result" role="status" aria-live="polite"></div>
-      <div class="identity-table-wrap"><table class="identity-table"><thead><tr><th>User UUID</th><th>Category</th><th>Custom ID</th><th>Created</th></tr></thead><tbody id="identityRows"><tr><td colspan="4">তালিকা লোড করতে Refresh চাপুন।</td></tr></tbody></table></div>
-    </section>
-    <div class="admin-grid">
-      <div class="admin-card"><strong>👤 User Management</strong><p>ব্যবহারকারীর তালিকা, প্রোফাইল, Block/Unblock এবং রিপোর্ট পর্যালোচনা।</p><small>DATABASE CONNECTION REQUIRED</small></div>
-      <div class="admin-card"><strong>🛡️ Admin & Moderator</strong><p>Admin/Moderator আবেদন দেখা এবং মালিকের অনুমোদনে ভূমিকা নির্ধারণ।</p><small>OWNER APPROVAL REQUIRED</small></div>
-      <div class="admin-card"><strong>🎙️ Audio & Video Rooms</strong><p>রুম চালু/বন্ধ, রুমের নাম, Host এবং রুমের নিয়ম পরিচালনা।</p><small>LIVE ROOM SERVICE REQUIRED</small></div>
-      <div class="admin-card"><strong>💎 Wallet & Diamonds</strong><p>ব্যালেন্স, Recharge, Transfer ও লেনদেনের হিসাব যাচাই।</p><small>SECURE LEDGER REQUIRED</small></div>
-      <div class="admin-card"><strong>🎁 Gifts & VIP</strong><p>Gift catalog, মূল্য, VIP সুবিধা এবং Ranking-এর নিয়ম।</p><small>DATABASE CONNECTION REQUIRED</small></div>
-      <div class="admin-card"><strong>⚙️ App Settings & Support</strong><p>বাংলা/English সেটিংস, Support requests এবং অ্যাপের সাধারণ নিয়ন্ত্রণ।</p><small>SETTINGS SERVICE REQUIRED</small></div>
+<!-- DASHBOARD -->
+<section id="dashboard" class="hidden">
+
+  <div class="panel">
+    <h2>🐯 TIGER LIVE Dashboard</h2>
+    <p id="userLine" class="gold">Account</p>
+    <p id="ownerStatus" class="muted"></p>
+    <button class="danger full" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="grid">
+    <div class="tile">
+      <div>💎</div>
+      <h3>Diamond</h3>
+      <p>শীঘ্রই চালু হবে</p>
     </div>
-    <div class="admin-actions"><button class="admin-back" id="adminBackBtn" type="button">← Dashboard-এ ফিরে যান</button></div>
+    <div class="tile">
+      <div>⭐</div>
+      <h3>Level</h3>
+      <p>0</p>
+    </div>
+    <div class="tile">
+      <div>🎁</div>
+      <h3>Gift</h3>
+      <p>Coming Soon</p>
+    </div>
+    <div class="tile">
+      <div>👑</div>
+      <h3>VIP</h3>
+      <p>Coming Soon</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>🎙️ Audio Rooms</h2>
+    <div id="audioRooms"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📹 Video Rooms</h2>
+    <div id="videoRooms"></div>
+  </div>
+
+  <div class="panel">
+    <h2>More Features</h2>
+    <div class="grid">
+      <div class="tile">💰 Wallet</div>
+      <div class="tile">💎 Recharge</div>
+      <div class="tile">🎁 Gifts</div>
+      <div class="tile">👥 Friends</div>
+      <div class="tile">🏢 Agency</div>
+      <div class="tile">🛟 Support</div>
+    </div>
+  </div>
+
+  <!-- OWNER ONLY -->
+  <section id="adminPanel" class="panel hidden">
+    <h2>👑 SUPER ADMIN PANEL</h2>
+    <p class="gold">Owner Control Center</p>
+
+    <div class="row">
+      <button onclick="loadAdminUsers()">Refresh Users</button>
+    </div>
+
+    <p id="adminMessage" class="muted"></p>
+
+    <h3>Registered Users</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Account ID</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="userTable">
+          <tr><td colspan="4">Load users to view</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
+
 </section>
-</main>
-<div class="footer">TIGER LIVE © 2026</div>
+
+<footer>
+  TIGER LIVE © 2026 | বাংলা • English
+</footer>
+
 </div>
+
 <script>
-/* Supabase browser configuration: publishable key is intended for frontend use. */
+/* ==================================
+   SUPABASE CONNECTION
+================================== */
+
 const SUPABASE_URL = "https://yehheffwgloegvmexqzy.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-const $ = (id) => document.getElementById(id);
-let mode = "login";
-let lang = "bn";
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+/* ==================================
+   APP VARIABLES
+================================== */
+
+const $ = id => document.getElementById(id);
+
 let currentUser = null;
-// Known owner accounts for this prototype. Real admin authorization must also be enforced by Supabase RLS/server functions.
-const SUPER_ADMIN_USER_IDS = new Set([
- "4a543e0e-f70b-49de-9ffb-e8425ada8e1c"
-]);
+let isCurrentUserOwner = false;
+let mode = "login";
+let adminOffset = 0;
 
-const translations = {
- bn:{login:"লগইন",signup:"নতুন অ্যাকাউন্ট",title:"TIGER LIVE-এ স্বাগতম",subLogin:"ফোন নম্বর ও পাসওয়ার্ড দিয়ে প্রবেশ করুন।",subSignup:"নতুন অ্যাকাউন্ট খুলতে ফোন নম্বর ও পাসওয়ার্ড দিন।",phone:"ফোন নম্বর",password:"পাসওয়ার্ড",confirm:"পাসওয়ার্ড আবার লিখুন",submitLogin:"লগইন করুন",submitSignup:"অ্যাকাউন্ট তৈরি করুন",or:"অথবা",google:"Google দিয়ে চালিয়ে যান",note:"ফোন নম্বরটি অ্যাকাউন্ট শনাক্ত করতে ব্যবহার হবে। এই পদ্ধতিতে SMS/OTP পাঠানো হয় না এবং ফোন নম্বরের মালিকানা যাচাই হয় না।",welcome:"স্বাগতম!",logged:"আপনি TIGER LIVE-এ লগইন করেছেন।",logout:"লগআউট",audio:"অডিও রুম",video:"ভিডিও রুম",live:"লাইভ কমিউনিটি",features:"অন্যান্য ফিচার",tag:"লাইভ রুম • সংযোগ • আনন্দ",phoneErr:"সঠিক ফোন নম্বর লিখুন।",passErr:"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",matchErr:"দুইটি পাসওয়ার্ড মিলছে না।",signupOk:"অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।",loginErr:"লগইন করা যায়নি। ফোন নম্বর ও পাসওয়ার্ড পরীক্ষা করুন।",signupErr:"অ্যাকাউন্ট তৈরি করা যায়নি। নম্বরটি আগে ব্যবহার করা হয়েছে কি না দেখুন।",googleErr:"Google লগইন শুরু করা যায়নি। Supabase-এ Google provider সেটিংস পরীক্ষা করুন।",rooms:"রুম",account:"অ্যাকাউন্ট"},
- en:{login:"Log in",signup:"Create account",title:"Welcome to TIGER LIVE",subLogin:"Sign in with your phone number and password.",subSignup:"Create your account with a phone number and password.",phone:"Phone number",password:"Password",confirm:"Confirm password",submitLogin:"Log in",submitSignup:"Create account",or:"OR",google:"Continue with Google",note:"Your phone number is used as an account identifier. This method does not send SMS/OTP and does not verify phone ownership.",welcome:"Welcome!",logged:"You are signed in to TIGER LIVE.",logout:"Log out",audio:"Audio rooms",video:"Video rooms",live:"Live community",features:"More features",tag:"Live rooms • Connect • Enjoy",phoneErr:"Enter a valid phone number.",passErr:"Password must be at least 6 characters.",matchErr:"Passwords do not match.",signupOk:"Account created. You can now log in.",loginErr:"Could not log in. Check your phone number and password.",signupErr:"Could not create account. The number may already be registered.",googleErr:"Could not start Google login. Check the Google provider settings in Supabase.",rooms:"Room",account:"Account"}
-};
+/* ==================================
+   PHONE NUMBER
+================================== */
 
-function setMessage(text, type="error"){const el=$("message");el.textContent=text;el.className="msg "+type;}
-function clearMessage(){const el=$("message");el.textContent="";el.className="msg";}
-function renderMode(){
- const t=translations[lang]; $("loginTab").classList.toggle("active",mode==="login");$("signupTab").classList.toggle("active",mode==="signup");
- $("authTitle").textContent=t.title;$("authSub").textContent=mode==="login"?t.subLogin:t.subSignup;
- $("phoneLabel").textContent=t.phone;$("passwordLabel").textContent=t.password;$("confirmLabel").textContent=t.confirm;
- $("confirmField").style.display=mode==="signup"?"block":"none";$("confirmPassword").required=mode==="signup";
- $("submitBtn").textContent=mode==="login"?t.submitLogin:t.submitSignup;$("orText").textContent=t.or;$("googleText").textContent=t.google;$("authNote").textContent=t.note;
- $("loginTab").textContent=t.login;$("signupTab").textContent=t.signup;$("logoutBtn").textContent=t.logout;
- $("tagline").textContent=t.tag;$("welcomeTitle").textContent=t.welcome;$("userLine").textContent=t.logged;
- $("audioStat").textContent=t.audio;$("videoStat").textContent=t.video;$("liveStat").textContent=t.live;
- $("audioTitle").textContent="🎙️ "+t.audio;$("videoTitle").textContent="📹 "+t.video;$("featureTitle").textContent="✨ "+t.features;
- document.querySelectorAll("[data-bn]").forEach(el=>el.textContent=el.dataset[lang]);
-}
-function normalizePhone(){
- const raw=$("phone").value.trim();
- const digits=raw.replace(/\D/g,"");
- let e164;
- // If the user enters a complete international number, keep that country code.
- if(raw.startsWith("+") || raw.startsWith("00")){
-  const international=raw.startsWith("00")?digits.slice(2):digits;
-  if(international.length<7 || international.length>15) return null;
-  e164="+"+international;
- }else{
-  let local=digits.replace(/^0+/,"");
-  if(!local || local.length<5 || local.length>14) return null;
-  e164=$("country").value+local;
- }
- const e164Digits=e164.replace(/\D/g,"");
- if(e164Digits.length<7 || e164Digits.length>15) return null;
- return e164;
-}
-/* Supabase Auth uses Email/Password here because native Phone Auth requires an SMS provider.
-   The generated internal email is NOT a real mailbox and does not prove phone ownership. */
-function phoneToAuthEmails(e164){
- const digits=e164.replace(/\D/g,"");
- // Support both the original u-prefix account and the older p-prefix account.
- return ["u"+digits+"@login.tigerlive.com", "p"+digits+"@login.tigerlive.com"];
-}
-async function handleAuth(event){
- event.preventDefault();clearMessage();
- const t=translations[lang], phone=normalizePhone(), password=$("password").value;
- if(!phone){setMessage(t.phoneErr);return;}
- if(password.length<6){setMessage(t.passErr);return;}
- const emails=phoneToAuthEmails(phone);
- $("submitBtn").disabled=true;$("submitBtn").textContent="...";
- try{
-  if(mode==="signup"){
-   if(password!==$("confirmPassword").value){setMessage(t.matchErr);return;}
-   // New registrations continue to use the canonical u-prefix account.
-   const {data,error}=await supabaseClient.auth.signUp({email:emails[0],password,options:{data:{phone_number:phone,app_name:"TIGER LIVE"}}});
-   if(error) throw error;
-   if(data.session){showDashboard(data.user);}
-   else setMessage(t.signupOk,"success");
-  }else{
-   let loginData=null;
-   let loginError=null;
-   for(const email of emails){
-    const result=await supabaseClient.auth.signInWithPassword({email,password});
-    if(!result.error){loginData=result.data;break;}
-    loginError=result.error;
-    // Try the legacy p-prefix only when the canonical account credentials do not match.
-    const message=String(result.error.message||"").toLowerCase();
-    const invalidCredentials=result.error.code==="invalid_credentials" || message.includes("invalid login credentials");
-    if(!invalidCredentials) break;
-   }
-   if(!loginData) throw loginError || new Error(t.loginErr);
-   showDashboard(loginData.user);
+function getPhoneNumber() {
+  let digits = $("phone").value.replace(/\D/g, "");
+  const country = $("countryCode").value;
+
+  if (!digits) return "";
+
+  // Remove leading zero from local phone number.
+  if (digits.startsWith("0")) {
+    digits = digits.substring(1);
   }
- }catch(err){
-  console.error("Authentication error:",err);
-  setMessage(mode==="signup"?(err.message||t.signupErr):(err.message||t.loginErr));
- }finally{
-  $("submitBtn").disabled=false;renderMode();
- }
+
+  // If country code is already entered, do not add it twice.
+  if (digits.startsWith(country)) {
+    return digits;
+  }
+
+  return country + digits;
 }
-async function googleLogin(){
- clearMessage();
- try{
-  const {error}=await supabaseClient.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname}});
-  if(error) throw error;
- }catch(err){console.error(err);setMessage(translations[lang].googleErr);}
+
+function phoneToInternalEmail(phone) {
+  const digits = phone.replace(/\D/g, "");
+  return "u" + digits + "@login.tigerlive.com";
 }
-function showDashboard(user){
- currentUser=user;$("authPanel").style.display="none";$("dashboard").style.display="block";
- $("adminPanel").style.display="none";
- const isOwner=!!user?.id && SUPER_ADMIN_USER_IDS.has(user.id);
- $("adminOpenBtn").style.display=isOwner?"inline-block":"none";
- const phone=user?.user_metadata?.phone_number;
- const accountId=user?.id?user.id.slice(0,8).toUpperCase():"—";
- const identity=phone||user?.email||translations[lang].logged;
- $("userLine").textContent=(lang==="bn"?"অ্যাকাউন্ট আইডি: ":"Account ID: ")+accountId+"  •  "+identity;
+
+/* ==================================
+   LOGIN / REGISTER MODE
+================================== */
+
+function toggleMode() {
+  mode = mode === "login" ? "register" : "login";
+
+  $("authTitle").textContent =
+    mode === "login" ? "TIGER LIVE Login" : "Create TIGER LIVE Account";
+
+  $("authSubmit").textContent =
+    mode === "login" ? "Login" : "Register";
+
+  $("modeButton").textContent =
+    mode === "login"
+      ? "Create New Account / Register"
+      : "Already have an account? Login";
+
+  $("registerNameBox").classList.toggle(
+    "hidden",
+    mode !== "register"
+  );
+
+  $("authMessage").textContent = "";
 }
-async function logout(){
- await supabaseClient.auth.signOut();currentUser=null;$("dashboard").style.display="none";$("adminPanel").style.display="none";$("adminOpenBtn").style.display="none";$("authPanel").style.display="block";$("password").value="";$("confirmPassword").value="";
+
+/* ==================================
+   AUTH MESSAGE
+================================== */
+
+function authMessage(message, isError = false) {
+  $("authMessage").textContent = message;
+  $("authMessage").className = isError ? "error" : "muted";
 }
-function makeRooms(target,emoji,prefix){
- const root=$(target);root.innerHTML="";
- for(let i=1;i<=20;i++){const div=document.createElement("div");div.className="room";div.innerHTML=`<div class="emoji">${emoji}</div><b>${prefix} ${String(i).padStart(2,"0")}</b><small>${lang==="bn"?"শিগগিরই চালু হবে":"Coming soon"}</small>`;root.appendChild(div);}
+
+/* ==================================
+   LOGIN / REGISTER
+================================== */
+
+async function submitAuth() {
+  const phone = getPhoneNumber();
+  const password = $("password").value.trim();
+  const fullName = $("fullName").value.trim();
+
+  if (!phone || phone.length < 8) {
+    authMessage("সঠিক ফোন নম্বর লিখুন।", true);
+    return;
+  }
+
+  if (password.length < 6) {
+    authMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।", true);
+    return;
+  }
+
+  if (mode === "register" && !fullName) {
+    authMessage("আপনার নাম লিখুন।", true);
+    return;
+  }
+
+  const email = phoneToInternalEmail(phone);
+
+  $("authSubmit").disabled = true;
+  authMessage("Please wait...");
+
+  try {
+    if (mode === "register") {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            phone_number: "+" + phone,
+            login_method: "phone_password"
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        await showDashboard(data.user);
+      } else {
+        authMessage(
+          "অ্যাকাউন্ট তৈরি হয়েছে। Supabase Email Confirmation চালু থাকলে আগে সেটি সম্পন্ন করতে হবে।"
+        );
+      }
+
+    } else {
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) throw error;
+
+      await showDashboard(data.user);
+    }
+
+  } catch (error) {
+    authMessage(error.message || "Login failed", true);
+  } finally {
+    $("authSubmit").disabled = false;
+  }
 }
-function renderRooms(){makeRooms("audioRooms","🎙️",lang==="bn"?"অডিও রুম":"Audio Room");makeRooms("videoRooms","📹",lang==="bn"?"ভিডিও রুম":"Video Room");}
-$("loginTab").addEventListener("click",()=>{mode="login";clearMessage();renderMode();});
-$("signupTab").addEventListener("click",()=>{mode="signup";clearMessage();renderMode();});
-$("authForm").addEventListener("submit",handleAuth);
-$("googleBtn").addEventListener("click",googleLogin);
-$("logoutBtn").addEventListener("click",logout);
-async function loadIdentityRows(){
- const tbody=$("identityRows"), result=$("identityResult");
- tbody.innerHTML='<tr><td colspan="4">লোড হচ্ছে...</td></tr>';
- const {data,error}=await supabaseClient.rpc("tiger_live_admin_list_identities");
- if(error){tbody.innerHTML='<tr><td colspan="4">তালিকা লোড করা যায়নি।</td></tr>';result.textContent="ত্রুটি: "+error.message;result.style.color="#ff9da6";return;}
- tbody.innerHTML="";
- if(!data || !data.length){tbody.innerHTML='<tr><td colspan="4">এখনো কোনো ID বরাদ্দ করা হয়নি।</td></tr>';return;}
- for(const item of data){
-  const tr=document.createElement("tr");
-  [item.user_id,item.category,item.custom_id,item.created_at?new Date(item.created_at).toLocaleString():"—"].forEach(value=>{const td=document.createElement("td");td.textContent=String(value??"");tr.appendChild(td);});
-  tbody.appendChild(tr);
- }
- result.textContent="ID তালিকা আপডেট হয়েছে।";result.style.color="#9cf0c5";
+
+/* ==================================
+   GOOGLE LOGIN
+================================== */
+
+async function googleLogin() {
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin + window.location.pathname
+    }
+  });
+
+  if (error) {
+    authMessage(error.message, true);
+  }
 }
-$("identityForm").addEventListener("submit",async event=>{
- event.preventDefault();
- if(!currentUser?.id || !SUPER_ADMIN_USER_IDS.has(currentUser.id)){ $("identityResult").textContent="Owner access required";return; }
- const userId=$("identityUserId").value.trim();
- const category=$("identityCategory").value;
- const customId=$("identityCustomId").value.trim();
- const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
- if(!uuidPattern.test(userId)){ $("identityResult").textContent="সঠিক User UUID লিখুন।";$("identityResult").style.color="#ff9da6";return; }
- if(!customId){ $("identityResult").textContent="ID খালি রাখা যাবে না।";$("identityResult").style.color="#ff9da6";return; }
- const btn=$("identitySaveBtn");btn.disabled=true;btn.textContent="সেভ হচ্ছে...";
- const {data,error}=await supabaseClient.rpc("tiger_live_admin_assign_identity",{p_user_id:userId,p_category:category,p_custom_id:customId});
- btn.disabled=false;btn.textContent="ID বরাদ্দ / আপডেট করুন";
- if(error){$("identityResult").textContent="সেভ হয়নি: "+error.message;$("identityResult").style.color="#ff9da6";return;}
- $("identityResult").textContent="সফল! ID বরাদ্দ / আপডেট হয়েছে।";$("identityResult").style.color="#9cf0c5";
- $("identityCustomId").value="";
- await loadIdentityRows();
-});
-$("identityRefreshBtn").addEventListener("click",loadIdentityRows);
-$("adminOpenBtn").addEventListener("click",async()=>{if(!currentUser?.id || !SUPER_ADMIN_USER_IDS.has(currentUser.id)) return;$("adminPanel").style.display="block";$("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});await loadIdentityRows();});
-$("adminBackBtn").addEventListener("click",()=>{$("adminPanel").style.display="none";$("dashboard").scrollIntoView({behavior:"smooth",block:"start"});});
-$("language").addEventListener("change",e=>{lang=e.target.value;renderMode();renderRooms();});
-(async function init(){
- renderMode();renderRooms();
- const {data:{session}}=await supabaseClient.auth.getSession();
- if(session?.user) showDashboard(session.user);
- supabaseClient.auth.onAuthStateChange((_event,session)=>{if(session?.user)showDashboard(session.user);});
-})();
+
+/* ==================================
+   CHECK OWNER FROM SUPABASE
+================================== */
+
+async function verifyOwner() {
+  isCurrentUserOwner = false;
+
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+  if (userError || !userData?.user?.id) {
+    return false;
+  }
+
+  const { data, error } = await supabaseClient.rpc(
+    "is_tiger_live_owner"
+  );
+
+  if (error) {
+    console.error("Owner verification failed:", error);
+    return false;
+  }
+
+  isCurrentUserOwner = data === true;
+  return isCurrentUserOwner;
+}
+
+/* ==================================
+   SHOW DASHBOARD
+================================== */
+
+async function showDashboard(user) {
+  if (!user) return;
+
+  currentUser = user;
+  isCurrentUserOwner = false;
+
+  $("authPanel").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+  $("adminPanel").classList.add("hidden");
+  $("ownerStatus").textContent = "";
+
+  const accountId = user.id
+    ? user.id.substring(0, 8).toUpperCase()
+    : "—";
+
+  const phone =
+    user.user_metadata?.phone_number || user.email || "";
+
+  $("userLine").textContent =
+    "Account ID: " + accountId + " • " + phone;
+
+  const owner = await verifyOwner();
+
+  if (owner) {
+    $("adminPanel").classList.remove("hidden");
+    $("ownerStatus").textContent = "👑 Super Admin Verified";
+    $("ownerStatus").className = "status";
+    await loadAdminUsers();
+  } else {
+    $("ownerStatus").textContent = "Welcome to TIGER LIVE";
+    $("ownerStatus").className = "muted";
+  }
+}
+
+/* ==================================
+   AUDIO / VIDEO ROOMS
+================================== */
+
+function renderRooms() {
+  const audio = $("audioRooms");
+  const video = $("videoRooms");
+
+  audio.innerHTML = "";
+  video.innerHTML = "";
+
+  for (let i = 1; i <= 20; i++) {
+    const audioRoom = document.createElement("div");
+    audioRoom.className = "room";
+
+    const audioName = document.createElement("span");
+    audioName.textContent = "🎙️ Audio Room " + i;
+
+    const audioStatus = document.createElement("small");
+    audioStatus.textContent = "Coming Soon";
+
+    audioRoom.append(audioName, audioStatus);
+    audio.appendChild(audioRoom);
+
+    const videoRoom = document.createElement("div");
+    videoRoom.className = "room";
+
+    const videoName = document.createElement("span");
+    videoName.textContent = "📹 Video Room " + i;
+
+    const videoStatus = document.createElement("small");
+    videoStatus.textContent = "Coming Soon";
+
+    videoRoom.append(videoName, videoStatus);
+    video.appendChild(videoRoom);
+  }
+}
+
+/* ==================================
+   OWNER: LOAD USERS
+================================== */
+
+async function loadAdminUsers() {
+  if (!currentUser || !isCurrentUserOwner) {
+    $("adminMessage").textContent = "Access denied.";
+    return;
+  }
+
+  $("adminMessage").textContent = "Loading users...";
+  $("userTable").innerHTML = "";
+
+  const { data, error } = await supabaseClient.rpc(
+    "tiger_live_admin_list_users",
+    {
+      p_limit: 50,
+      p_offset: adminOffset
+    }
+  );
+
+  if (error) {
+    console.error(error);
+    $("adminMessage").textContent =
+      "User list error: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    $("adminMessage").textContent =
+      "এখনো কোনো ব্যবহারকারী পাওয়া যায়নি।";
+    return;
+  }
+
+  $("adminMessage").textContent =
+    "Total displayed: " + data.length;
+
+  data.forEach(user => {
+    const tr = document.createElement("tr");
+
+    const name = document.createElement("td");
+    name.textContent = user.full_name || "User";
+
+    const phone = document.createElement("td");
+    phone.textContent = user.phone || "—";
+
+    const id = document.createElement("td");
+    id.textContent = user.user_id
+      ? user.user_id.substring(0, 8).toUpperCase()
+      : "—";
+
+    const status = document.createElement("td");
+    status.textContent = user.is_blocked ? "Blocked" : "Active";
+    status.className = user.is_blocked ? "error" : "status";
+
+    tr.append(name, phone, id, status);
+    $("userTable").appendChild(tr);
+  });
+}
+
+/* ==================================
+   LOGOUT
+================================== */
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+  isCurrentUserOwner = false;
+
+  $("dashboard").classList.add("hidden");
+  $("adminPanel").classList.add("hidden");
+  $("authPanel").classList.remove("hidden");
+
+  $("password").value = "";
+  $("authMessage").textContent = "";
+}
+
+/* ==================================
+   INITIALIZE
+================================== */
+
+async function init() {
+  renderRooms();
+
+  const { data, error } =
+    await supabaseClient.auth.getSession();
+
+  if (!error && data?.session?.user) {
+    await showDashboard(data.session.user);
+  }
+
+  // Defer Supabase calls until after the auth callback returns.
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    Promise.resolve().then(() => {
+      if (session?.user) {
+        showDashboard(session.user);
+      }
+    });
+  });
+}
+
+init();
+
 </script>
 </body>
 </html>
