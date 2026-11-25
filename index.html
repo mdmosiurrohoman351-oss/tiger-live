@@ -2,10 +2,9 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#09080a">
 <title>TIGER LIVE</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -20,111 +19,65 @@
 }
 * { box-sizing:border-box; }
 body {
-  margin:0;
-  padding:16px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
+  margin:0;padding:16px;background:var(--bg);
+  color:var(--text);font-family:Arial,sans-serif;
 }
-.container { max-width:650px; margin:auto; }
-header { text-align:center; padding:22px 0; }
+.container { max-width:650px;margin:auto; }
+header { text-align:center;padding:22px 0; }
 .logo {
-  color:var(--gold);
-  font-size:35px;
-  font-weight:900;
-  letter-spacing:3px;
-  text-shadow:0 0 18px #b8862b;
+  color:var(--gold);font-size:35px;font-weight:900;
+  letter-spacing:3px;text-shadow:0 0 18px #b8862b;
 }
-.tagline { color:var(--muted); margin-top:8px; }
+.tagline { color:var(--muted);margin-top:8px; }
 .panel {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:20px;
-  margin:15px 0;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:20px;margin:15px 0;
 }
 h2,h3 { color:var(--gold); }
 input,select {
-  width:100%;
-  padding:14px;
-  margin:7px 0;
-  border:1px solid #514126;
-  border-radius:9px;
-  background:#09080a;
-  color:white;
-  font-size:16px;
+  width:100%;padding:14px;margin:7px 0;
+  border:1px solid #514126;border-radius:9px;
+  background:#09080a;color:white;font-size:16px;
 }
 button {
-  padding:13px 16px;
-  border:0;
-  border-radius:9px;
-  background:var(--gold);
-  color:#17110a;
-  font-weight:bold;
-  font-size:15px;
-  cursor:pointer;
+  padding:13px 16px;border:0;border-radius:9px;
+  background:var(--gold);color:#17110a;
+  font-weight:bold;font-size:15px;cursor:pointer;
 }
 button:disabled { opacity:.5; }
-.full { width:100%; margin-top:10px; }
+.full { width:100%;margin-top:10px; }
 .secondary {
-  background:#29232e;
-  color:white;
-  border:1px solid var(--border);
+  background:#29232e;color:white;border:1px solid var(--border);
 }
-.danger { background:var(--red); color:white; }
+.danger { background:var(--red);color:white; }
 .hidden { display:none !important; }
-.muted { color:var(--muted); font-size:13px; }
+.muted { color:var(--muted);font-size:13px; }
 .gold { color:var(--gold); }
 .grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
 }
 .tile {
-  background:#211b25;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:17px 10px;
-  text-align:center;
+  background:#211b25;border:1px solid var(--border);
+  border-radius:12px;padding:17px 10px;text-align:center;
 }
 .room {
-  background:#211b25;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px;
-  margin:7px 0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  background:#211b25;border:1px solid var(--border);
+  border-radius:10px;padding:12px;margin:7px 0;
+  display:flex;justify-content:space-between;align-items:center;
 }
 .room span { color:var(--gold); }
-.row {
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+.row { display:flex;gap:8px;align-items:center;flex-wrap:wrap; }
 .row button { flex:1; }
-table {
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
-}
+table { width:100%;border-collapse:collapse;font-size:12px; }
 th,td {
-  border-bottom:1px solid #40331b;
-  padding:9px 5px;
-  text-align:left;
-  overflow-wrap:anywhere;
+  border-bottom:1px solid #40331b;padding:9px 5px;
+  text-align:left;overflow-wrap:anywhere;
 }
 .table-wrap { overflow-x:auto; }
 .status { color:#6ee7a0; }
 .error { color:#ff8585; }
-footer {
-  text-align:center;
-  color:#777;
-  padding:25px 0;
-  font-size:12px;
-}
+footer { text-align:center;color:#777;padding:25px 0;font-size:12px; }
 </style>
 </head>
 
@@ -146,13 +99,13 @@ footer {
 
   <label class="muted">Country / দেশ</label>
   <select id="countryCode">
-    <option value="880">Bangladesh (+880)</option>
-    <option value="964" selected>Iraq (+964)</option>
+    <option value="880" selected>Bangladesh (+880)</option>
+    <option value="964">Iraq (+964)</option>
     <option value="44">United Kingdom (+44)</option>
   </select>
 
-  <input id="phone" type="tel" placeholder="Phone Number" autocomplete="tel">
-  <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+  <input id="phone" type="tel" placeholder="Phone Number">
+  <input id="password" type="password" placeholder="Password">
 
   <button id="authSubmit" class="full" onclick="submitAuth()">Login</button>
 
@@ -167,9 +120,7 @@ footer {
   </button>
 
   <p id="authMessage" class="muted"></p>
-  <p class="muted">
-    ফোন নম্বর ও পাসওয়ার্ড দিয়ে অ্যাকাউন্ট ব্যবহার করুন।
-  </p>
+  <p class="muted">ফোন নম্বর ও পাসওয়ার্ড দিয়ে অ্যাকাউন্ট ব্যবহার করুন।</p>
 </section>
 
 <!-- DASHBOARD -->
@@ -183,26 +134,10 @@ footer {
   </div>
 
   <div class="grid">
-    <div class="tile">
-      <div>💎</div>
-      <h3>Diamond</h3>
-      <p>শীঘ্রই চালু হবে</p>
-    </div>
-    <div class="tile">
-      <div>⭐</div>
-      <h3>Level</h3>
-      <p>0</p>
-    </div>
-    <div class="tile">
-      <div>🎁</div>
-      <h3>Gift</h3>
-      <p>Coming Soon</p>
-    </div>
-    <div class="tile">
-      <div>👑</div>
-      <h3>VIP</h3>
-      <p>Coming Soon</p>
-    </div>
+    <div class="tile">💎<h3>Diamond</h3><p>শীঘ্রই চালু হবে</p></div>
+    <div class="tile">⭐<h3>Level</h3><p>0</p></div>
+    <div class="tile">🎁<h3>Gift</h3><p>Coming Soon</p></div>
+    <div class="tile">👑<h3>VIP</h3><p>Coming Soon</p></div>
   </div>
 
   <div class="panel">
@@ -227,15 +162,12 @@ footer {
     </div>
   </div>
 
-  <!-- OWNER ONLY -->
+  <!-- OWNER ADMIN PANEL -->
   <section id="adminPanel" class="panel hidden">
     <h2>👑 SUPER ADMIN PANEL</h2>
     <p class="gold">Owner Control Center</p>
 
-    <div class="row">
-      <button onclick="loadAdminUsers()">Refresh Users</button>
-    </div>
-
+    <button class="full" onclick="loadAdminUsers()">Refresh Users</button>
     <p id="adminMessage" class="muted"></p>
 
     <h3>Registered Users</h3>
@@ -258,30 +190,24 @@ footer {
 
 </section>
 
-<footer>
-  TIGER LIVE © 2026 | বাংলা • English
-</footer>
-
+<footer>TIGER LIVE © 2026 | বাংলা • English</footer>
 </div>
 
 <script>
-/* ==================================
-   SUPABASE CONNECTION
-================================== */
+/* SUPABASE CONNECTION */
 
-const SUPABASE_URL = "https://yehheffwgloegvmexqzy.supabase.co";
+const SUPABASE_URL =
+  "https://yehheffwgloegvmexqzy.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
+  "sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
-/* ==================================
-   APP VARIABLES
-================================== */
+/* APP VARIABLES */
 
 const $ = id => document.getElementById(id);
 
@@ -290,9 +216,7 @@ let isCurrentUserOwner = false;
 let mode = "login";
 let adminOffset = 0;
 
-/* ==================================
-   PHONE NUMBER
-================================== */
+/* PHONE NUMBER NORMALIZATION */
 
 function getPhoneNumber() {
   let digits = $("phone").value.replace(/\D/g, "");
@@ -300,33 +224,33 @@ function getPhoneNumber() {
 
   if (!digits) return "";
 
-  // Remove leading zero from local phone number.
-  if (digits.startsWith("0")) {
-    digits = digits.substring(1);
-  }
-
-  // If country code is already entered, do not add it twice.
+  // International number already includes country code.
   if (digits.startsWith(country)) {
     return digits;
+  }
+
+  // Local number begins with 0.
+  if (digits.startsWith("0")) {
+    digits = digits.substring(1);
   }
 
   return country + digits;
 }
 
-function phoneToInternalEmail(phone) {
+function phoneToInternalEmail(phone, prefix = "u") {
   const digits = phone.replace(/\D/g, "");
-  return "u" + digits + "@login.tigerlive.com";
+  return prefix + digits + "@login.tigerlive.com";
 }
 
-/* ==================================
-   LOGIN / REGISTER MODE
-================================== */
+/* LOGIN / REGISTER MODE */
 
 function toggleMode() {
   mode = mode === "login" ? "register" : "login";
 
   $("authTitle").textContent =
-    mode === "login" ? "TIGER LIVE Login" : "Create TIGER LIVE Account";
+    mode === "login"
+      ? "TIGER LIVE Login"
+      : "Create TIGER LIVE Account";
 
   $("authSubmit").textContent =
     mode === "login" ? "Login" : "Register";
@@ -344,22 +268,20 @@ function toggleMode() {
   $("authMessage").textContent = "";
 }
 
-/* ==================================
-   AUTH MESSAGE
-================================== */
+/* MESSAGE */
 
 function authMessage(message, isError = false) {
   $("authMessage").textContent = message;
   $("authMessage").className = isError ? "error" : "muted";
 }
 
-/* ==================================
-   LOGIN / REGISTER
-================================== */
+/* LOGIN / REGISTER */
 
 async function submitAuth() {
   const phone = getPhoneNumber();
-  const password = $("password").value.trim();
+
+  // Do not trim password: spaces may be part of the password.
+  const password = $("password").value;
   const fullName = $("fullName").value.trim();
 
   if (!phone || phone.length < 8) {
@@ -385,8 +307,8 @@ async function submitAuth() {
   try {
     if (mode === "register") {
       const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
+        email: email,
+        password: password,
         options: {
           data: {
             full_name: fullName,
@@ -398,36 +320,44 @@ async function submitAuth() {
 
       if (error) throw error;
 
-      if (data.session) {
+      if (data.session && data.user) {
         await showDashboard(data.user);
       } else {
         authMessage(
-          "অ্যাকাউন্ট তৈরি হয়েছে। Supabase Email Confirmation চালু থাকলে আগে সেটি সম্পন্ন করতে হবে।"
+          "অ্যাকাউন্ট তৈরি হয়েছে। Email confirmation চালু থাকলে সেটি সম্পন্ন করতে হবে।"
         );
       }
 
     } else {
-      const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-          email,
-          password
+      // First try the current account email format.
+      let result = await supabaseClient.auth.signInWithPassword({
+        email: phoneToInternalEmail(phone, "u"),
+        password: password
+      });
+
+      // If the old account used the legacy p-prefix, try that too.
+      if (result.error &&
+          result.error.message === "Invalid login credentials") {
+        result = await supabaseClient.auth.signInWithPassword({
+          email: phoneToInternalEmail(phone, "p"),
+          password: password
         });
+      }
 
-      if (error) throw error;
+      if (result.error) throw result.error;
 
-      await showDashboard(data.user);
+      await showDashboard(result.data.user);
     }
 
   } catch (error) {
+    console.error("Authentication error:", error);
     authMessage(error.message || "Login failed", true);
   } finally {
     $("authSubmit").disabled = false;
   }
 }
 
-/* ==================================
-   GOOGLE LOGIN
-================================== */
+/* GOOGLE LOGIN */
 
 async function googleLogin() {
   const { error } = await supabaseClient.auth.signInWithOAuth({
@@ -437,14 +367,10 @@ async function googleLogin() {
     }
   });
 
-  if (error) {
-    authMessage(error.message, true);
-  }
+  if (error) authMessage(error.message, true);
 }
 
-/* ==================================
-   CHECK OWNER FROM SUPABASE
-================================== */
+/* OWNER VERIFICATION */
 
 async function verifyOwner() {
   isCurrentUserOwner = false;
@@ -453,6 +379,10 @@ async function verifyOwner() {
     await supabaseClient.auth.getUser();
 
   if (userError || !userData?.user?.id) {
+    return false;
+  }
+
+  if (userData.user.id !== currentUser?.id) {
     return false;
   }
 
@@ -469,9 +399,7 @@ async function verifyOwner() {
   return isCurrentUserOwner;
 }
 
-/* ==================================
-   SHOW DASHBOARD
-================================== */
+/* DASHBOARD */
 
 async function showDashboard(user) {
   if (!user) return;
@@ -482,7 +410,6 @@ async function showDashboard(user) {
   $("authPanel").classList.add("hidden");
   $("dashboard").classList.remove("hidden");
   $("adminPanel").classList.add("hidden");
-  $("ownerStatus").textContent = "";
 
   const accountId = user.id
     ? user.id.substring(0, 8).toUpperCase()
@@ -493,6 +420,8 @@ async function showDashboard(user) {
 
   $("userLine").textContent =
     "Account ID: " + accountId + " • " + phone;
+
+  $("ownerStatus").textContent = "Checking account...";
 
   const owner = await verifyOwner();
 
@@ -507,9 +436,7 @@ async function showDashboard(user) {
   }
 }
 
-/* ==================================
-   AUDIO / VIDEO ROOMS
-================================== */
+/* AUDIO / VIDEO ROOMS */
 
 function renderRooms() {
   const audio = $("audioRooms");
@@ -545,9 +472,7 @@ function renderRooms() {
   }
 }
 
-/* ==================================
-   OWNER: LOAD USERS
-================================== */
+/* OWNER: LOAD USERS */
 
 async function loadAdminUsers() {
   if (!currentUser || !isCurrentUserOwner) {
@@ -575,12 +500,12 @@ async function loadAdminUsers() {
 
   if (!data || data.length === 0) {
     $("adminMessage").textContent =
-      "এখনো কোনো ব্যবহারকারী পাওয়া যায়নি।";
+      "কোনো ব্যবহারকারী পাওয়া যায়নি।";
     return;
   }
 
   $("adminMessage").textContent =
-    "Total displayed: " + data.length;
+    "Users displayed: " + data.length;
 
   data.forEach(user => {
     const tr = document.createElement("tr");
@@ -605,9 +530,7 @@ async function loadAdminUsers() {
   });
 }
 
-/* ==================================
-   LOGOUT
-================================== */
+/* LOGOUT */
 
 async function logout() {
   await supabaseClient.auth.signOut();
@@ -623,9 +546,7 @@ async function logout() {
   $("authMessage").textContent = "";
 }
 
-/* ==================================
-   INITIALIZE
-================================== */
+/* INITIALIZE */
 
 async function init() {
   renderRooms();
@@ -637,8 +558,8 @@ async function init() {
     await showDashboard(data.session.user);
   }
 
-  // Defer Supabase calls until after the auth callback returns.
   supabaseClient.auth.onAuthStateChange((_event, session) => {
+    // Run Supabase calls after the auth callback completes.
     Promise.resolve().then(() => {
       if (session?.user) {
         showDashboard(session.user);
@@ -648,7 +569,6 @@ async function init() {
 }
 
 init();
-
 </script>
 </body>
 </html>
