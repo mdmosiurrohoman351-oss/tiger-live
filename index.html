@@ -1,57 +1,224 @@
-<!doctype html>
-<html lang="bn">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09080a">
-<title>TIGER LIVE</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🐯%3C/text%3E%3C/svg%3E">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--bg:#09080a;--panel:#151218;--gold:#f5c451;--muted:#aaa;--line:#40331b;--red:#e34c4c;--green:#6ee7a0}*{box-sizing:border-box}body{margin:0;padding:14px;background:var(--bg);color:#fff;font:15px Arial,sans-serif}.container{max-width:760px;margin:auto}header{text-align:center;padding:22px 0}.logo{font-size:34px;font-weight:900;letter-spacing:3px;color:var(--gold);text-shadow:0 0 18px #b8862b}.tagline,.muted{color:var(--muted);font-size:13px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px;margin:13px 0}h2,h3{color:var(--gold);margin-top:5px}input,select{width:100%;padding:13px;margin:6px 0;border:1px solid #514126;border-radius:9px;background:#09080a;color:white;font-size:16px}button{padding:12px 14px;border:0;border-radius:9px;background:var(--gold);color:#17110a;font-weight:bold;cursor:pointer}.full{width:100%;margin-top:8px}.secondary{background:#29232e;color:#fff;border:1px solid var(--line)}.danger{background:var(--red);color:#fff}.hidden{display:none!important}.gold{color:var(--gold)}.green{color:var(--green)}.error{color:#ff8585}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{background:#211b25;border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;min-width:0}.tile strong{display:block;color:var(--gold);font-size:19px;margin:5px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}.room{background:#211b25;border:1px solid var(--line);border-radius:10px;padding:11px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;gap:8px}.room span{color:var(--gold)}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid var(--line);padding:8px 5px;text-align:left;overflow-wrap:anywhere}nav{display:flex;gap:7px;overflow:auto;padding:5px 0}nav button{white-space:nowrap}.section{scroll-margin-top:8px}.note{border-left:3px solid var(--gold);padding:8px 10px;background:#201b16;color:#ddd;font-size:13px}footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
-</style></head>
-<body><div class="container">
-<header><div class="logo">🐯 TIGER LIVE</div><div class="tagline">বাংলা • English | Live Community</div></header>
-<section id="authPanel" class="panel"><h2 id="authTitle">TIGER LIVE Login</h2><div id="registerNameBox" class="hidden"><input id="fullName" placeholder="আপনার নাম"></div><label class="muted">Country / দেশ</label><select id="countryCode"><option value="880">Bangladesh (+880)</option><option value="964">Iraq (+964)</option><option value="44">United Kingdom (+44)</option></select><input id="phone" type="tel" placeholder="Phone Number"><input id="password" type="password" placeholder="Password"><button id="authSubmit" class="full" onclick="submitAuth()">Login</button><button id="modeButton" class="full secondary" onclick="toggleMode()">Create New Account / Register</button><div style="text-align:center;margin:14px;color:#aaa">OR</div><button class="full secondary" onclick="googleLogin()">Continue with Google</button><p id="authMessage" class="muted"></p><p class="muted">ফোন নম্বর দিয়ে লগইন করার জন্য এই সংস্করণে অভ্যন্তরীণ ইমেইল অ্যালিয়াস ব্যবহৃত হয়; এটি ফোন নম্বর যাচাই করে না।</p></section>
-<section id="dashboard" class="hidden">
-<div class="panel"><h2>🐯 TIGER LIVE Dashboard</h2><p id="userLine" class="gold"></p><p id="ownerStatus" class="muted"></p><button class="danger full" onclick="logout()">Logout</button></div>
-<nav><button onclick="go('walletSection')">Wallet</button><button onclick="go('agencySection')">Agency</button><button onclick="go('roomsSection')">Rooms</button><button onclick="go('rpSection')">RP</button><button onclick="go('adminPanel')">Admin</button></nav>
-<div class="grid"><div class="tile">💎 Diamond<strong id="diamondBalance">0</strong></div><div class="tile">💰 Wallet<strong id="walletBalance">0</strong></div><div class="tile">⭐ Level<strong>0</strong></div><div class="tile">🎁 Gifts<strong>Coming soon</strong></div></div>
-<section id="walletSection" class="panel section"><h2>💰 Wallet & Diamond</h2><div class="grid"><div class="tile">Wallet Balance<strong id="walletValue">0</strong></div><div class="tile">Diamond Balance<strong id="diamondValue">0</strong></div></div><h3>Recharge</h3><p class="note">Recharge UI প্রস্তুত। বাস্তব টাকা গ্রহণ/পেমেন্ট এখনো সংযুক্ত নয়। অনুমোদিত payment provider ও server-side verification লাগবে।</p><input id="rechargeAmount" type="number" min="1" placeholder="Recharge amount"><button class="full" onclick="requestRecharge()">Recharge Request (Demo)</button><p id="walletMessage" class="muted"></p><h3>Transaction History</h3><div id="transactions" class="muted">লেনদেনের রেকর্ড লোড হচ্ছে…</div></section>
-<section id="agencySection" class="panel section"><h2>🏢 Agency & Host</h2><p id="agencySummary" class="muted">Agency তথ্য লোড হচ্ছে…</p><h3>Agency-তে যোগদানের অনুরোধ</h3><input id="agencyCodeInput" placeholder="Agency ID"><button class="full" onclick="requestAgency()">Send Agency Request</button><p id="agencyMessage" class="muted"></p><div id="agencyHostArea"></div>
-<h3>Agency-এর Pending Host Requests</h3><button class="full secondary" onclick="loadAgencyRequests()">Refresh Host Requests</button><div id="agencyRequests" class="muted"></div>
-<h3>Host Hosting Control</h3><p class="muted">Agency-তে যুক্ত Host নিজের Hosting শুরু/শেষ করতে পারবে।</p><div class="row"><button onclick="hostStart()">Start Hosting</button><button class="secondary" onclick="hostStop()">Stop Hosting</button></div><p id="hostMessage" class="muted"></p></section>
-<section id="roomsSection" class="panel section"><h2>🎙️ Audio Rooms</h2><div id="audioRooms"></div><h2>📹 Video Rooms</h2><div id="videoRooms"></div><p class="note">এখানে ২০টি Audio ও ২০টি Video Room-এর তালিকা রয়েছে। প্রকৃত অডিও/ভিডিও সম্প্রচারের জন্য WebRTC/LiveKit/Agora ধরনের সার্ভিস সংযোগ প্রয়োজন।</p></section>
-<section id="rpSection" class="panel section"><h2>💞 RP / Partner</h2><input id="rpTarget" placeholder="অন্য User-এর Account ID"><select id="rpType"><option value="love">Love Partner</option><option value="marriage">Marriage Partner</option><option value="best_friend">Best Friend</option><option value="king_queen">King & Queen</option></select><button class="full" onclick="sendRpRequest()">Send RP Request</button><p id="rpMessage" class="muted">দুজনের সম্মতি ছাড়া RP চালু হবে না।</p><div id="rpRequests"></div></section>
-<section id="adminPanel" class="panel hidden section"><h2>👑 SUPER ADMIN PANEL</h2><p class="gold">Owner Control Center</p><button class="full" onclick="loadAdminUsers()">Refresh Users</button><p id="adminMessage" class="muted"></p><div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Account ID</th><th>Status</th></tr></thead><tbody id="userTable"><tr><td colspan="4">Load users to view</td></tr></tbody></table></div><hr style="border-color:var(--line);margin:18px 0"><h3>Create Agency (Owner only)</h3><input id="agencyOwnerAccount" placeholder="Agency owner Account UUID"><input id="newAgencyCode" placeholder="Agency ID (যেমন TIGER1001)"><input id="newAgencyName" placeholder="Agency Name"><button class="full" onclick="createAgency()">Create Agency</button><p id="createAgencyMessage" class="muted"></p><h3>Agency List</h3><button class="full secondary" onclick="loadOwnerAgencies()">Refresh Agencies</button><div id="ownerAgencyList" class="muted"></div></section>
-</section><footer>TIGER LIVE © 2026 | বাংলা • English</footer></div>
-<script>
-const SUPABASE_URL='https://yehheffwgloegvmexqzy.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg';
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const $=id=>document.getElementById(id);let currentUser=null,isCurrentUserOwner=false,mode='login',adminOffset=0,showRun=0;
-function go(id){$(id)?.scrollIntoView({behavior:'smooth'});}
-function getPhoneNumber(){let d=$('phone').value.replace(/\D/g,''),c=$('countryCode').value;if(!d)return '';if(d.startsWith(c))return d;if(d.startsWith('0'))d=d.slice(1);return c+d;}
-function phoneToInternalEmail(phone,prefix='u'){return prefix+phone.replace(/\D/g,'')+'@login.tigerlive.com';}
-function toggleMode(){mode=mode==='login'?'register':'login';$('authTitle').textContent=mode==='login'?'TIGER LIVE Login':'Create TIGER LIVE Account';$('authSubmit').textContent=mode==='login'?'Login':'Register';$('modeButton').textContent=mode==='login'?'Create New Account / Register':'Already have an account? Login';$('registerNameBox').classList.toggle('hidden',mode!=='register');$('authMessage').textContent='';}
-function authMessage(m,e=false){$('authMessage').textContent=m;$('authMessage').className=e?'error':'muted';}
-async function submitAuth(){const phone=getPhoneNumber(),password=$('password').value,name=$('fullName').value.trim();if(phone.length<8)return authMessage('সঠিক ফোন নম্বর লিখুন।',true);if(password.length<6)return authMessage('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।',true);if(mode==='register'&&!name)return authMessage('আপনার নাম লিখুন।',true);$('authSubmit').disabled=true;authMessage('Please wait…');try{if(mode==='register'){const {data,error}=await supabaseClient.auth.signUp({email:phoneToInternalEmail(phone),password,options:{data:{full_name:name,phone_number:'+'+phone,login_method:'phone_password'}}});if(error)throw error;if(data.session&&data.user)await showDashboard(data.user);else authMessage('অ্যাকাউন্ট তৈরি হয়েছে। Supabase Email Confirmation চালু থাকলে নিশ্চিত করতে হবে।');}else{let r=await supabaseClient.auth.signInWithPassword({email:phoneToInternalEmail(phone),password});if(r.error&&r.error.message==='Invalid login credentials')r=await supabaseClient.auth.signInWithPassword({email:phoneToInternalEmail(phone,'p'),password});if(r.error)throw r.error;await showDashboard(r.data.user);}}catch(e){authMessage(e.message||'Login failed',true);}finally{$('authSubmit').disabled=false;}}
-async function googleLogin(){const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)authMessage(error.message,true);}
-async function verifyOwner(){const {data:u,error:ue}=await supabaseClient.auth.getUser();if(ue||u.user?.id!==currentUser?.id)return false;const {data,error}=await supabaseClient.rpc('is_tiger_live_owner');if(error){console.warn(error);return false;}return data===true;}
-async function rpc(name,args={}){const {data,error}=await supabaseClient.rpc(name,args);if(error)throw error;return data;}
-async function showDashboard(user){if(!user)return;currentUser=user;const run=++showRun;$('authPanel').classList.add('hidden');$('dashboard').classList.remove('hidden');$('adminPanel').classList.add('hidden');$('userLine').textContent='Account ID: '+user.id+' • '+(user.user_metadata?.phone_number||user.email||'');$('ownerStatus').textContent='Checking account…';isCurrentUserOwner=await verifyOwner();if(run!==showRun)return;if(isCurrentUserOwner){$('adminPanel').classList.remove('hidden');$('ownerStatus').textContent='👑 Super Admin Verified';$('ownerStatus').className='green';await loadAdminUsers();await loadOwnerAgencies();}else{$('ownerStatus').textContent='Welcome to TIGER LIVE';$('ownerStatus').className='muted';}await Promise.allSettled([loadWallet(),loadAgency(),loadRpRequests(),loadAgencyRequests()]);}
-function renderRooms(){for(const [id,label,emoji] of [['audioRooms','Audio Room','🎙️'],['videoRooms','Video Room','📹']]){const el=$(id);el.innerHTML='';for(let i=1;i<=20;i++){const d=document.createElement('div');d.className='room';const s=document.createElement('span');s.textContent=emoji+' '+label+' '+i;const b=document.createElement('small');b.textContent='Coming Soon';d.append(s,b);el.append(d);}}}
-async function loadAdminUsers(){if(!currentUser||!isCurrentUserOwner)return;$('adminMessage').textContent='Loading users…';$('userTable').innerHTML='';try{const data=await rpc('tiger_live_admin_list_users',{p_limit:50,p_offset:adminOffset});const seen=new Set();let count=0;for(const u of data||[]){if(seen.has(u.user_id))continue;seen.add(u.user_id);count++;const tr=document.createElement('tr');for(const v of [u.full_name||'User',u.phone||'—',(u.user_id||''),u.is_blocked?'Blocked':'Active']){const td=document.createElement('td');td.textContent=v;tr.append(td);} $('userTable').append(tr);} $('adminMessage').textContent='Users displayed: '+count;}catch(e){$('adminMessage').textContent='User list error: '+e.message;}}
-async function loadWallet(){try{const wr=await rpc('tiger_live_get_my_wallet');const w=Array.isArray(wr)?wr[0]:wr;$('walletBalance').textContent=w?.wallet_balance??0;$('walletValue').textContent=w?.wallet_balance??0;$('diamondBalance').textContent=w?.diamond_balance??0;$('diamondValue').textContent=w?.diamond_balance??0;const tx=await rpc('tiger_live_get_my_transactions');$('transactions').innerHTML='';if(!tx?.length){$('transactions').textContent='এখনো কোনো লেনদেন নেই।';return;}const t=document.createElement('table');t.innerHTML='<thead><tr><th>Type</th><th>Amount</th><th>Date</th></tr></thead>';const b=document.createElement('tbody');tx.forEach(x=>{const r=document.createElement('tr');[x.entry_type,x.amount,new Date(x.created_at).toLocaleString()].forEach(v=>{const c=document.createElement('td');c.textContent=v;r.append(c);});b.append(r);});t.append(b);$('transactions').append(t);}catch(e){$('transactions').textContent='Wallet SQL চালানোর পর তথ্য দেখা যাবে: '+e.message;}}
-async function requestRecharge(){const amount=Number($('rechargeAmount').value);if(!Number.isFinite(amount)||amount<=0){$('walletMessage').textContent='সঠিক Recharge amount লিখুন।';return;}try{await rpc('tiger_live_request_recharge',{p_amount:amount});$('walletMessage').textContent='Recharge request জমা হয়েছে। Payment provider যুক্ত না হওয়া পর্যন্ত Wallet-এ টাকা যোগ হবে না।';$('rechargeAmount').value='';}catch(e){$('walletMessage').textContent='Recharge SQL চালানোর পর অনুরোধ জমা হবে: '+e.message;}}
-async function requestAgency(){const code=$('agencyCodeInput').value.trim();if(!code)return $('agencyMessage').textContent='Agency ID লিখুন।';try{const r=await rpc('tiger_live_request_agency',{p_agency_code:code});$('agencyMessage').textContent='অনুরোধ পাঠানো হয়েছে। Agency Accept করলে যুক্ত হবেন।';await loadAgency();}catch(e){$('agencyMessage').textContent=e.message;}}
-async function loadAgency(){try{const ar=await rpc('tiger_live_get_my_agency');const a=Array.isArray(ar)?ar[0]:ar;$('agencySummary').textContent=a?.agency_name?`Agency: ${a.agency_name} • ID: ${a.agency_code} • Status: ${a.membership_status}`:'আপনি এখনো কোনো Agency-এর অধীনে যুক্ত নন।';const area=$('agencyHostArea');area.innerHTML='';if(a?.agency_id && a?.is_manager){const hosts=await rpc('tiger_live_agency_hosts');const p=document.createElement('p');p.className='gold';p.textContent='Agency Host Records';area.append(p);const table=document.createElement('table');table.innerHTML='<thead><tr><th>Host ID</th><th>Status</th><th>Hosting Time (min)</th><th>Diamonds</th></tr></thead>';const body=document.createElement('tbody');(hosts||[]).forEach(h=>{const tr=document.createElement('tr');[String(h.user_id).slice(0,8).toUpperCase(),h.is_active?'Active':'Offline',h.hosting_minutes??0,h.diamonds_earned??0].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});body.append(tr);});table.append(body);area.append(table);}}catch(e){$('agencySummary').textContent='Agency SQL চালানোর পর তথ্য দেখা যাবে: '+e.message;}}
-async function loadAgencyRequests(){const el=$('agencyRequests');if(!el)return;try{const rows=await rpc('tiger_live_agency_pending_requests');el.innerHTML='';if(!rows?.length){el.textContent='কোনো Pending Request নেই অথবা আপনি Agency Manager নন।';return;}rows.forEach(x=>{const d=document.createElement('div');d.className='room';const t=document.createElement('span');t.textContent=(x.full_name||'User')+' • '+String(x.user_id);d.append(t);const b=document.createElement('button');b.textContent='Accept';b.onclick=async()=>{try{await rpc('tiger_live_agency_review_member',{p_user_id:x.user_id,p_accept:true});await loadAgencyRequests();await loadAgency();}catch(e){$('agencyMessage').textContent=e.message;}};const r=document.createElement('button');r.className='secondary';r.textContent='Reject';r.onclick=async()=>{try{await rpc('tiger_live_agency_review_member',{p_user_id:x.user_id,p_accept:false});await loadAgencyRequests();}catch(e){$('agencyMessage').textContent=e.message;}};d.append(b,r);el.append(d);});}catch(e){el.textContent='Agency acceptance SQL চালানোর পর অনুরোধ দেখা যাবে: '+e.message;}}
-async function hostStart(){try{await rpc('tiger_live_host_start');$('hostMessage').textContent='Hosting session শুরু হয়েছে।';await loadAgency();}catch(e){$('hostMessage').textContent=e.message;}}
-async function hostStop(){try{await rpc('tiger_live_host_stop');$('hostMessage').textContent='Hosting session শেষ হয়েছে এবং সময় রেকর্ড হয়েছে।';await loadAgency();}catch(e){$('hostMessage').textContent=e.message;}}
-async function createAgency(){if(!isCurrentUserOwner)return;$('createAgencyMessage').textContent='Creating…';try{const id=$('agencyOwnerAccount').value.trim(),code=$('newAgencyCode').value.trim(),name=$('newAgencyName').value.trim();await rpc('tiger_live_owner_create_agency',{p_agency_user_id:id,p_agency_code:code,p_agency_name:name});$('createAgencyMessage').textContent='Agency তৈরি হয়েছে।';await loadOwnerAgencies();}catch(e){$('createAgencyMessage').textContent=e.message;}}
-async function loadOwnerAgencies(){if(!isCurrentUserOwner)return;try{const rows=await rpc('tiger_live_owner_list_agencies');$('ownerAgencyList').textContent=(rows||[]).map(x=>`${x.agency_code} — ${x.agency_name} — ${x.agency_user_id}`).join('\n')||'কোনো Agency নেই।';$('ownerAgencyList').style.whiteSpace='pre-wrap';}catch(e){$('ownerAgencyList').textContent=e.message;}}
-async function sendRpRequest(){const id=$('rpTarget').value.trim(),type=$('rpType').value;if(!id)return $('rpMessage').textContent='অন্য User-এর Account ID লিখুন।';try{await rpc('tiger_live_send_rp_request',{p_target_user_id:id,p_rp_type:type});$('rpMessage').textContent='RP Request পাঠানো হয়েছে। অপর User Accept করলে চালু হবে।';}catch(e){$('rpMessage').textContent=e.message;}}
-async function loadRpRequests(){try{const rows=await rpc('tiger_live_my_rp_requests');const el=$('rpRequests');el.innerHTML='';(rows||[]).forEach(x=>{const d=document.createElement('div');d.className='room';const s=document.createElement('span');s.textContent=`${x.rp_type} • ${String(x.requester_id).slice(0,8)} → ${String(x.target_user_id).slice(0,8)} (${x.status})`;d.append(s);if(x.status==='pending'&&x.target_user_id===currentUser.id){const b=document.createElement('button');b.textContent='Accept';b.onclick=async()=>{try{await rpc('tiger_live_review_rp_request',{p_request_id:x.id,p_accept:true});await loadRpRequests();}catch(e){$('rpMessage').textContent=e.message;}};d.append(b);}el.append(d);});}catch(e){$('rpRequests').textContent='RP SQL চালানোর পর অনুরোধ দেখা যাবে।';}}
-async function logout(){await supabaseClient.auth.signOut();showRun++;currentUser=null;isCurrentUserOwner=false;$('dashboard').classList.add('hidden');$('authPanel').classList.remove('hidden');$('password').value='';}
-async function init(){renderRooms();const {data}=await supabaseClient.auth.getSession();if(data?.session?.user)await showDashboard(data.session.user);supabaseClient.auth.onAuthStateChange((_e,s)=>{Promise.resolve().then(()=>{if(s?.user)showDashboard(s.user);else if(_e==='SIGNED_OUT'){currentUser=null;$('dashboard').classList.add('hidden');$('authPanel').classList.remove('hidden');}});});}
-init();
-</script></body></html>
+-- 1. Admin নিয়োগ: TIGER ID দিয়ে
+CREATE OR REPLACE FUNCTION public.tiger_live_owner_assign_admin(
+    p_tiger_id text
+)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_user_id uuid;
+    v_role text;
+    v_count integer;
+    v_permission text;
+BEGIN
+    IF NOT public.is_tiger_live_owner() THEN
+        RAISE EXCEPTION 'Only Super Master Admin can assign admins';
+    END IF;
+
+    SELECT count(*)
+    INTO v_count
+    FROM public.profiles
+    WHERE upper(trim(tiger_id)) = upper(trim(p_tiger_id));
+
+    IF v_count = 0 THEN
+        RAISE EXCEPTION 'TIGER ID not found';
+    ELSIF v_count > 1 THEN
+        RAISE EXCEPTION 'Duplicate TIGER ID found';
+    END IF;
+
+    SELECT id
+    INTO v_user_id
+    FROM public.profiles
+    WHERE upper(trim(tiger_id)) = upper(trim(p_tiger_id));
+
+    SELECT role
+    INTO v_role
+    FROM public.tiger_live_roles
+    WHERE user_id = v_user_id
+    FOR UPDATE;
+
+    IF v_role = 'owner' THEN
+        RAISE EXCEPTION 'Owner cannot be assigned as admin';
+    ELSIF v_role = 'moderator' THEN
+        RAISE EXCEPTION 'This user is already a moderator';
+    ELSIF v_role IS NULL THEN
+        INSERT INTO public.tiger_live_roles (user_id, role)
+        VALUES (v_user_id, 'admin')
+        ON CONFLICT (user_id) DO NOTHING;
+    END IF;
+
+    SELECT role INTO v_role
+    FROM public.tiger_live_roles
+    WHERE user_id = v_user_id;
+
+    IF v_role <> 'admin' THEN
+        RAISE EXCEPTION 'Could not assign admin role';
+    END IF;
+
+    FOREACH v_permission IN ARRAY ARRAY[
+        'user_management',
+        'agency_management',
+        'host_management',
+        'gift_management',
+        'diamond_management',
+        'wallet_recharge',
+        'vip_management',
+        'audio_video_room',
+        'support_management',
+        'admin_management',
+        'user_ban',
+        'reports_statistics'
+    ]
+    LOOP
+        INSERT INTO public.tiger_live_admin_permissions
+            (user_id, permission, is_enabled)
+        VALUES (v_user_id, v_permission, false)
+        ON CONFLICT (user_id, permission) DO NOTHING;
+    END LOOP;
+
+    RETURN v_user_id;
+END;
+$$;
+
+
+-- 2. Admin-এর Permission ON/OFF
+CREATE OR REPLACE FUNCTION public.tiger_live_owner_set_permission(
+    p_user_id uuid,
+    p_permission text,
+    p_enabled boolean
+)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+    IF NOT public.is_tiger_live_owner() THEN
+        RAISE EXCEPTION 'Only Super Master Admin can change permissions';
+    END IF;
+
+    IF p_permission NOT IN (
+        'user_management',
+        'agency_management',
+        'host_management',
+        'gift_management',
+        'diamond_management',
+        'wallet_recharge',
+        'vip_management',
+        'audio_video_room',
+        'support_management',
+        'admin_management',
+        'user_ban',
+        'reports_statistics'
+    ) THEN
+        RAISE EXCEPTION 'Invalid permission';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM public.tiger_live_roles
+        WHERE user_id = p_user_id
+          AND role = 'admin'
+    ) THEN
+        RAISE EXCEPTION 'Target user is not an admin';
+    END IF;
+
+    INSERT INTO public.tiger_live_admin_permissions
+        (user_id, permission, is_enabled)
+    VALUES (p_user_id, p_permission, p_enabled)
+    ON CONFLICT (user_id, permission)
+    DO UPDATE SET
+        is_enabled = EXCLUDED.is_enabled,
+        updated_at = now();
+
+    RETURN true;
+END;
+$$;
+
+
+-- 3. Admin তালিকা দেখা
+CREATE OR REPLACE FUNCTION public.tiger_live_owner_list_admins()
+RETURNS TABLE (
+    user_id uuid,
+    tiger_id text,
+    username text,
+    created_at timestamptz
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+    IF NOT public.is_tiger_live_owner() THEN
+        RAISE EXCEPTION 'Only Super Master Admin can view admins';
+    END IF;
+
+    RETURN QUERY
+    SELECT r.user_id, p.tiger_id, p.username, r.created_at
+    FROM public.tiger_live_roles r
+    JOIN public.profiles p ON p.id = r.user_id
+    WHERE r.role = 'admin'
+    ORDER BY r.created_at DESC;
+END;
+$$;
+
+
+-- 4. Admin অপসারণ
+CREATE OR REPLACE FUNCTION public.tiger_live_owner_remove_admin(
+    p_user_id uuid
+)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    v_role text;
+BEGIN
+    IF NOT public.is_tiger_live_owner() THEN
+        RAISE EXCEPTION 'Only Super Master Admin can remove admins';
+    END IF;
+
+    SELECT role INTO v_role
+    FROM public.tiger_live_roles
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+
+    IF v_role IS DISTINCT FROM 'admin' THEN
+        RAISE EXCEPTION 'Target user is not an admin';
+    END IF;
+
+    DELETE FROM public.tiger_live_admin_permissions
+    WHERE user_id = p_user_id;
+
+    DELETE FROM public.tiger_live_roles
+    WHERE user_id = p_user_id
+      AND role = 'admin';
+
+    RETURN true;
+END;
+$$;
+
+
+-- 5. নিরাপদ RPC অনুমতি
+REVOKE ALL ON FUNCTION public.tiger_live_owner_assign_admin(text)
+FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.tiger_live_owner_assign_admin(text)
+TO authenticated;
+
+REVOKE ALL ON FUNCTION public.tiger_live_owner_set_permission(uuid, text, boolean)
+FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.tiger_live_owner_set_permission(uuid, text, boolean)
+TO authenticated;
+
+REVOKE ALL ON FUNCTION public.tiger_live_owner_list_admins()
+FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.tiger_live_owner_list_admins()
+TO authenticated;
+
+REVOKE ALL ON FUNCTION public.tiger_live_owner_remove_admin(uuid)
+FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.tiger_live_owner_remove_admin(uuid)
+TO authenticated;
