@@ -56,7 +56,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
  <div class="muted">বাংলা • English | Live Community</div>
 </header>
 
-<!-- LOGIN PANEL -->
 <section id="authPanel" class="panel">
  <h2 id="authTitle">TIGER LIVE Login</h2>
 
@@ -84,7 +83,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
  <p class="muted">ফোন নম্বরের জন্য অভ্যন্তরীণ Email Alias ব্যবহৃত হয়। এটি ফোন নম্বর যাচাই করে না। SMS OTP/Twilio এই সংস্করণে ব্যবহার করা হচ্ছে না।</p>
 </section>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="hidden">
 
  <div class="panel">
@@ -109,7 +107,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div class="tile">🎁 Gifts<strong>Coming Soon</strong></div>
  </div>
 
- <!-- WALLET -->
  <section id="walletSection" class="panel">
   <h2>💰 Wallet & Diamond</h2>
   <p>Wallet: <strong id="walletValue">0</strong></p>
@@ -123,7 +120,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div id="transactions" class="muted">লেনদেনের তথ্য লোড হচ্ছে…</div>
  </section>
 
- <!-- AGENCY -->
  <section id="agencySection" class="panel">
   <h2>🏢 Agency & Host</h2>
   <p id="agencySummary" class="muted">Agency তথ্য লোড হচ্ছে…</p>
@@ -143,7 +139,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <p id="hostMessage" class="muted"></p>
  </section>
 
- <!-- ROOMS -->
  <section id="roomsSection" class="panel">
   <h2>🎙️ Audio Rooms</h2>
   <div id="audioRooms"></div>
@@ -152,7 +147,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <p class="note">এগুলো Room Placeholder। প্রকৃত Audio/Video চালাতে WebRTC বা LiveKit/Agora সংযোগ প্রয়োজন।</p>
  </section>
 
- <!-- RP -->
  <section id="rpSection" class="panel">
   <h2>💞 RP / Partner</h2>
   <input id="rpTarget" placeholder="অন্য User-এর Account ID">
@@ -167,7 +161,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div id="rpRequests"></div>
  </section>
 
- <!-- OWNER PANEL -->
  <section id="ownerPanel" class="panel hidden">
   <h2>👑 TIGER LIVE — OWNER CONTROL</h2>
   <p class="muted">শুধু মূল মালিকের জন্য</p>
@@ -258,14 +251,38 @@ function escapeHTML(value) {
 }
 
 function phoneToInternalEmail(phone) {
- const digits=phone.replace(/\D/g,"");
+ const digits=String(phone).replace(/\D/g,"");
  return "u"+digits+"@login.tigerlive.com";
 }
 
+/*
+ * PHONE NUMBER NORMALIZATION
+ * উদাহরণ:
+ * Country code 880 + 01648149817
+ * ফলাফল: 8801648149817
+ *
+ * Country code 880 + 1648149817
+ * ফলাফল: 8801648149817
+ *
+ * Country code 880 + +8801648149817
+ * ফলাফল: 8801648149817
+ */
+
 function getFullPhone() {
  const code=byId("countryCode")?.value||"880";
- const phone=byId("phone")?.value||"";
- return (code+phone).replace(/\D/g,"");
+
+ let digits=(byId("phone")?.value||"").replace(/\D/g,"");
+
+ // নম্বরের শুরুতে country code থাকলে সেটি বাদ
+ if(digits.startsWith(code)) {
+  digits=digits.slice(code.length);
+ }
+
+ // স্থানীয় নম্বরের শুরুর 0 বাদ
+ digits=digits.replace(/^0+/,"");
+
+ // Country code + national number
+ return code+digits;
 }
 
 /* NAVIGATION */
