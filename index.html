@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#09080a">
 <title>TIGER LIVE</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
  --bg:#09080a; --panel:#151218; --gold:#f5c451;
@@ -34,6 +35,7 @@ nav{display:flex;gap:7px;overflow:auto;padding:5px 0}
 nav button{white-space:nowrap}
 .room{background:#211b25;border:1px solid var(--line);border-radius:10px;padding:11px;margin:6px 0;display:flex;justify-content:space-between;gap:8px}
 .room span{color:var(--gold)}
+.room-card{width:100%;text-align:left;margin:5px 0;background:#211b25;color:white;border:1px solid var(--line)}
 .note{border-left:3px solid var(--gold);padding:8px 10px;background:#201b16;color:#ddd;font-size:13px}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
@@ -45,6 +47,7 @@ th,td{border-bottom:1px solid var(--line);padding:8px 5px;text-align:left;overfl
 footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
 </style>
 </head>
+
 <body>
 <div class="container">
 
@@ -53,6 +56,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
  <div class="muted">বাংলা • English | Live Community</div>
 </header>
 
+<!-- LOGIN PANEL -->
 <section id="authPanel" class="panel">
  <h2 id="authTitle">TIGER LIVE Login</h2>
 
@@ -71,7 +75,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
  <input id="password" type="password" placeholder="Password">
 
  <button id="authSubmit" class="full" onclick="submitAuth()">Login</button>
- <button id="modeButton" class="full secondary" onclick="toggleMode()">Create New Account / Register</button>
+ <button id="modeButton" class="full secondary" onclick="toggleAuthMode()">Create New Account / Register</button>
 
  <p style="text-align:center;color:#aaa">OR</p>
  <button class="full secondary" onclick="googleLogin()">Continue with Google</button>
@@ -80,6 +84,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
  <p class="muted">ফোন নম্বরের জন্য অভ্যন্তরীণ Email Alias ব্যবহৃত হয়। এটি ফোন নম্বর যাচাই করে না। SMS OTP/Twilio এই সংস্করণে ব্যবহার করা হচ্ছে না।</p>
 </section>
 
+<!-- DASHBOARD -->
 <section id="dashboard" class="hidden">
 
  <div class="panel">
@@ -94,7 +99,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <button onclick="go('agencySection')">Agency</button>
   <button onclick="go('roomsSection')">Rooms</button>
   <button onclick="go('rpSection')">RP</button>
-  <button id="adminNav" class="hidden" onclick="go('adminPanel')">Owner Panel</button>
+  <button id="adminNav" class="hidden" onclick="go('ownerPanel')">Owner Panel</button>
  </nav>
 
  <div class="grid">
@@ -104,6 +109,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div class="tile">🎁 Gifts<strong>Coming Soon</strong></div>
  </div>
 
+ <!-- WALLET -->
  <section id="walletSection" class="panel">
   <h2>💰 Wallet & Diamond</h2>
   <p>Wallet: <strong id="walletValue">0</strong></p>
@@ -117,6 +123,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div id="transactions" class="muted">লেনদেনের তথ্য লোড হচ্ছে…</div>
  </section>
 
+ <!-- AGENCY -->
  <section id="agencySection" class="panel">
   <h2>🏢 Agency & Host</h2>
   <p id="agencySummary" class="muted">Agency তথ্য লোড হচ্ছে…</p>
@@ -130,12 +137,13 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <div id="agencyRequests"></div>
   <h3>Host Control</h3>
   <div class="grid">
-   <button onclick="hostStart()">Start Hosting</button>
-   <button class="secondary" onclick="hostStop()">Stop Hosting</button>
+   <button onclick="startHosting()">Start Hosting</button>
+   <button class="secondary" onclick="stopHosting()">Stop Hosting</button>
   </div>
   <p id="hostMessage" class="muted"></p>
  </section>
 
+ <!-- ROOMS -->
  <section id="roomsSection" class="panel">
   <h2>🎙️ Audio Rooms</h2>
   <div id="audioRooms"></div>
@@ -144,6 +152,7 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <p class="note">এগুলো Room Placeholder। প্রকৃত Audio/Video চালাতে WebRTC বা LiveKit/Agora সংযোগ প্রয়োজন।</p>
  </section>
 
+ <!-- RP -->
  <section id="rpSection" class="panel">
   <h2>💞 RP / Partner</h2>
   <input id="rpTarget" placeholder="অন্য User-এর Account ID">
@@ -157,10 +166,9 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <p id="rpMessage" class="muted"></p>
   <div id="rpRequests"></div>
  </section>
-</section>
-</div>
-<!-- TIGER LIVE OWNER PANEL -->
-<section id="ownerPanel" class="panel" style="display:none">
+
+ <!-- OWNER PANEL -->
+ <section id="ownerPanel" class="panel hidden">
   <h2>👑 TIGER LIVE — OWNER CONTROL</h2>
   <p class="muted">শুধু মূল মালিকের জন্য</p>
 
@@ -174,7 +182,6 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <input id="adminTigerId" placeholder="Admin TIGER ID">
   <button onclick="assignAdmin()">Make Admin</button>
   <p id="adminMessage" class="muted"></p>
-
   <div id="adminList"></div>
 
   <hr>
@@ -182,12 +189,10 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <h3>⚙️ Admin Permissions</h3>
   <p class="muted">একজন Admin নির্বাচন করে তার অনুমতি চালু বা বন্ধ করুন।</p>
   <div id="adminPermissions">
-    <p class="muted">প্রথমে Admin নির্বাচন করুন।</p>
+   <p class="muted">প্রথমে Admin নির্বাচন করুন।</p>
   </div>
 
-  <button class="danger" onclick="removeSelectedAdmin()">
-    Remove Selected Admin
-  </button>
+  <button class="danger" onclick="removeSelectedAdmin()">Remove Selected Admin</button>
 
   <hr>
 
@@ -197,14 +202,14 @@ footer{text-align:center;color:#777;padding:25px 0;font-size:12px}
   <input id="newAgencyName" placeholder="Agency Name">
   <button onclick="createAgency()">Create Agency</button>
   <p id="ownerAgencyMessage" class="muted"></p>
-
   <div id="ownerAgencyList"></div>
+ </section>
+
 </section>
-<!-- END OWNER PANEL --></body><script>
-/* =====================================
-   TIGER LIVE - PART 3
-   LOGIN, WALLET, AGENCY, ROOMS, OWNER
-===================================== */
+</div>
+
+<script>
+/* TIGER LIVE CONFIG */
 
 const SUPABASE_URL = "https://yehheffwgloegvmexqzy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_tOdDjkFgQmry_2PXk3vM8Q_KZjZTwhg";
@@ -218,860 +223,669 @@ let currentUser = null;
 let isOwner = false;
 let selectedAdminId = null;
 let adminOffset = 0;
+let registerMode = false;
 
 const PERMISSIONS = [
-  ["user_management", "User Management"],
-  ["agency_management", "Agency Management"],
-  ["host_management", "Host Management"],
-  ["gift_management", "Gift Management"],
-  ["diamond_management", "Diamond Management"],
-  ["wallet_recharge", "Wallet Recharge"],
-  ["vip_management", "VIP Management"],
-  ["audio_video_room", "Audio / Video Room"],
-  ["support_management", "Support Management"],
-  ["admin_management", "Admin Management"],
-  ["user_ban", "User Ban"],
-  ["reports_statistics", "Reports & Statistics"]
+ ["user_management","User Management"],
+ ["agency_management","Agency Management"],
+ ["host_management","Host Management"],
+ ["gift_management","Gift Management"],
+ ["diamond_management","Diamond Management"],
+ ["wallet_recharge","Wallet Recharge"],
+ ["vip_management","VIP Management"],
+ ["audio_video_room","Audio / Video Room"],
+ ["support_management","Support Management"],
+ ["admin_management","Admin Management"],
+ ["user_ban","User Ban"],
+ ["reports_statistics","Reports & Statistics"]
 ];
 
 function byId(id) {
-  return document.getElementById(id);
+ return document.getElementById(id);
 }
 
-function showMessage(id, message, isError = false) {
-  const el = byId(id);
-  if (!el) return;
-  el.textContent = message;
-  el.style.color = isError ? "#ff7777" : "#f5c451";
+function showMessage(id,message,isError=false) {
+ const el=byId(id);
+ if(!el)return;
+ el.textContent=message;
+ el.style.color=isError?"#ff7777":"#f5c451";
 }
 
 function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+ return String(value??"").replace(/[&<>"']/g,char=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[char]);
 }
 
 function phoneToInternalEmail(phone) {
-  const digits = phone.replace(/\D/g, "");
-  return "u" + digits + "@login.tigerlive.com";
+ const digits=phone.replace(/\D/g,"");
+ return "u"+digits+"@login.tigerlive.com";
 }
 
 function getFullPhone() {
-  const code = byId("countryCode")?.value || "+880";
-  const phone = byId("phone")?.value || "";
-  return (code + phone).replace(/\D/g, "");
+ const code=byId("countryCode")?.value||"880";
+ const phone=byId("phone")?.value||"";
+ return (code+phone).replace(/\D/g,"");
 }
 
-/* LOGIN / REGISTER MODE */
+/* NAVIGATION */
 
-let registerMode = false;
+function go(sectionId) {
+ const section=byId(sectionId);
+ if(!section)return;
+ section.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* LOGIN / REGISTER */
 
 function toggleAuthMode() {
-  registerMode = !registerMode;
+ registerMode=!registerMode;
 
-  if (byId("authTitle")) {
-    byId("authTitle").textContent =
-      registerMode ? "Create TIGER LIVE Account" : "TIGER LIVE Login";
-  }
+ byId("authTitle").textContent=registerMode
+  ?"Create TIGER LIVE Account":"TIGER LIVE Login";
 
-  if (byId("registerNameBox")) {
-    byId("registerNameBox").style.display =
-      registerMode ? "block" : "none";
-  }
+ byId("registerNameBox").classList.toggle("hidden",!registerMode);
 
-  if (byId("authSubmit")) {
-    byId("authSubmit").textContent =
-      registerMode ? "Register" : "Login";
-  }
+ byId("authSubmit").textContent=registerMode?"Register":"Login";
 
-  if (byId("modeButton")) {
-    byId("modeButton").textContent =
-      registerMode ? "Already have an account? Login" :
-      "Create New Account";
-  }
+ byId("modeButton").textContent=registerMode
+  ?"Already have an account? Login":"Create New Account / Register";
 
-  showMessage("authMessage", "");
+ showMessage("authMessage","");
 }
 
 async function submitAuth() {
-  const phone = getFullPhone();
-  const password = byId("password")?.value || "";
-  const fullName = byId("fullName")?.value?.trim() || "";
+ const phone=getFullPhone();
+ const password=byId("password")?.value||"";
+ const fullName=byId("fullName")?.value?.trim()||"";
 
-  if (!phone || phone.length < 8) {
-    showMessage("authMessage", "সঠিক ফোন নম্বর লিখুন।", true);
-    return;
-  }
+ if(!phone||phone.length<8) {
+  showMessage("authMessage","সঠিক ফোন নম্বর লিখুন।",true);
+  return;
+ }
 
-  if (password.length < 6) {
-    showMessage("authMessage", "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।", true);
-    return;
-  }
+ if(password.length<6) {
+  showMessage("authMessage","পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",true);
+  return;
+ }
 
-  if (registerMode && !fullName) {
-    showMessage("authMessage", "আপনার নাম লিখুন।", true);
-    return;
-  }
+ if(registerMode&&!fullName) {
+  showMessage("authMessage","আপনার নাম লিখুন।",true);
+  return;
+ }
 
-  const email = phoneToInternalEmail(phone);
+ const email=phoneToInternalEmail(phone);
+ showMessage("authMessage","অপেক্ষা করুন...");
 
-  showMessage("authMessage", "অপেক্ষা করুন...");
-
-  try {
-    if (registerMode) {
-      const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            phone_number: "+" + phone,
-            login_method: "phone_password"
-          }
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        await openDashboard(data.session.user);
-      } else {
-        showMessage(
-          "authMessage",
-          "অ্যাকাউন্ট তৈরি হয়েছে। ইমেইল কনফার্মেশন চালু থাকলে আগে সেটি সম্পন্ন করুন।"
-        );
-      }
-    } else {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) throw error;
-      await openDashboard(data.user);
+ try {
+  if(registerMode) {
+   const {data,error}=await supabaseClient.auth.signUp({
+    email,password,
+    options:{
+     data:{
+      full_name:fullName,
+      phone_number:"+"+phone,
+      login_method:"phone_password"
+     }
     }
-  } catch (error) {
-    showMessage("authMessage", error.message || "Login ব্যর্থ হয়েছে।", true);
+   });
+
+   if(error)throw error;
+
+   if(data.session) {
+    await openDashboard(data.session.user);
+   } else {
+    showMessage("authMessage","অ্যাকাউন্ট তৈরি হয়েছে। Supabase-এ Email Confirmation চালু থাকলে সেটি সম্পন্ন করতে হবে।");
+   }
+  } else {
+   const {data,error}=await supabaseClient.auth.signInWithPassword({
+    email,password
+   });
+
+   if(error)throw error;
+   await openDashboard(data.user);
   }
+ } catch(error) {
+  showMessage("authMessage",error.message||"Login ব্যর্থ হয়েছে।",true);
+ }
 }
 
 /* GOOGLE LOGIN */
 
 async function googleLogin() {
-  const { error } = await supabaseClient.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.href.split("#")[0]
-    }
-  });
+ const {error}=await supabaseClient.auth.signInWithOAuth({
+  provider:"google",
+  options:{redirectTo:window.location.href.split("#")[0]}
+ });
 
-  if (error) {
-    showMessage("authMessage", error.message, true);
-  }
+ if(error)showMessage("authMessage",error.message,true);
 }
 
 /* DASHBOARD */
 
 async function openDashboard(user) {
-  currentUser = user;
+ currentUser=user;
 
-  if (byId("authPanel")) byId("authPanel").style.display = "none";
-  if (byId("dashboard")) byId("dashboard").style.display = "block";
+ byId("authPanel").classList.add("hidden");
+ byId("dashboard").classList.remove("hidden");
 
-  const metadata = user.user_metadata || {};
-  const displayName = metadata.full_name || metadata.name || "TIGER LIVE User";
+ const metadata=user.user_metadata||{};
+ const displayName=metadata.full_name||metadata.name||"TIGER LIVE User";
 
-  if (byId("userLine")) {
-    byId("userLine").textContent =
-      displayName + " | " + (metadata.phone_number || user.email || "");
-  }
+ byId("userLine").textContent=
+  displayName+" | "+(metadata.phone_number||user.email||"");
 
-  await checkOwner();
-  await loadWallet();
-  await loadTransactions();
-  await loadMyAgency();
-  await loadRpRequests();
+ await checkOwner();
+ await loadWallet();
+ await loadTransactions();
+ await loadMyAgency();
+ await loadRpRequests();
 }
 
 async function logout() {
-  const { error } = await supabaseClient.auth.signOut();
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  currentUser = null;
-  isOwner = false;
-  location.reload();
+ const {error}=await supabaseClient.auth.signOut();
+ if(error){alert(error.message);return;}
+ currentUser=null;
+ isOwner=false;
+ location.reload();
 }
 
 /* OWNER CHECK */
 
 async function checkOwner() {
-  const { data, error } = await supabaseClient.rpc(
-    "is_tiger_live_owner"
-  );
+ const {data,error}=await supabaseClient.rpc("is_tiger_live_owner");
+ isOwner=!error&&data===true;
 
-  isOwner = !error && data === true;
+ byId("ownerStatus").textContent=isOwner?"👑 OWNER":"MEMBER";
 
-  if (byId("ownerStatus")) {
-    byId("ownerStatus").textContent =
-      isOwner ? "👑 OWNER" : "MEMBER";
-  }
+ byId("ownerPanel").classList.toggle("hidden",!isOwner);
+ byId("adminNav").classList.toggle("hidden",!isOwner);
 
-  if (byId("ownerPanel")) {
-    byId("ownerPanel").style.display = isOwner ? "block" : "none";
-  }
-
-  if (byId("adminNav")) {
-    byId("adminNav").style.display = isOwner ? "block" : "none";
-  }
-
-  if (isOwner) {
-    await loadAdminUsers();
-    await loadAdmins();
-    await loadOwnerAgencies();
-  }
+ if(isOwner) {
+  await loadAdminUsers();
+  await loadAdmins();
+  await loadOwnerAgencies();
+ }
 }
 
 /* WALLET */
 
 async function loadWallet() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_get_my_wallet"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_get_my_wallet");
 
-  if (error) {
-    showMessage("walletMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("walletMessage",error.message,true);return;}
 
-  const wallet = Array.isArray(data) ? data[0] : data;
-  if (!wallet) return;
+ const wallet=Array.isArray(data)?data[0]:data;
+ if(!wallet)return;
 
-  const walletBalance = Number(
-    wallet.wallet_balance ?? wallet.balance ?? 0
-  );
+ const walletBalance=Number(wallet.wallet_balance??wallet.balance??0);
+ const diamondBalance=Number(wallet.diamond_balance??wallet.diamonds??0);
 
-  const diamondBalance = Number(
-    wallet.diamond_balance ?? wallet.diamonds ?? 0
-  );
-
-  if (byId("walletBalance")) {
-    byId("walletBalance").textContent = walletBalance;
-  }
-
-  if (byId("walletValue")) {
-    byId("walletValue").textContent = walletBalance;
-  }
-
-  if (byId("diamondBalance")) {
-    byId("diamondBalance").textContent = diamondBalance;
-  }
-
-  if (byId("diamondValue")) {
-    byId("diamondValue").textContent = diamondBalance;
-  }
+ byId("walletBalance").textContent=walletBalance;
+ byId("walletValue").textContent=walletBalance;
+ byId("diamondBalance").textContent=diamondBalance;
+ byId("diamondValue").textContent=diamondBalance;
 }
 
 async function requestRecharge() {
-  const amount = Number(byId("rechargeAmount")?.value || 0);
+ const amount=Number(byId("rechargeAmount")?.value||0);
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    showMessage("walletMessage", "সঠিক Amount লিখুন।", true);
-    return;
-  }
+ if(!Number.isFinite(amount)||amount<=0) {
+  showMessage("walletMessage","সঠিক Amount লিখুন।",true);
+  return;
+ }
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_request_recharge",
-    { p_amount: amount }
-  );
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_request_recharge",{p_amount:amount}
+ );
 
-  if (error) {
-    showMessage("walletMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("walletMessage",error.message,true);return;}
 
-  showMessage("walletMessage", "Recharge request পাঠানো হয়েছে।");
-  await loadTransactions();
+ showMessage("walletMessage","Recharge request পাঠানো হয়েছে।");
+ await loadTransactions();
 }
 
 async function loadTransactions() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_get_my_transactions"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_get_my_transactions");
 
-  if (error) {
-    showMessage("walletMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("walletMessage",error.message,true);return;}
 
-  const list = byId("transactions");
-  if (!list) return;
+ const list=byId("transactions");
+ if(!list)return;
+ list.innerHTML="";
 
-  list.innerHTML = "";
-
-  (data || []).forEach(item => {
-    const row = document.createElement("p");
-    row.textContent =
-      (item.transaction_type || item.type || "Transaction") +
-      " | " + (item.amount ?? "") +
-      " | " + (item.status || "");
-    list.appendChild(row);
-  });
+ (data||[]).forEach(item=>{
+  const row=document.createElement("p");
+  row.textContent=
+   (item.transaction_type||item.type||"Transaction")+
+   " | "+(item.amount??"")+" | "+(item.status||"");
+  list.appendChild(row);
+ });
 }
 
 /* AGENCY */
 
 async function requestAgency() {
-  const code = byId("agencyCodeInput")?.value?.trim() || "";
+ const code=byId("agencyCodeInput")?.value?.trim()||"";
 
-  if (!code) {
-    showMessage("agencyMessage", "Agency Code লিখুন।", true);
-    return;
-  }
+ if(!code){showMessage("agencyMessage","Agency Code লিখুন।",true);return;}
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_request_agency",
-    { p_agency_code: code }
-  );
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_request_agency",{p_agency_code:code}
+ );
 
-  if (error) {
-    showMessage("agencyMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("agencyMessage",error.message,true);return;}
 
-  showMessage("agencyMessage", "Agency request পাঠানো হয়েছে।");
-  await loadMyAgency();
+ showMessage("agencyMessage","Agency request পাঠানো হয়েছে।");
+ await loadMyAgency();
 }
 
 async function loadMyAgency() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_get_my_agency"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_get_my_agency");
 
-  if (error) {
-    showMessage("agencyMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("agencyMessage",error.message,true);return;}
 
-  const agency = Array.isArray(data) ? data[0] : data;
-  if (byId("agencySummary")) {
-    byId("agencySummary").textContent = agency
-      ? "Agency: " + (agency.agency_name || agency.agency_code || "Member") +
-        " | Status: " + (agency.membership_status || agency.status || "Unknown")
-      : "আপনি এখনো কোনো Agency-তে যুক্ত নন।";
-  }
+ const agency=Array.isArray(data)?data[0]:data;
 
-  await loadAgencyHosts();
+ byId("agencySummary").textContent=agency
+  ?"Agency: "+(agency.agency_name||agency.agency_code||"Member")+
+   " | Status: "+(agency.membership_status||agency.status||"Unknown")
+  :"আপনি এখনো কোনো Agency-তে যুক্ত নন।";
+
+ await loadAgencyHosts();
 }
 
 async function loadAgencyHosts() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_agency_hosts"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_agency_hosts");
 
-  if (error) {
-    showMessage("hostMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("hostMessage",error.message,true);return;}
 
-  const area = byId("agencyHostArea");
-  if (!area) return;
+ const area=byId("agencyHostArea");
+ if(!area)return;
+ area.innerHTML="";
 
-  area.innerHTML = "";
-
-  (data || []).forEach(host => {
-    const item = document.createElement("p");
-    item.textContent =
-      "Host: " + (host.user_id || "") +
-      " | Active: " + (host.is_active ? "Yes" : "No");
-    area.appendChild(item);
-  });
+ (data||[]).forEach(host=>{
+  const item=document.createElement("p");
+  item.textContent="Host: "+(host.user_id||"")+
+   " | Active: "+(host.is_active?"Yes":"No");
+  area.appendChild(item);
+ });
 }
 
 async function startHosting() {
-  const { error } = await supabaseClient.rpc("tiger_live_host_start");
-
-  if (error) {
-    showMessage("hostMessage", error.message, true);
-    return;
-  }
-
-  showMessage("hostMessage", "Hosting started.");
-  await loadAgencyHosts();
+ const {error}=await supabaseClient.rpc("tiger_live_host_start");
+ if(error){showMessage("hostMessage",error.message,true);return;}
+ showMessage("hostMessage","Hosting started.");
+ await loadAgencyHosts();
 }
 
 async function stopHosting() {
-  const { error } = await supabaseClient.rpc("tiger_live_host_stop");
-
-  if (error) {
-    showMessage("hostMessage", error.message, true);
-    return;
-  }
-
-  showMessage("hostMessage", "Hosting stopped.");
-  await loadAgencyHosts();
+ const {error}=await supabaseClient.rpc("tiger_live_host_stop");
+ if(error){showMessage("hostMessage",error.message,true);return;}
+ showMessage("hostMessage","Hosting stopped.");
+ await loadAgencyHosts();
 }
 
-/* AGENCY REQUEST REVIEW */
+async function reviewAgencyMember(userId,accept) {
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_agency_review_member",
+  {p_user_id:userId,p_accept:accept}
+ );
 
-async function reviewAgencyMember(userId, accept) {
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_agency_review_member",
-    {
-      p_user_id: userId,
-      p_accept: accept
-    }
-  );
-
-  if (error) {
-    showMessage("agencyMessage", error.message, true);
-    return;
-  }
-
-  await loadAgencyRequests();
+ if(error){showMessage("agencyMessage",error.message,true);return;}
+ await loadAgencyRequests();
 }
 
 async function loadAgencyRequests() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_agency_pending_requests"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_agency_pending_requests");
 
-  if (error) {
-    showMessage("agencyMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("agencyMessage",error.message,true);return;}
 
-  const area = byId("agencyRequests");
-  if (!area) return;
+ const area=byId("agencyRequests");
+ if(!area)return;
+ area.innerHTML="";
 
-  area.innerHTML = "";
+ (data||[]).forEach(item=>{
+  const row=document.createElement("div");
+  row.className="panel";
 
-  (data || []).forEach(item => {
-    const row = document.createElement("div");
-    row.className = "panel";
+  const label=document.createElement("p");
+  label.textContent="User: "+(item.user_id||"");
+  row.appendChild(label);
 
-    const label = document.createElement("p");
-    label.textContent = "User: " + (item.user_id || "");
-    row.appendChild(label);
+  const yes=document.createElement("button");
+  yes.textContent="Approve";
+  yes.onclick=()=>reviewAgencyMember(item.user_id,true);
 
-    const yes = document.createElement("button");
-    yes.textContent = "Approve";
-    yes.onclick = () => reviewAgencyMember(item.user_id, true);
+  const no=document.createElement("button");
+  no.textContent="Reject";
+  no.onclick=()=>reviewAgencyMember(item.user_id,false);
 
-    const no = document.createElement("button");
-    no.textContent = "Reject";
-    no.onclick = () => reviewAgencyMember(item.user_id, false);
-
-    row.append(yes, no);
-    area.appendChild(row);
-  });
+  row.append(yes,no);
+  area.appendChild(row);
+ });
 }
 
-/* AUDIO / VIDEO ROOM PLACEHOLDERS */
+/* AUDIO / VIDEO ROOMS */
 
 function createRoomCards() {
-  ["audioRooms", "videoRooms"].forEach((id, index) => {
-    const area = byId(id);
-    if (!area || area.children.length) return;
+ ["audioRooms","videoRooms"].forEach((id,index)=>{
+  const area=byId(id);
+  if(!area||area.children.length)return;
 
-    for (let i = 1; i <= 20; i++) {
-      const card = document.createElement("button");
-      card.className = "room-card";
-      card.textContent =
-        (index === 0 ? "🎙️ Audio Room " : "📹 Video Room ") + i;
-
-      card.onclick = () => {
-        alert("Room " + i + " এখনো প্রস্তুত করা হয়নি।");
-      };
-
-      area.appendChild(card);
-    }
-  });
+  for(let i=1;i<=20;i++) {
+   const card=document.createElement("button");
+   card.className="room-card";
+   card.textContent=(index===0?"🎙️ Audio Room ":"📹 Video Room ")+i;
+   card.onclick=()=>alert("Room "+i+" এখনো প্রস্তুত করা হয়নি।");
+   area.appendChild(card);
+  }
+ });
 }
 
 /* RP / PARTNER */
 
 async function sendRpRequest() {
-  const target = byId("rpTarget")?.value?.trim() || "";
-  const type = byId("rpType")?.value || "love";
+ const target=byId("rpTarget")?.value?.trim()||"";
+ const type=byId("rpType")?.value||"love";
 
-  if (!target) {
-    showMessage("rpMessage", "Target User ID লিখুন।", true);
-    return;
-  }
+ if(!target){showMessage("rpMessage","Target User ID লিখুন।",true);return;}
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_send_rp_request",
-    {
-      p_target_user_id: target,
-      p_rp_type: type
-    }
-  );
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_send_rp_request",
+  {p_target_user_id:target,p_rp_type:type}
+ );
 
-  if (error) {
-    showMessage("rpMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("rpMessage",error.message,true);return;}
 
-  showMessage("rpMessage", "RP Request পাঠানো হয়েছে।");
-  await loadRpRequests();
+ showMessage("rpMessage","RP Request পাঠানো হয়েছে।");
+ await loadRpRequests();
 }
 
 async function loadRpRequests() {
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_my_rp_requests"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_my_rp_requests");
 
-  if (error) {
-    showMessage("rpMessage", error.message, true);
-    return;
+ if(error){showMessage("rpMessage",error.message,true);return;}
+
+ const area=byId("rpRequests");
+ if(!area)return;
+ area.innerHTML="";
+
+ (data||[]).forEach(item=>{
+  const row=document.createElement("div");
+  row.className="panel";
+
+  const info=document.createElement("p");
+  info.textContent=(item.rp_type||"RP")+" | "+(item.status||"Pending");
+  row.appendChild(info);
+
+  if(item.status==="pending"&&item.target_user_id===currentUser?.id) {
+   const accept=document.createElement("button");
+   accept.textContent="Accept";
+   accept.onclick=()=>reviewRp(item.id,true);
+   row.appendChild(accept);
   }
 
-  const area = byId("rpRequests");
-  if (!area) return;
-
-  area.innerHTML = "";
-
-  (data || []).forEach(item => {
-    const row = document.createElement("div");
-    row.className = "panel";
-
-    const info = document.createElement("p");
-    info.textContent =
-      (item.rp_type || "RP") +
-      " | " + (item.status || "Pending");
-
-    row.appendChild(info);
-
-    if (item.status === "pending" &&
-        item.target_user_id === currentUser?.id) {
-      const accept = document.createElement("button");
-      accept.textContent = "Accept";
-      accept.onclick = () => reviewRp(item.id, true);
-
-      row.appendChild(accept);
-    }
-
-    area.appendChild(row);
-  });
+  area.appendChild(row);
+ });
 }
 
-async function reviewRp(requestId, accept) {
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_review_rp_request",
-    {
-      p_request_id: requestId,
-      p_accept: accept
-    }
-  );
+async function reviewRp(requestId,accept) {
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_review_rp_request",
+  {p_request_id:requestId,p_accept:accept}
+ );
 
-  if (error) {
-    showMessage("rpMessage", error.message, true);
-    return;
-  }
-
-  await loadRpRequests();
+ if(error){showMessage("rpMessage",error.message,true);return;}
+ await loadRpRequests();
 }
 
 /* OWNER: USER LIST */
 
 async function loadAdminUsers() {
-  if (!isOwner) return;
+ if(!isOwner)return;
 
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_admin_list_users",
-    {
-      p_limit: 50,
-      p_offset: adminOffset
-    }
-  );
+ const {data,error}=await supabaseClient.rpc(
+  "tiger_live_admin_list_users",
+  {p_limit:50,p_offset:adminOffset}
+ );
 
-  if (error) {
-    showMessage("adminMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("adminMessage",error.message,true);return;}
 
-  const area = byId("ownerUsers");
-  if (!area) return;
+ const area=byId("ownerUsers");
+ if(!area)return;
+ area.innerHTML="";
 
-  area.innerHTML = "";
+ (data||[]).forEach(user=>{
+  const row=document.createElement("div");
+  row.className="panel";
 
-  (data || []).forEach(user => {
-    const row = document.createElement("div");
-    row.className = "panel";
+  const info=document.createElement("p");
+  info.textContent=
+   (user.full_name||"User")+" | "+
+   (user.email||user.phone||user.user_id)+" | "+user.user_id;
 
-    const info = document.createElement("p");
-    info.textContent =
-      (user.full_name || "User") +
-      " | " + (user.email || user.phone || user.user_id) +
-      " | " + user.user_id;
-
-    row.appendChild(info);
-    area.appendChild(row);
-  });
+  row.appendChild(info);
+  area.appendChild(row);
+ });
 }
 
 /* OWNER: ADMIN MANAGEMENT */
 
 async function assignAdmin() {
-  if (!isOwner) return;
+ if(!isOwner)return;
 
-  const tigerId = byId("adminTigerId")?.value?.trim() || "";
+ const tigerId=byId("adminTigerId")?.value?.trim()||"";
+ if(!tigerId){showMessage("adminMessage","TIGER ID লিখুন।",true);return;}
 
-  if (!tigerId) {
-    showMessage("adminMessage", "TIGER ID লিখুন।", true);
-    return;
-  }
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_owner_assign_admin",{p_tiger_id:tigerId}
+ );
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_owner_assign_admin",
-    { p_tiger_id: tigerId }
-  );
+ if(error){showMessage("adminMessage",error.message,true);return;}
 
-  if (error) {
-    showMessage("adminMessage", error.message, true);
-    return;
-  }
-
-  showMessage("adminMessage", "Admin সফলভাবে যুক্ত হয়েছে।");
-  await loadAdmins();
+ showMessage("adminMessage","Admin সফলভাবে যুক্ত হয়েছে।");
+ await loadAdmins();
 }
 
 async function loadAdmins() {
-  if (!isOwner) return;
+ if(!isOwner)return;
 
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_owner_list_admins"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_owner_list_admins");
 
-  if (error) {
-    showMessage("adminMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("adminMessage",error.message,true);return;}
 
-  const area = byId("adminList");
-  if (!area) return;
+ const area=byId("adminList");
+ if(!area)return;
+ area.innerHTML="";
 
-  area.innerHTML = "";
+ (data||[]).forEach(admin=>{
+  const row=document.createElement("div");
+  row.className="panel";
 
-  (data || []).forEach(admin => {
-    const row = document.createElement("div");
-    row.className = "panel";
+  const info=document.createElement("p");
+  info.textContent=(admin.full_name||admin.tiger_id||"Admin")+
+   " | "+(admin.user_id||"");
 
-    const info = document.createElement("p");
-    info.textContent =
-      (admin.full_name || admin.tiger_id || "Admin") +
-      " | " + (admin.user_id || "");
+  const select=document.createElement("button");
+  select.textContent="Manage Permissions";
+  select.onclick=()=>selectAdmin(admin.user_id);
 
-    const select = document.createElement("button");
-    select.textContent = "Manage Permissions";
-    select.onclick = () => selectAdmin(admin.user_id);
-
-    row.append(info, select);
-    area.appendChild(row);
-  });
+  row.append(info,select);
+  area.appendChild(row);
+ });
 }
 
 async function selectAdmin(userId) {
-  selectedAdminId = userId;
-  await loadAdminPermissions();
+ selectedAdminId=userId;
+ await loadAdminPermissions();
 }
 
 /* OWNER: ADMIN PERMISSIONS */
 
 async function loadAdminPermissions() {
-  if (!isOwner || !selectedAdminId) return;
+ if(!isOwner||!selectedAdminId)return;
 
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_owner_get_admin_permissions",
-    { p_user_id: selectedAdminId }
-  );
+ const {data,error}=await supabaseClient.rpc(
+  "tiger_live_owner_get_admin_permissions",
+  {p_user_id:selectedAdminId}
+ );
 
-  const area = byId("adminPermissions");
-  if (!area) return;
+ const area=byId("adminPermissions");
+ if(!area)return;
 
-  if (error) {
-    area.textContent = error.message;
-    return;
-  }
+ if(error){area.textContent=error.message;return;}
 
-  area.innerHTML = "";
+ area.innerHTML="";
+ const permissionRows=Array.isArray(data)?data:[];
 
-  const permissionRows = Array.isArray(data) ? data : [];
+ PERMISSIONS.forEach(([key,label])=>{
+  const saved=permissionRows.find(item=>item.permission===key);
+  const enabled=saved?saved.is_enabled===true:false;
 
-  PERMISSIONS.forEach(([key, label]) => {
-    const saved = permissionRows.find(item =>
-      item.permission === key
-    );
+  const wrapper=document.createElement("label");
+  wrapper.className="permission";
 
-    const enabled = saved ? saved.is_enabled === true : false;
+  const text=document.createElement("span");
+  text.textContent=label;
 
-    const wrapper = document.createElement("label");
-    wrapper.style.display = "block";
-    wrapper.style.padding = "8px";
+  const checkbox=document.createElement("input");
+  checkbox.type="checkbox";
+  checkbox.checked=enabled;
+  checkbox.onchange=()=>savePermission(key,checkbox.checked);
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = enabled;
-    checkbox.onchange = () =>
-      savePermission(key, checkbox.checked);
-
-    wrapper.append(checkbox, document.createTextNode(" " + label));
-    area.appendChild(wrapper);
-  });
+  wrapper.append(text,checkbox);
+  area.appendChild(wrapper);
+ });
 }
 
-async function savePermission(permission, enabled) {
-  if (!isOwner || !selectedAdminId) return;
+async function savePermission(permission,enabled) {
+ if(!isOwner||!selectedAdminId)return;
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_owner_set_permission",
-    {
-      p_user_id: selectedAdminId,
-      p_permission: permission,
-      p_enabled: enabled
-    }
-  );
-
-  if (error) {
-    alert("Permission update failed: " + error.message);
-    await loadAdminPermissions();
-    return;
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_owner_set_permission",
+  {
+   p_user_id:selectedAdminId,
+   p_permission:permission,
+   p_enabled:enabled
   }
+ );
 
-  showMessage("adminMessage", "Permission updated.");
+ if(error) {
+  alert("Permission update failed: "+error.message);
+  await loadAdminPermissions();
+  return;
+ }
+
+ showMessage("adminMessage","Permission updated.");
 }
 
 /* OWNER: REMOVE ADMIN */
 
 async function removeSelectedAdmin() {
-  if (!isOwner || !selectedAdminId) {
-    alert("আগে একজন Admin নির্বাচন করুন।");
-    return;
-  }
+ if(!isOwner||!selectedAdminId) {
+  alert("আগে একজন Admin নির্বাচন করুন।");
+  return;
+ }
 
-  if (!confirm("আপনি কি এই Admin-কে Remove করতে চান?")) return;
+ if(!confirm("আপনি কি এই Admin-কে Remove করতে চান?"))return;
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_owner_remove_admin",
-    { p_user_id: selectedAdminId }
-  );
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_owner_remove_admin",
+  {p_user_id:selectedAdminId}
+ );
 
-  if (error) {
-    showMessage("adminMessage", error.message, true);
-    return;
-  }
+ if(error){showMessage("adminMessage",error.message,true);return;}
 
-  selectedAdminId = null;
+ selectedAdminId=null;
+ byId("adminPermissions").textContent="কোনো Admin নির্বাচন করা হয়নি।";
 
-  if (byId("adminPermissions")) {
-    byId("adminPermissions").textContent = "কোনো Admin নির্বাচন করা হয়নি।";
-  }
-
-  showMessage("adminMessage", "Admin সরানো হয়েছে।");
-  await loadAdmins();
+ showMessage("adminMessage","Admin সরানো হয়েছে।");
+ await loadAdmins();
 }
 
 /* OWNER: AGENCY CREATION */
 
 async function createAgency() {
-  if (!isOwner) return;
+ if(!isOwner)return;
 
-  const userId = byId("agencyOwnerId")?.value?.trim() || "";
-  const code = byId("newAgencyCode")?.value?.trim() || "";
-  const name = byId("newAgencyName")?.value?.trim() || "";
+ const userId=byId("agencyOwnerId")?.value?.trim()||"";
+ const code=byId("newAgencyCode")?.value?.trim()||"";
+ const name=byId("newAgencyName")?.value?.trim()||"";
 
-  if (!userId || !code || !name) {
-    showMessage("ownerAgencyMessage", "সব তথ্য পূরণ করুন।", true);
-    return;
+ if(!userId||!code||!name) {
+  showMessage("ownerAgencyMessage","সব তথ্য পূরণ করুন।",true);
+  return;
+ }
+
+ const {error}=await supabaseClient.rpc(
+  "tiger_live_owner_create_agency",
+  {
+   p_agency_user_id:userId,
+   p_agency_code:code,
+   p_agency_name:name
   }
+ );
 
-  const { error } = await supabaseClient.rpc(
-    "tiger_live_owner_create_agency",
-    {
-      p_agency_user_id: userId,
-      p_agency_code: code,
-      p_agency_name: name
-    }
-  );
+ if(error){showMessage("ownerAgencyMessage",error.message,true);return;}
 
-  if (error) {
-    showMessage("ownerAgencyMessage", error.message, true);
-    return;
-  }
-
-  showMessage("ownerAgencyMessage", "Agency তৈরি হয়েছে।");
-  await loadOwnerAgencies();
+ showMessage("ownerAgencyMessage","Agency তৈরি হয়েছে।");
+ await loadOwnerAgencies();
 }
 
 async function loadOwnerAgencies() {
-  if (!isOwner) return;
+ if(!isOwner)return;
 
-  const { data, error } = await supabaseClient.rpc(
-    "tiger_live_owner_list_agencies"
-  );
+ const {data,error}=await supabaseClient.rpc("tiger_live_owner_list_agencies");
 
-  const area = byId("ownerAgencyList");
-  if (!area) return;
+ const area=byId("ownerAgencyList");
+ if(!area)return;
 
-  if (error) {
-    area.textContent = error.message;
-    return;
-  }
+ if(error){area.textContent=error.message;return;}
 
-  area.innerHTML = "";
+ area.innerHTML="";
 
-  (data || []).forEach(agency => {
-    const row = document.createElement("p");
-    row.textContent =
-      (agency.agency_name || "Agency") +
-      " | " + (agency.agency_code || "") +
-      " | " + (agency.agency_user_id || "");
-    area.appendChild(row);
-  });
+ (data||[]).forEach(agency=>{
+  const row=document.createElement("p");
+  row.textContent=
+   (agency.agency_name||"Agency")+" | "+
+   (agency.agency_code||"")+" | "+
+   (agency.agency_user_id||"");
+  area.appendChild(row);
+ });
 }
 
-/* INITIAL STARTUP */
+/* STARTUP */
 
 async function initializeTigerLive() {
-  createRoomCards();
+ createRoomCards();
 
-  const {
-    data: { session },
-    error
-  } = await supabaseClient.auth.getSession();
+ const {
+  data:{session},
+  error
+ }=await supabaseClient.auth.getSession();
 
-  if (error) {
-    showMessage("authMessage", error.message, true);
-    return;
+ if(error) {
+  showMessage("authMessage",error.message,true);
+  return;
+ }
+
+ if(session?.user) {
+  await openDashboard(session.user);
+ }
+
+ supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_IN"&&session?.user&&!currentUser) {
+   openDashboard(session.user);
   }
 
-  if (session?.user) {
-    await openDashboard(session.user);
+  if(event==="SIGNED_OUT") {
+   location.reload();
   }
-
-  supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
-      if (event === "SIGNED_IN" && session?.user && !currentUser) {
-        await openDashboard(session.user);
-      }
-
-      if (event === "SIGNED_OUT") {
-        location.reload();
-      }
-    }
-  );
+ });
 }
 
-document.addEventListener("DOMContentLoaded", initializeTigerLive);
+document.addEventListener("DOMContentLoaded",initializeTigerLive);
 </script>
 </body>
-</html>
 </html>
