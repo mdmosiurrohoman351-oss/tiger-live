@@ -479,7 +479,7 @@ async function loadTransactions() {
  (data||[]).forEach(item=>{
   const row=document.createElement("p");
   row.textContent=
-   (item.transaction_type||item.type||"Transaction")+
+   (item.entry_type||item.transaction_type||item.type||"Transaction")+
    " | "+(item.amount??"")+" | "+(item.status||"");
   list.appendChild(row);
  });
